@@ -1,0 +1,8 @@
+# History files
+.History
+
+# Example code in package build process
+.R*
+!.Rproj
+*.*~
+.Rproj.user
