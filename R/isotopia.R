@@ -162,36 +162,3 @@ iso <- function(class.isoval, class.isosys, ..., attribs = list(), single_as_df 
     new(class.isosys, df)
 }
 
-
-#' Isotope system
-#' 
-#' A system of isotope data for the same element (e.g. all oxygen or all sulfur isotopes).
-#' Can be generated from any number of valid isotope data types but they must all be
-#' the same (e.g., all \code{\link{ratio}}, all \code{\link{abundance}}, all \code{\link{intensity}}, all 
-#' \code{\link{delta}} value, etc.). Additionally, the name of the major ion in 
-#' the system may be specified and will be propagated through data conversations
-#' of the system. 
-#' 
-#' In the case of an isotope system composed of intensity measurements, it is required to 
-#' specify \code{major} to identify the major ion. 
-#' 
-#' @param ... - the different components of the isotope system
-#' @param major - the name of the major isotope in the system
-#' @family isotope data types
-#' @return an isosys data.frame with all the different components of the system
-#' as separate columns. This object can be treated and manipulated just like a 
-#' regular R data.frame. The column headers are named after the \code{isoname}
-#' attribute of each passed in isotope data object (careful though if using 
-#' names like '12C' that start with a number, they are not syntactically valid
-#' variable names in R and must be accessed via \code{isosys(...)$`12C`} instead 
-#' of \code{isosys(...)$12C}). Isotope data objects without \code{isoname} generate 
-#' columns named \code{iso, iso.1, iso.2, ...}.
-#' @export
-#' @examples
-#' \dontrun{
-#' data <- isosys(ratio(c(0.1, 0.2, 0.3), "12C", "13C"), ratio(c(0.15, 0.21, 0.32)))
-#' print(data$`12C`) # to access the 12C ratio in the system
-#' }
-# isosys <- function(..., major = "") {
-
-# }
