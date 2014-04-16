@@ -73,31 +73,3 @@ setClass("Intensities", contains = "Isosys")
 # this will also take care of maintaning the Ratio object if the whole data frame is subset
 # but that I will have to find out
 # something like this: setMethod("[", "Ratio", function(x) { print("hello"); callNextMethod(x) })
-
-
-# Initialize Isosys 
-# FIXME - none of this should be necessary anymore!
-# setMethod(initialize, "Isosys", function(.Object, ...) { 
-#     object <- callNextMethod(.Object, ...) 
-#     # --> update column names with data type names
-#     names(object) <- make.unique(
-#         sapply(object, function(i) {
-#             if (nchar(i@isoname) == 0) 'iso' else i@isoname
-#         }, simplify = TRUE))
-#     
-#     # --> propagate major isotope name to data types
-#     if (nchar(object@major) > 0) {
-#         cols_with_major <- which(sapply(object, function(i) "major" %in% slotNames(i)))
-#         for (i in names(object[cols_with_major])) {
-#             column <- object[[i]]
-#             column@major <- object@major
-#             validObject(column)
-#             # unfortunately, using regular [[]] syntax drops the S4 class, hence this workaround
-#             # maybe there is a better way to preserve Isosys object and make the change?
-#             eval(parse(text = paste0("object$`", i, "` <- column")))
-#         }
-#     }
-#     
-#     return(object)
-# }) 
-
