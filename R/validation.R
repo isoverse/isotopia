@@ -1,13 +1,11 @@
 #' @include classes.R
 NULL
 
-#FIXME convert to is_iso, is_ratio, etc.
-
 #' Check for isotope value objects
 #' 
 #' Checks for different kinds of isotope value objects. All checks recognize
 #' both the vector (single isotope value) and the data.frame (isotope system) 
-#' version of an isotope value object. \code{is.isosys(obj)} can be used to
+#' version of an isotope value object. \code{is_isosys(obj)} can be used to
 #' make the distinction between the two.
 #' 
 #' @note Isotope value objects that are subset or extended loose their identification
@@ -21,53 +19,53 @@ NULL
 #' isotope values.
 #' 
 #' @details
-#' \code{is.iso} checks whether the object is an isotope value object of any kind. 
+#' \code{is_iso} checks whether the object is an isotope value object of any kind. 
 #' Returns TRUE if it is (e.g. ratio, abundance, delta, etc. - single or system of
 #' values), FALSE otherwise.
 #' 
 #' @param obj - object to test
 #' @export
-is.iso <- function(obj) inherits(obj, "Isoval") || inherits(obj, "Isosys")
+is_iso <- function(obj) inherits(obj, "Isoval") || inherits(obj, "Isosys")
 
 #' @details
-#' \code{is.isosys} checks whether the object is a an isotope system.
+#' \code{is_isosys} checks whether the object is a an isotope system.
 #' Returns TRUE if it's an isotope system (of any kind, ratios, abundances, deltas, etc.)
 #' and FALSE otherwise.
-#' @rdname is.iso
+#' @rdname is_iso
 #' @export
-is.isosys <- function(obj) inherits(obj, "Isosys")
+is_isosys <- function(obj) inherits(obj, "Isosys")
 
 #' @details
-#' \code{is.ratio} checks whether the object is an isotope ratio object.
+#' \code{is_ratio} checks whether the object is an isotope ratio object.
 #' Returns TRUE if it's a single isotope ratio object or an isotope system of ratios,
 #' FALSE otherwise.
-#' @rdname is.iso
+#' @rdname is_iso
 #' @export
-is.ratio <- function(obj) inherits(obj, "Ratio") || inherits(obj, "Ratios")
+is_ratio <- function(obj) inherits(obj, "Ratio") || inherits(obj, "Ratios")
 
 #' @details
-#' \code{is.abundance} checks whether the object is an isotope abundance object.
+#' \code{is_abundance} checks whether the object is an isotope abundance object.
 #' Returns TRUE if it's a single isotope abundance object or an isotope system of abundances,
 #' FALSE otherwise.
-#' @rdname is.iso
+#' @rdname is_iso
 #' @export
-is.abundance <- function(obj) inherits(obj, "Abundance") || inherits(obj, "Abundances")
+is_abundance <- function(obj) inherits(obj, "Abundance") || inherits(obj, "Abundances")
 
 #' @details
-#' \code{is.delta} checks whether the object is a delta value object.
+#' \code{is_delta} checks whether the object is a delta value object.
 #' Returns TRUE if it's a single delta value object or an isotope system of delta values,
 #' FALSE otherwise.
-#' @rdname is.iso
+#' @rdname is_iso
 #' @export
-is.delta <- function(obj) inherits(obj, "Delta") || inherits(obj, "Deltas")
+is_delta <- function(obj) inherits(obj, "Delta") || inherits(obj, "Deltas")
 
 #' @details
-#' \code{is.intensity} checks whether the object is an ion intensity object.
+#' \code{is_intensity} checks whether the object is an ion intensity object.
 #' Returns TRUE if it's a single ion intensity object or an isotope system of ion intensities,
 #' FALSE otherwise.
-#' @rdname is.iso
+#' @rdname is_iso
 #' @export
-is.intensity <- function(obj) inherits(obj, "Intensity") || inherits(obj, "Intensities")
+is_intensity <- function(obj) inherits(obj, "Intensity") || inherits(obj, "Intensities")
 
 # =====================================
 # Built-in object validity checks 
