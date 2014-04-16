@@ -48,7 +48,7 @@ setClass("Intensity", representation(unit = "character"), contains = "Isoval",
          prototype = prototype(new("Isoval"), unit = ""))
 setMethod("update", "Intensity", function(obj, isoname, attribs) {
     obj <- callNextMethod(obj, isoname, attribs)
-    if (!is.null(major <- attribs$unit) && nchar(unit) > 0) {
+    if (!is.null(unit <- attribs$unit) && nchar(unit) > 0) {
         if (nchar(obj@unit) > 0 && obj@unit != unit)
             warning("changing the unit of a '", class(obj), " value' object from '", obj@unit, "' to '", unit, "'")
         obj@unit <- unit

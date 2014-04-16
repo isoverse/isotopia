@@ -95,7 +95,7 @@ delta <- function(x) {
 #' @family isotope data types
 #' @export
 intensity <- function(..., major = "", unit = "", single_as_df = FALSE) {
-    new("Intensity", "Intensities", ..., 
+    iso("Intensity", "Intensities", ..., 
         attribs = list(major = major, unit = unit), single_as_df = single_as_df)
 }
 
@@ -106,9 +106,6 @@ intensity <- function(..., major = "", unit = "", single_as_df = FALSE) {
 #' @param attribs named list of attributes to pass to the isotope data object constructors
 #' @param ... values (can be single data frame or list)
 #' @param single_as_df whether to return a single value as a data frame
-#' FIXME: add more document from isosys about how things are named
-#' (might be possible to include in overall documentation from here
-#' just by saying @note ?)
 #' @note the setup for this function also means that you can modify
 #' e.g. an existing ratio with the paramters passed in (say to set the name later on)
 #' @export
@@ -119,15 +116,17 @@ iso <- function(class.isoval, class.isosys, ..., attribs = list(), single_as_df 
     new_isoval <- function(data, isoname) {
         if (!is (data, class.isoval))
             data <- new(class.isoval, data) # initialize new if not already the right object
-        update(data, isoname = isoname, attribs = attribs) # update attributes
+        obj <- update(data, isoname = isoname, attribs = attribs) # update attributes
+        validObject(obj) # test validity
+        return(obj)
     }
     
     # type checks
     if (!extends(class.isoval, "Isoval"))
-        stop("not an Isoval class:", class.isoval)
+        stop("not an Isoval class: ", class.isoval)
     
     if (!extends(class.isosys, "Isosys"))
-        stop("not an Isosys class:", class.isosys)
+        stop("not an Isosys class: ", class.isosys)
         
     # no values passed at all --> initialize with empty numeric
     if (length(values) == 0)
@@ -146,10 +145,8 @@ iso <- function(class.isoval, class.isosys, ..., attribs = list(), single_as_df 
         stop("Not the same number of measurements provided for each isotope: ", paste(val, collapse = ", "))
     
     # initialize each value 
-    print(values)
-    print(names(values))
-    values <- mapply(new_isoval, values, names(values), SIMPLIFY = FALSE)
-    print(values)
+    if (is.null(isonames <- names(values))) isonames <- ""
+    values <- mapply(new_isoval, values, isonames, SIMPLIFY = FALSE)
     
     # generate data frame and with the correct column names
     df <- data.frame(values)

@@ -28,6 +28,14 @@ NULL
 is_iso <- function(obj) inherits(obj, "Isoval") || inherits(obj, "Isosys")
 
 #' @details
+#' \code{is_isoval} checks whether the object is a single isotope value.
+#' Returns TRUE if it's a single isotope value object (of any kind, ratio, abundance, delta, etc.)
+#' and FALSE otherwise.
+#' @rdname is_iso
+#' @export
+is_isoval <- function(obj) inherits(obj, "Isoval")
+
+#' @details
 #' \code{is_isosys} checks whether the object is a an isotope system.
 #' Returns TRUE if it's an isotope system (of any kind, ratios, abundances, deltas, etc.)
 #' and FALSE otherwise.
@@ -73,9 +81,15 @@ is_intensity <- function(obj) inherits(obj, "Intensity") || inherits(obj, "Inten
 # and can be re-run with validObject(obj) at any time
 
 setValidity(
+    "Isoval",
+    function(object) {             
+        if (any(is.na(object))) return('NA is not a valid isotope data type')
+        return(TRUE)
+    })
+
+setValidity(
     "Ratio",
     function(object) {             
-        if (any(is.na(object))) return('NA is not a valid isotope ratio')
         if (any(object < 0)) return('isotope ratios cannot be negative')
         if (nchar(object@isoname) > 0 && nchar(object@major) > 0 && object@isoname == object@major)
             return("isotope ratios cannot be defined for the same isotope as minor and major isotope")
@@ -85,7 +99,6 @@ setValidity(
 setValidity(
     "Abundance",
     function(object) {
-        if (any(is.na(object))) return('NA is not a valid fractional abundance')
         if (any(object < 0)) return('fractional abundances cannot be negative')
         if (any(object > 1)) return('fractional abundances cannot be larger than 1')
         return(TRUE)
@@ -94,7 +107,6 @@ setValidity(
 setValidity(
     "Intensity",
     function(object) {             
-        if (any(is.na(object))) return('NA is not a valid ion intensity')
         if (any(object < 0)) return('ion intensities cannot be negative')
         return(TRUE)
     })
@@ -102,14 +114,19 @@ setValidity(
 setValidity(
     "Isosys",
     function(object) {
-        if (!all(sapply(object, function(i) is(i, "Isoval"))))
-            return("Not all data in the system are provided as isotope data types (delta, ratio, abundance, etc.)")
+        isovals <- object[which(sapply(object, is_isoval))]
         
-        if (!all((val <- sapply(object, class)) == class(object[[1]])))
+        if (!all((val <- sapply(isovals, class)) == class(isovals[[1]])))
             return(paste("Not all isotopes in the system have the same data type, found:", paste(val, collapse = ", ")))
         
-        if (any(duplicated(val <- unlist(sapply(object, function(i) if(nchar(i@isoname) > 0) i@isoname)))))
+        if (any(duplicated(val <- unlist(sapply(isovals, function(i) if(nchar(i@isoname) > 0) i@isoname)))))
             return(paste("All isotopes in a system must be unique, found duplicates:", paste(val, collapse = ", ")))
+        
+        majors <- unlist(sapply(isovals, function(i) if (nchar(i@major) > 0) i@major))
+        if (!is.null(majors) && !all(majors == majors[1]))
+            return(paste("If specified, the major ion of all isotope value object in an isotope system must be the same.",
+                         "Found:", paste(majors, collapse=", ")))
+        
         
         return (TRUE)
     })
@@ -117,16 +134,16 @@ setValidity(
 setValidity(
     "Intensities",
     function(object) {
-#         if (nchar(object@major) == 0)
-#             return("The major ion must be specified in an isotopic system defined by ion intensities")
-#         
-#         if (! (object@major %in% sapply(object, function(i) i@isoname)))
-#             return("The major ion must be part of the ion intensities isotopic system")
-#         
-#         units <- unlist(sapply(object, function(i) if (nchar(i@unit) > 0) i@unit))
-#         if (!is.null(units) && !all(units == units[1]))
-#             return(paste("If units are specified in an isotopic system of ion intensities, they must all be the same.",
-#                          "Found:", paste(units, collapse=", ")))
+        isovals <- object[which(sapply(object, is_isoval))]
+        isonames <- unlist(sapply(isovals, function(i) if(nchar(i@isoname) > 0) i@isoname))
+        majors <- unlist(sapply(isovals, function(i) if (nchar(i@major) > 0) i@major))
+        if (!is.null(majors) && ! majors[1] %in% isonames )
+            return(paste0("The major ion (", majors[1], ") must be part of the ion intensities isotopic system but is missing"))
+         
+        units <- unlist(sapply(isovals, function(i) if (nchar(i@unit) > 0) i@unit))
+        if (!is.null(units) && !all(units == units[1]))
+            return(paste("If specified, the units in an isotopic system of ion intensities must all be the same.",
+                         "Found:", paste(units, collapse=", ")))
         
         return (TRUE)
     })
