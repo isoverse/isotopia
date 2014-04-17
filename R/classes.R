@@ -31,13 +31,15 @@ setClass("Intensity", representation(unit = "character"), contains = "Isoval",
          prototype = prototype(new("Isoval"), unit = ""))
 
 # Isotope Systems
-setClass("Isosys", contains = "data.frame")
+setClass("Isosys", representation(isoval_class = "character"), contains = "data.frame",
+         prototype = prototype(data.frame(), isoval_class = "Isoval"))
 setMethod("initialize", "Isosys", function(.Object, ...){
     # generate data frame and with the correct column names
     params <- list(...)
     
     # update isovalue column names with the names stored in the isotope value objects
-    if (length(params) > 0 && length(iso_idx <- which(sapply(params[[1]], is.isoval))) > 0) {
+    if (length(params) > 0 && any(val <- sapply(params[[1]], is.isoval))) {
+        iso_idx <- which(val)
         names(params[[1]])[iso_idx] <- make.unique(
             sapply(params[[1]][iso_idx], function(i) {
                 if (nchar(i@isoname) == 0) 'iso' else i@isoname
@@ -61,7 +63,7 @@ setMethod("[", "Isosys", function(x, i, j, ..., drop = TRUE) {
     
     #message("selection i: ", paste(i, collapse=", "), " and j: ", paste(j, collapse=", "))
     
-    df <- data.frame(x@.Data)
+    df <- data.frame(x@.Data, stringsAsFactors = F)
     names(df) <- names(x) 
     df <- df[i, j, drop = FALSE]
     if (drop && ncol(df) == 1) {
@@ -74,10 +76,14 @@ setMethod("[", "Isosys", function(x, i, j, ..., drop = TRUE) {
     }
 })
 
-setClass("Abundances", contains = "Isosys")
-setClass("Ratios", contains = "Isosys")
-setClass("Deltas", contains = "Isosys")
-setClass("Intensities", contains = "Isosys")
+setClass("Abundances", contains = "Isosys",
+         prototype = prototype(new("Isosys"), isoval_class = "Abundance"))
+setClass("Ratios", contains = "Isosys",
+         prototype = prototype(new("Isosys"), isoval_class = "Ratio"))
+setClass("Deltas", contains = "Isosys",
+         prototype = prototype(new("Isosys"), isoval_class = "Delta"))
+setClass("Intensities", contains = "Isosys",
+         prototype = prototype(new("Isosys"), isoval_class = "Intensity"))
 
 #' enable conversion back to a normal data frame
 #' this can also be done simply by running data.frame(x)

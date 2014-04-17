@@ -117,12 +117,12 @@ setValidity(
         # IMPORTANT note: in the validation functions, it is critical to select the data with object@.Data rather
         # than via [] because otherwise there will be an endless loop (node stack overflow) when the [] function
         # tries to select a subset of an Isosys data frame and validate it
-        if (length(iso_is <- which(sapply(object@.Data, is.isoval))) == 0)
+        if (!any(val <- sapply(object@.Data, is.isoval)))
             return("There are no isotope values in this isotope system.")
-        isovals <- object@.Data[iso_is]
+        isovals <- object@.Data[which(val)]
         
-        if (!all((val <- sapply(isovals, class)) == class(isovals[[1]])))
-            return(paste("Not all isotopes in the system have the same data type, found:", paste(val, collapse = ", ")))
+        if (!all((val <- sapply(isovals, class)) == object@isoval_class))
+            return(paste0("Not all isotopes in the system have the expected data type (", object@isoval_class, "), found: ", paste(val, collapse = ", ")))
         
         if (any(duplicated(val <- unlist(sapply(isovals, function(i) if(nchar(i@isoname) > 0) i@isoname)))))
             return(paste("All isotopes in a system must be unique, found duplicates:", paste(val, collapse = ", ")))
@@ -137,11 +137,18 @@ setValidity(
     })
 
 setValidity(
+    "Abundances",
+    function(object) {
+        isovals <- object@.Data[which(sapply(object@.Data, is.isoval))]
+        if (any( (sums <- rowSums(data.frame(isovals))) > 1.0)) 
+            return(paste("the sum of fractional abundances for each data point in an isotope system cannot exceed 1",
+                         ", found:", paste(sums[sums > 1.0], collapse = ", ")))
+        return (TRUE)
+    })
+
+setValidity(
     "Intensities",
     function(object) {
-        # IMPORTANT note: in the validation functions, it is critical to select the data with object@.Data rather
-        # than via [] because otherwise there will be an endless loop (node stack overflow) when the [] function
-        # tries to select a subset of an Isosys data frame and validate it
         isovals <- object@.Data[which(sapply(object@.Data, is.isoval))]
         isonames <- unlist(sapply(isovals, function(i) if(nchar(i@isoname) > 0) i@isoname))
         majors <- unlist(sapply(isovals, function(i) if (nchar(i@major) > 0) i@major))

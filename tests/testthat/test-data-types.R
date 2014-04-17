@@ -3,7 +3,7 @@ context("Data Types")
 test_that("Testing that basic single data types' (ratio, abundance, delta, etc.) validity controls are working", {
     
     # testing basic initialization
-    expect_error(iso("InvalidClass"), "not an Isoval class")
+    expect_error(new("Ratios", data.frame()), "There are no isotope values in this isotope system")
     
     # testing Ratio data type
     expect_error(ratio(NA), "not a valid isotope data type")
@@ -76,6 +76,7 @@ test_that("Testing that isotope systems' (ratios, abundances, etc.) validity con
     # specific test of different isotope systems
     expect_is(ratio(0.2, 0.5), "Ratios")
     expect_is(abundance(0.2, 0.5), "Abundances")
+    expect_error(abundance(0.5, 0.50001), "the sum of fractional abundances for each data point in an isotope system cannot exceed 1")
     expect_is(intensity(100, 500), "Intensities")
     expect_error(intensity(100, 500, major = "12C"), "major ion .* must be part of the ion intensities isotopic system")
     expect_is(intensity(`12C` = 100, `13C` = 500, major = "12C"), "Intensities")
@@ -90,8 +91,13 @@ test_that("Testing that isotope systems' (ratios, abundances, etc.) validity con
     expect_equal(rs2$`34S`@major, "12C")
     
     # testing compound data frame isotope systems to throw the appropriate errors and warnings
+    expect_is(rs <- ratio(`33S` = c(0.1, 0.2), `34S` = c(0.2, 0.3), major = "32S"), "Ratios")
     expect_error({
-        rs <- ratio(`13C` = c(0.1, 0.2), major = "12C", single_as_df = T)
+        rs2 <- rs
+        rs2$c <- abundance(c(0.2, 0.3))
+        validObject(rs2)
+    }, "Not all isotopes in the system have the expected data type")
+    expect_error({
         rs$`18O` <- ratio(c(0.2, 0.3), major = "16O")
         ratio(rs)
     }, "major ion of all isotope value object in an isotope system must be the same")
@@ -100,7 +106,20 @@ test_that("Testing that isotope systems' (ratios, abundances, etc.) validity con
         is$`ion.2` <- intensity(c(0.2, 0.3), unit = "V")
         intensity(is)
     }, "units in an isotopic system of ion intensities must all be the same")
-    
+    expect_is({ # should still be a ratio
+        rs$test <- 'other column'
+        rs
+    }, "Ratios")
+    expect_true(is.isosys(rs["33S", drop = F]))
+    expect_false(is.isosys(rs["test", drop = F])) # reduced to data frame
+    expect_is({ # adding column
+        rs$`36S` <- ratio(c(0.2, 0.3))
+        rs
+    }, "Ratios")
+    expect_is({ # overwriting column
+        rs$`32S` <- ratio(c(0.2, 0.3))
+        rs
+    }, "Ratios")
 })
 
 test_that("Testing that object type check functions (is.x()) are working", {

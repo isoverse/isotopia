@@ -57,7 +57,10 @@ setMethod("label", "Isoval", function(object) {
 })
 
 setMethod("label", "Isosys", function(object) {
-    isos <- which(sapply(object, function(i) is(i, "Isoval")))
-    paste0(sapply(object[isos, drop = F], label), collapse = ", ")
+    isos <- sapply(object, function(i) is(i, "Isoval"))
+    if (any(isos))
+        paste0(sapply(object[which(isos), drop = F], label), collapse = ", ")
+    else
+        ""
 })
 

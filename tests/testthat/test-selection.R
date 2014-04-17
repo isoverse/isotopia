@@ -32,26 +32,6 @@ test_that("Testing that isotope data types can be properly subselected", {
     expect_false(identical(rs[,"34S"], rs[,"34S", drop = FALSE])) # dropping by defaul
     expect_true(identical(rs[,c("33S", "34S")], rs[,c("33S", "34S"), drop = FALSE])) # doesn't matter if more than one column
     
-    # adding/overwriting columns to the system 
-    expect_is({ # should still be a ratio
-        rs$test <- 'other column'
-        rs
-    }, "Ratios")
-    expect_true(is.isosys(rs["33S", drop = F]))
-    expect_false(is.isosys(rs["test", drop = F])) # reduced to data frame
-    expect_is({
-        rs$`36S` <- ratio(c(0.2, 0.3))
-        rs
-    }, "Ratios")
-    expect_is({
-        rs$`32S` <- ratio(c(0.2, 0.3))
-        rs
-    }, "Ratios")
-    expect_error({
-        rs$`36S` <- abundance(c(0.2, 0.3))
-        validObject(rs)
-    }, "Not all isotopes in the system have the same data type")
-    
     # converting data types
     expect_false(is.iso(as.data.frame(rs)))
     expect_false(is.iso(data.frame(rs)))
