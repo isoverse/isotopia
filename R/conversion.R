@@ -133,7 +133,7 @@ setMethod("as.abundance", "Ratios", function(iso) {
            lapply(df / (1 + rowSums(df)), recast_isoval, "abundance")
        })
 })
-
+setMethod("as.abundance", "Intensities", function(iso) as.abundance(as.ratio(iso)))
 
 
 setMethod("as.ratio", "data.frame", function(iso) {

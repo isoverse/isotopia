@@ -48,8 +48,11 @@ test_that("Testing that isotope data type conversations behave correctly", {
       is <- intensity(`32S` = 9502, `33S` = 75, `34S` = 421, `36S` = 2, major = "32S", unit = "#")
       rs <- as.ratio(is)
   }, "Ratios")
-  expect_equal(rs, ratio(`33S` = 75/9502, `34S` = 421/9502, `36S` = 2/9502, major = "32S"))
-  expect_equal(as.ratio(intensity(x = x, y = y, major = "x")), ratio(y = y/x, major = "x", single_as_df = T))
+  expect_equal(rs, ratio(`33S` = 75/9502, `34S` = 421/9502, `36S` = 2/9502, major = "32S")) # value check 
+  expect_equal(as.ratio(intensity(x = x, y = y, major = "x")), ratio(y = y/x, major = "x", single_as_df = T)) # formula check
+  expect_is(ab <- as.abundance(is), "Abundances")
+  expect_equal(ab, abundance(`33S` = 0.0075, `34S` = 0.0421, `36S` = 0.0002, major = "32S")) # value check
+  expect_equal(as.abundance(intensity(x = x, y = y, major = "x")), abundance(y = y/(y + x), major = "x", single_as_df = T)) # formula check
 })
 
 
