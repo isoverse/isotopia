@@ -5,7 +5,7 @@ NULL
 #' 
 #' Checks for different kinds of isotope value objects. All checks recognize
 #' both the vector (single isotope value) and the data.frame (isotope system) 
-#' version of an isotope value object. \code{is_isosys(obj)} can be used to
+#' version of an isotope value object. \code{is.isosys(obj)} can be used to
 #' make the distinction between the two.
 #' 
 #' @note Isotope value objects that are subset or extended loose their identification
@@ -19,61 +19,61 @@ NULL
 #' isotope values.
 #' 
 #' @details
-#' \code{is_iso} checks whether the object is an isotope value object of any kind. 
+#' \code{is.iso} checks whether the object is an isotope value object of any kind. 
 #' Returns TRUE if it is (e.g. ratio, abundance, delta, etc. - single or system of
 #' values), FALSE otherwise.
 #' 
 #' @param obj - object to test
 #' @export
-is_iso <- function(obj) inherits(obj, "Isoval") || inherits(obj, "Isosys")
+is.iso <- function(obj) inherits(obj, "Isoval") || inherits(obj, "Isosys")
 
 #' @details
-#' \code{is_isoval} checks whether the object is a single isotope value.
+#' \code{is.isoval} checks whether the object is a single isotope value.
 #' Returns TRUE if it's a single isotope value object (of any kind, ratio, abundance, delta, etc.)
 #' and FALSE otherwise.
-#' @rdname is_iso
+#' @rdname is.iso
 #' @export
-is_isoval <- function(obj) inherits(obj, "Isoval")
+is.isoval <- function(obj) inherits(obj, "Isoval")
 
 #' @details
-#' \code{is_isosys} checks whether the object is a an isotope system.
+#' \code{is.isosys} checks whether the object is a an isotope system.
 #' Returns TRUE if it's an isotope system (of any kind, ratios, abundances, deltas, etc.)
 #' and FALSE otherwise.
-#' @rdname is_iso
+#' @rdname is.iso
 #' @export
-is_isosys <- function(obj) inherits(obj, "Isosys")
+is.isosys <- function(obj) inherits(obj, "Isosys")
 
 #' @details
-#' \code{is_ratio} checks whether the object is an isotope ratio object.
+#' \code{is.ratio} checks whether the object is an isotope ratio object.
 #' Returns TRUE if it's a single isotope ratio object or an isotope system of ratios,
 #' FALSE otherwise.
-#' @rdname is_iso
+#' @rdname is.iso
 #' @export
-is_ratio <- function(obj) inherits(obj, "Ratio") || inherits(obj, "Ratios")
+is.ratio <- function(obj) inherits(obj, "Ratio") || inherits(obj, "Ratios")
 
 #' @details
-#' \code{is_abundance} checks whether the object is an isotope abundance object.
+#' \code{is.abundance} checks whether the object is an isotope abundance object.
 #' Returns TRUE if it's a single isotope abundance object or an isotope system of abundances,
 #' FALSE otherwise.
-#' @rdname is_iso
+#' @rdname is.iso
 #' @export
-is_abundance <- function(obj) inherits(obj, "Abundance") || inherits(obj, "Abundances")
+is.abundance <- function(obj) inherits(obj, "Abundance") || inherits(obj, "Abundances")
 
 #' @details
-#' \code{is_delta} checks whether the object is a delta value object.
+#' \code{is.delta} checks whether the object is a delta value object.
 #' Returns TRUE if it's a single delta value object or an isotope system of delta values,
 #' FALSE otherwise.
-#' @rdname is_iso
+#' @rdname is.iso
 #' @export
-is_delta <- function(obj) inherits(obj, "Delta") || inherits(obj, "Deltas")
+is.delta <- function(obj) inherits(obj, "Delta") || inherits(obj, "Deltas")
 
 #' @details
-#' \code{is_intensity} checks whether the object is an ion intensity object.
+#' \code{is.intensity} checks whether the object is an ion intensity object.
 #' Returns TRUE if it's a single ion intensity object or an isotope system of ion intensities,
 #' FALSE otherwise.
-#' @rdname is_iso
+#' @rdname is.iso
 #' @export
-is_intensity <- function(obj) inherits(obj, "Intensity") || inherits(obj, "Intensities")
+is.intensity <- function(obj) inherits(obj, "Intensity") || inherits(obj, "Intensities")
 
 # =====================================
 # Built-in object validity checks 
@@ -117,7 +117,7 @@ setValidity(
         # IMPORTANT note: in the validation functions, it is critical to select the data with object@.Data rather
         # than via [] because otherwise there will be an endless loop (node stack overflow) when the [] function
         # tries to select a subset of an Isosys data frame and validate it
-        isovals <- object@.Data[which(sapply(object@.Data, is_isoval))]
+        isovals <- object@.Data[which(sapply(object@.Data, is.isoval))]
         
         if (!all((val <- sapply(isovals, class)) == class(isovals[[1]])))
             return(paste("Not all isotopes in the system have the same data type, found:", paste(val, collapse = ", ")))
@@ -140,7 +140,7 @@ setValidity(
         # IMPORTANT note: in the validation functions, it is critical to select the data with object@.Data rather
         # than via [] because otherwise there will be an endless loop (node stack overflow) when the [] function
         # tries to select a subset of an Isosys data frame and validate it
-        isovals <- object@.Data[which(sapply(object@.Data, is_isoval))]
+        isovals <- object@.Data[which(sapply(object@.Data, is.isoval))]
         isonames <- unlist(sapply(isovals, function(i) if(nchar(i@isoname) > 0) i@isoname))
         majors <- unlist(sapply(isovals, function(i) if (nchar(i@major) > 0) i@major))
         if (!is.null(majors) && ! majors[1] %in% isonames )

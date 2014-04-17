@@ -34,7 +34,7 @@
 #' @docType package
 #' @title isotoper package
 #' @author Sebastian Kopf
-#' @seealso \code{\link{ratio}}, \code{\link{is_ratio}}, \code{\link{to_ratio}}, etc.
+#' @seealso \code{\link{ratio}}, \code{\link{is.ratio}}, \code{\link{as.ratio}}, etc.
 #' @examples
 #' # these examples are for initializing isotope ratio objects but apply equally to other data types
 #' ratio(0.1) # single value

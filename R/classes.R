@@ -51,7 +51,7 @@ setMethod("[", "Isosys", function(x, i, j, ..., drop = TRUE) {
     df <- data.frame(x@.Data)
     names(df) <- names(x) 
     df <- df[i, j, drop = FALSE]
-    if (drop && is_isoval(df[,,drop = TRUE]))
+    if (drop && is.isoval(df[,,drop = TRUE]))
         return (df[,,drop = TRUE])
     else
         new(class(x), df)

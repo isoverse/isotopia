@@ -103,25 +103,25 @@ test_that("Testing that isotope systems' (ratios, abundances, etc.) validity con
     
 })
 
-test_that("Testing that object type check functions (is_x()) are working", {
-    # is_ratio
-    expect_true(is_ratio(ratio(0.1)))
-    expect_true(is_ratio(ratio(0.1, 0.2)))
-    expect_false(is_ratio(abundance(0.1)))
+test_that("Testing that object type check functions (is.x()) are working", {
+    # is.ratio
+    expect_true(is.ratio(ratio(0.1)))
+    expect_true(is.ratio(ratio(0.1, 0.2)))
+    expect_false(is.ratio(abundance(0.1)))
     
-    # is_abundance
-    expect_true(is_abundance(abundance(0.1)))
-    expect_true(is_abundance(abundance(0.1, 0.2)))
-    expect_false(is_abundance(ratio(0.1)))
+    # is.abundance
+    expect_true(is.abundance(abundance(0.1)))
+    expect_true(is.abundance(abundance(0.1, 0.2)))
+    expect_false(is.abundance(ratio(0.1)))
     
-    # is_intensity
-    expect_true(is_intensity(intensity(100)))
-    expect_true(is_intensity(intensity(100, 400)))
-    expect_false(is_intensity(abundance(0.1)))
+    # is.intensity
+    expect_true(is.intensity(intensity(100)))
+    expect_true(is.intensity(intensity(100, 400)))
+    expect_false(is.intensity(abundance(0.1)))
 
-    # is_isosys vs is_isoval
-    expect_true(is_isoval(ratio(0.1)))
-    expect_false(is_isoval(ratio(0.1, 0.2)))
-    expect_false(is_isosys(ratio(0.1)))
-    expect_true(is_isosys(ratio(0.1, 0.2)))
+    # is.isosys vs is.isoval
+    expect_true(is.isoval(ratio(0.1)))
+    expect_false(is.isoval(ratio(0.1, 0.2)))
+    expect_false(is.isosys(ratio(0.1)))
+    expect_true(is.isosys(ratio(0.1, 0.2)))
 })
