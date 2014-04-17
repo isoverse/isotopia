@@ -114,7 +114,10 @@ setValidity(
 setValidity(
     "Isosys",
     function(object) {
-        isovals <- object[which(sapply(object, is_isoval))]
+        # IMPORTANT note: in the validation functions, it is critical to select the data with object@.Data rather
+        # than via [] because otherwise there will be an endless loop (node stack overflow) when the [] function
+        # tries to select a subset of an Isosys data frame and validate it
+        isovals <- object@.Data[which(sapply(object@.Data, is_isoval))]
         
         if (!all((val <- sapply(isovals, class)) == class(isovals[[1]])))
             return(paste("Not all isotopes in the system have the same data type, found:", paste(val, collapse = ", ")))
@@ -134,7 +137,10 @@ setValidity(
 setValidity(
     "Intensities",
     function(object) {
-        isovals <- object[which(sapply(object, is_isoval))]
+        # IMPORTANT note: in the validation functions, it is critical to select the data with object@.Data rather
+        # than via [] because otherwise there will be an endless loop (node stack overflow) when the [] function
+        # tries to select a subset of an Isosys data frame and validate it
+        isovals <- object@.Data[which(sapply(object@.Data, is_isoval))]
         isonames <- unlist(sapply(isovals, function(i) if(nchar(i@isoname) > 0) i@isoname))
         majors <- unlist(sapply(isovals, function(i) if (nchar(i@major) > 0) i@major))
         if (!is.null(majors) && ! majors[1] %in% isonames )

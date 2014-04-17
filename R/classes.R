@@ -10,6 +10,12 @@ setMethod("initialize", "Isoval", function(.Object, ...){
     callNextMethod(.Object, ...)
 })
 
+# Enable regular subsetting of all isotope values (while maintaining their status as an isotope value class)
+setMethod("[", "Isoval", function(x, i) { 
+    x@.Data <- x@.Data[i]
+    x 
+})
+
 # Abundance
 setClass("Abundance", contains="Isoval")
 
@@ -31,13 +37,31 @@ setClass("Ratios", contains = "Isosys")
 setClass("Deltas", contains = "Isosys")
 setClass("Intensities", contains = "Isosys")
 
+# Enable regular subsetting of an Isosys class (as if it was a regulr data.frame) --> also enables proper subsetting with subset
+setMethod("[", "Isosys", function(x, i, j, ..., drop = TRUE) { 
+    if (nargs() == 2 || (nargs() == 3 && !missing(drop))) { # single paramter provided --> use as column marker like in regular data frame
+        j <- if (missing(i)) 1:length(x) else i
+        i <- 1:nrow(x)
+    } else { # both i and j
+        j <- if (missing(j)) 1:length(x) else j
+        i <- if (missing(i)) 1:nrow(x) else i
+    }
+    if (is.character(j))
+        j <- match(j, names(x))
+    df <- data.frame(x@.Data)
+    names(df) <- names(x) 
+    df <- df[i, j, drop = FALSE]
+    if (drop && is_isoval(df[,,drop = TRUE]))
+        return (df[,,drop = TRUE])
+    else
+        new(class(x), df)
+})
 
-# FIXME
-# FIXME
-# FIXME
-# implement subset and [[ ]] for isosys objects? so that they columns remain Isoval and the
-# data frame remains Isosys
-# --> I think this could be done simply by modifying the [] of Isoval and hopefully
-# this will also take care of maintaning the Ratio object if the whole data frame is subset
-# but that I will have to find out
-# something like this: setMethod("[", "Ratio", function(x) { print("hello"); callNextMethod(x) })
+# enable conversion back to a normal data frame
+# this can also be done simply by running data.frame(x)
+as.data.frame.Isosys <- function(x, ..., stringsAsFactors = default.stringsAsFactors()){
+    df <- data.frame(x@.Data, stringsAsFactors = stringsAsFactors)
+    names(df) <- names(x) 
+    df
+}
+    

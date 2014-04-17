@@ -1,8 +1,6 @@
 #' @include classes.R
 NULL
 
-# FIXME: convert to to_ratio, to_delta, etc.
-
 #' Convert to isotope ratio
 #' 
 #' \code{to_ratio} converts another isotopic data type to a ratio.
@@ -14,8 +12,18 @@ NULL
 #' @export
 #' @genericMethods
 setGeneric("to_ratio", function(iso) standardGeneric("to_ratio"))
-setMethod("to_ratio", "ANY", function(iso) stop("can't do that"))
+setMethod("to_ratio", "ANY", function(iso) stop(sprintf("Don't know how to convert object of class %s to isotope ratio.", class(iso)[1])))
 setMethod("to_ratio", "Ratio", function(iso) iso)
+setMethod("to_ratio", "Ratios", function(iso) iso)
+setMethod("to_ratio", "Abundance", function(iso) {
+    ratio(iso@.Data / (1 + iso@.Data), major = iso@major)
+})
+setMethod("to_ratio", "Abundances", function(iso) {
+    iso_is <- which(sapply(iso, is_isoval))
+    iso[iso_is] <- iso[iso_is] / (1 + rowSums(iso[iso_is]))
+    iso
+})
+
 setMethod("to_ratio", "data.frame", function(iso) {
     stop("not implemented yet")
     # implement that it basically takes all parts of the df. that are Isoval and tries to make an isosys
