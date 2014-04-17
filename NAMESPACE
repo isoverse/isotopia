@@ -1,4 +1,6 @@
+S3method(as.data.frame,Isosys)
 export(abundance)
+export(as.abundance)
 export(as.ratio)
 export(intensity)
 export(is.abundance)

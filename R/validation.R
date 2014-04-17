@@ -117,7 +117,9 @@ setValidity(
         # IMPORTANT note: in the validation functions, it is critical to select the data with object@.Data rather
         # than via [] because otherwise there will be an endless loop (node stack overflow) when the [] function
         # tries to select a subset of an Isosys data frame and validate it
-        isovals <- object@.Data[which(sapply(object@.Data, is.isoval))]
+        if (length(iso_is <- which(sapply(object@.Data, is.isoval))) == 0)
+            return("There are no isotope values in this isotope system.")
+        isovals <- object@.Data[iso_is]
         
         if (!all((val <- sapply(isovals, class)) == class(isovals[[1]])))
             return(paste("Not all isotopes in the system have the same data type, found:", paste(val, collapse = ", ")))

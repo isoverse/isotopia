@@ -32,10 +32,20 @@ setClass("Intensity", representation(unit = "character"), contains = "Isoval",
 
 # Isotope Systems
 setClass("Isosys", contains = "data.frame")
-setClass("Abundances", contains = "Isosys")
-setClass("Ratios", contains = "Isosys")
-setClass("Deltas", contains = "Isosys")
-setClass("Intensities", contains = "Isosys")
+setMethod("initialize", "Isosys", function(.Object, ...){
+    # generate data frame and with the correct column names
+    params <- list(...)
+    
+    # update isovalue column names with the names stored in the isotope value objects
+    if (length(params) > 0 && length(iso_idx <- which(sapply(params[[1]], is.isoval))) > 0) {
+        names(params[[1]])[iso_idx] <- make.unique(
+            sapply(params[[1]][iso_idx], function(i) {
+                if (nchar(i@isoname) == 0) 'iso' else i@isoname
+            }, simplify = TRUE))
+    }
+    
+    do.call(callNextMethod, c(list(.Object), params))
+})
 
 # Enable regular subsetting of an Isosys class (as if it was a regulr data.frame) --> also enables proper subsetting with subset
 setMethod("[", "Isosys", function(x, i, j, ..., drop = TRUE) { 
@@ -48,17 +58,30 @@ setMethod("[", "Isosys", function(x, i, j, ..., drop = TRUE) {
     }
     if (is.character(j))
         j <- match(j, names(x))
+    
+    #message("selection i: ", paste(i, collapse=", "), " and j: ", paste(j, collapse=", "))
+    
     df <- data.frame(x@.Data)
     names(df) <- names(x) 
     df <- df[i, j, drop = FALSE]
-    if (drop && is.isoval(df[,,drop = TRUE]))
+    if (drop && ncol(df) == 1) {
         return (df[,,drop = TRUE])
-    else
-        new(class(x), df)
+    } else {
+        if (!any(sapply(df, is.isoval)))
+            return(df) # no longer any isotope values in the subset data frame
+        else 
+            return(new(class(x), df)) # return the Isosys object
+    }
 })
 
-# enable conversion back to a normal data frame
-# this can also be done simply by running data.frame(x)
+setClass("Abundances", contains = "Isosys")
+setClass("Ratios", contains = "Isosys")
+setClass("Deltas", contains = "Isosys")
+setClass("Intensities", contains = "Isosys")
+
+#' enable conversion back to a normal data frame
+#' this can also be done simply by running data.frame(x)
+#' @export
 as.data.frame.Isosys <- function(x, ..., stringsAsFactors = default.stringsAsFactors()){
     df <- data.frame(x@.Data, stringsAsFactors = stringsAsFactors)
     names(df) <- names(x) 

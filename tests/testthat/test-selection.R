@@ -37,6 +37,8 @@ test_that("Testing that isotope data types can be properly subselected", {
         rs$test <- 'other column'
         rs
     }, "Ratios")
+    expect_true(is.isosys(rs["33S", drop = F]))
+    expect_false(is.isosys(rs["test", drop = F])) # reduced to data frame
     expect_is({
         rs$`36S` <- ratio(c(0.2, 0.3))
         rs
@@ -51,6 +53,6 @@ test_that("Testing that isotope data types can be properly subselected", {
     }, "Not all isotopes in the system have the same data type")
     
     # converting data types
-    expect_is(as.data.frame(rs), "data.frame")
-    expect_is(data.frame(rs), "data.frame")
+    expect_false(is.iso(as.data.frame(rs)))
+    expect_false(is.iso(data.frame(rs)))
 })

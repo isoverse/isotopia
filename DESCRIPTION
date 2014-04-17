@@ -15,6 +15,7 @@ Collate:
     'classes.R'
     'conversion.R'
     'update.R'
+    'initialization.R'
     'isotopia.R'
     'show.R'
     'validation.R'
