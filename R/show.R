@@ -2,11 +2,21 @@
 NULL
 
 setMethod("show", "Isoval", function(object) {
-    cat("An isotope value object of type '", class(object), " value': ", label(object), "\n", sep="")
-    print(object@.Data)
+    validObject(object)
+    text <- if(is.weighted(object)) "A weighted isotope" else "An isotope"
+    cat(text, " value object of type '", class(object), " value': ", label(object), "\n", sep="")
+    if (is.weighted(object)) {
+        print(data.frame(
+                value = object@.Data, 
+                weight = object@weight,
+                weighted_value = object@.Data * object@weight))
+    } else {
+        print(as.value(object))
+    }
 })
 
 setMethod("show", "Isosys", function(object) {
+    validObject(object)
     cat("An isotope system object of type '", class(object), "' with ", label(object), "\n", sep="")
     print(as.data.frame(object))
 })

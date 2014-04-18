@@ -3,14 +3,17 @@ context("Data Selection")
 test_that("Testing that isotope data types can be properly subselected", {
     # subselection of single values (Isoval)
     expect_is(r <- ratio((1:5)*0.1)[c(1,2,5)], "Ratio")
-    expect_equal(as.numeric(r), c(0.1, 0.2, 0.5))
+    expect_equal(as.value(r), c(0.1, 0.2, 0.5))
+    expect_is(r <- ratio((1:5)*0.1, weight = 1:5)[c(1,2,5)], "Ratio")
+    expect_equal(as.weight(r), c(1,2,5))
+    
     
     # subselection of data.frames (Isosys)
     expect_is(rs <- ratio(`33S` = c(0.1, 0.2), `34S` = c(0.2, 0.3), major = "32S"), "Ratios")
     
     # column selections
     expect_is(rs_sub1 <- rs["33S"], "Ratio") # drop level
-    expect_equal(as.numeric(rs_sub1), c(0.1, 0.2))
+    expect_equal(as.value(rs_sub1), c(0.1, 0.2))
     expect_identical(rs["33S"], rs[1]) # name and index selection
     expect_identical(rs["33S"], rs$`33S`)
     expect_is(rs_sub2 <- rs["33S", drop = F], "Ratios") # keep as data frame
@@ -26,7 +29,7 @@ test_that("Testing that isotope data types can be properly subselected", {
     expect_equal(subset(rs, `33S` == 0.1), rs[1,]) # testing subset
     
     # row and column selection
-    expect_equal(as.numeric(rs[2,"34S"]), 0.3) 
+    expect_equal(as.value(rs[2,"34S"]), 0.3) 
     expect_identical(rs[,"34S"], rs[1:2,"34S"]) 
     expect_identical(rs[2,"34S"], rs[2,2]) 
     expect_false(identical(rs[,"34S"], rs[,"34S", drop = FALSE])) # dropping by defaul

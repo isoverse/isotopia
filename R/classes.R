@@ -2,17 +2,25 @@
 
 # Isotope value as the basis for any ratio, abundance, delta value or ion count
 setClass("Isoval", representation(isoname = "character", major = "character", compound = "character", weight = "numeric"), contains = "numeric", 
-         prototype = prototype(numeric(), isoname = "", major = "", compound = "", weight = NA_real_))
+         prototype = prototype(numeric(), isoname = "", major = "", compound = "", weight = numeric()))
 setMethod("initialize", "Isoval", function(.Object, ...){
     if (nargs() > 1 && is(..1, "Isoval"))
         stop("Cannot initialize an isotope value with another isotope value.\n",
              " To convert between isotope data types, please use as.ratio(), as.abundance(), etc. instead")
-    callNextMethod(.Object, ...)
+    obj <- callNextMethod(.Object, ...)
+    
+    # initialize with weights = 1 if not specified
+    if (length(obj@weight) == 0) 
+        obj@weight <- rep(1, length(obj@.Data))
+    
+    obj
 })
 
 # Enable regular subsetting of all isotope values (while maintaining their status as an isotope value class)
 setMethod("[", "Isoval", function(x, i) { 
     x@.Data <- x@.Data[i]
+    if (!identical(x@weight, NA_real_))
+        x@weight <- x@weight[i]
     x 
 })
 

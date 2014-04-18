@@ -1,4 +1,4 @@
-#' @include update.R
+#' @include attribs.R
 #' @include conversion.R
 NULL
 
@@ -10,8 +10,10 @@ NULL
 #' @param ... - numeric vectors (can be named) to turn into isotope ratio objects
 #' @param major - name of the major isotope in the single ratio or isotope system [optional]
 #' @param compound - name of the compound the isotopic values belong to [optional]
-#' @param weight - weight the isotope value (mass, concentration, etc.) for easy mass balance calculations [optional]
-#' In addition to reinitializing existing values, this can also be achieved with the \code{\link{weight}} function
+#' @param weight - weight the isotope value (with a mass, concentration, etc.) for easy mass balance calculations.
+#' The default value is 1, i.e. an unweighted isotope value.
+#' If specified, \code{weight} must be a single value or a numeric vector of the same size as the data values. 
+#' The weight of an isotope value obejct can be retrieved and (re)set with the \code{\link{weight}} function.
 #' @family isotope data types
 #' @export
 #' @examples
@@ -19,7 +21,7 @@ NULL
 #' ratio(c(0.1, 0.2, 0.3)) # multiple values
 #' ratio(`13C` = c(0.1, 0.2, 0.3)) # named ratio
 #' ratio(`33S` = c(0.1, 0.2, 0.3), `34S` = c(0.2, 0.4, 0.6), major = "32S") # isotope system
-ratio <- function(..., major = "", compound = "", weight = NA_real_, single_as_df = FALSE) {
+ratio <- function(..., major = "", compound = "", weight = numeric(), single_as_df = FALSE) {
     iso("Ratios", ..., attribs = list(major = major, compound = compound, weight = weight), single_as_df = single_as_df)
 }
 
@@ -35,7 +37,7 @@ ratio <- function(..., major = "", compound = "", weight = NA_real_, single_as_d
 #' @param compound - name of the compound the isotopic values belong to [optional]
 #' @family isotope data types
 #' @export
-abundance <- function(..., major = "", compound = "", weight = NA_real_, single_as_df = FALSE) {
+abundance <- function(..., major = "", compound = "", weight = numeric(), single_as_df = FALSE) {
     iso("Abundances", ..., attribs = list(major = major, compound = compound, weight = weight), single_as_df = single_as_df)
 }
 

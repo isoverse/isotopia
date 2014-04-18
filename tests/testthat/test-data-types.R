@@ -10,8 +10,19 @@ test_that("Testing that basic single data types' (ratio, abundance, delta, etc.)
     expect_error(ratio(-0.2), "cannot be negative")
     expect_is(ratio(c(0.1, 0.2, 0.3)), "Ratio")
     expect_error(ratio(`12C` = 0.1, major = "12C"), "isotope ratios cannot be defined for the same isotope as minor and major isotope")
-    expect_error(ratio(1:5, weights = 2:3), "not same number of measures and weights") # FIXME: continue here
     
+    # testing weights
+    expect_output(ratio(1), "An isotope value .*")
+    expect_output(ratio(1, weight = 1), "An isotope value .*")
+    expect_output(ratio(1, weight = 2), "A weighted isotope value .*")
+    expect_error(ratio(1:5, weight = 2:3), "Not the same number of data values and weights") 
+    expect_error(weight(ratio(1:5), 2:3), "Not the same number of data values and weights") 
+    expect_equal(ratio(1:5, weight = 1:5)@weight, 1.0:5) # check weight
+    expect_identical(weight(ratio(1:5), 0.2), ratio(1:5, weight = 0.2))  # set weight
+    expect_equal(as.weight(ratio(1:5, weight = 0.2)), rep(0.2, 5)) # retrieve weight
+    expect_equal(as.weight(ratio(1:5)), rep(1, 5)) # retrieve weight
+    expect_equal(as.weighted_value(ratio(1:5, weight = 2)), 2*1:5) # retrieve weight
+
     # testing labels
     expect_equal(name(ratio(`12C` = 0.2, major = "13C")), "R 12C/13C")
     expect_equal(label(ratio(`13C` = 1:5, compound = "CO2", major = "12C")), "CO2 R 13C/12C")
@@ -27,7 +38,6 @@ test_that("Testing that basic single data types' (ratio, abundance, delta, etc.)
     expect_error(ratio(abundance(0.1)), "Cannot initialize an isotope value with another isotope value")
     expect_is(ratio(ratio(0.1)), "Ratio")
 
-    
     # update name, major and compound
     expect_equal({
         r <- ratio(0.1)
@@ -67,6 +77,13 @@ test_that("Testing that basic single data types' (ratio, abundance, delta, etc.)
     }, "changing the compound name")
     expect_equal(r2@compound, "DIC")
     
+    # overwrite weight (wight warning)
+    expect_warning({
+        r <- ratio(`13C` = 0.1*(1:5), weight = 1:5)
+        r2 <- weight(r, 3:7)
+    }, "changing the weight .* differences: '1, 2, 6, 7'")
+    expect_equal(as.weight(r2), 3:7)
+    
     # change unit on intensity (with warning)
     expect_warning({
         i <- intensity(`13C` = 0.1, major = "12C", unit = "mV")
@@ -88,8 +105,16 @@ test_that("Testing that isotope systems' (ratios, abundances, etc.) validity con
     expect_false(is.data.frame(ratio(0.1)))
     expect_true(is.data.frame(ratio(0.1, single_as_df = T)))
     
-    # testing weights
+    # testing weights in isotope system
     expect_error(ratio(ratio(1:5, weight = 1:5), ratio(1:5, weight = 6:10)), "the weights of all isotope value objects in an isotope system must be the same")
+    expect_equal(as.weight(ratio(1, 2, weight = 3)$iso), 3)
+    expect_is(rs <- ratio(a = 1:5, b = 6:10, weight = 3:7), "Ratios")
+    expect_equal(as.weight(rs$a), 3:7) # single value
+    expect_equal(as.weighted_value(rs$a), 1:5*3:7) # convert single value
+    expect_equal(as.weight(rs$b), 3:7)
+    expect_equal(as.weighted_value(rs$b), 6:10*3:7)
+    expect_equal(as.weight(rs), data.frame(a=3:7, b=3:7)) # whole data frame
+    expect_equal(as.weighted_value(rs), data.frame(a=1:5*3:7, b=6:10*3:7)) # whole data frame
     
     # specific test of different isotope systems
     expect_is(ratio(0.2, 0.5), "Ratios")
@@ -167,4 +192,9 @@ test_that("Testing that object type check functions (is.x()) are working", {
     expect_false(is.isoval(ratio(0.1, 0.2)))
     expect_false(is.isosys(ratio(0.1)))
     expect_true(is.isosys(ratio(0.1, 0.2)))
+    
+    # is weighted
+    expect_false(is.weighted(ratio(0.2)))
+    expect_false(is.weighted(ratio(0.2, weight = 1)))
+    expect_true(is.weighted(ratio(c(0.1, 0.2), weight = c(1,2))))
 })

@@ -28,6 +28,18 @@ test_that("Testing proper response to math operators", {
     expect_error(rs / is, "Division .* not meaningful")
     
     # operations that are permitted and implemented ===========
+    # combining intensities with same definition
+    expect_error(intensity(a = 100) + intensity(b = 1000), "trying to combine two intensity objects that don't have matching attributes")
+    expect_error(intensity(1:5) + intensity(1000), "trying to combine two intensity objects that don't have matching lengths")
+    expect_is(ci <- intensity(100) + intensity(1000), "Intensity")
+    expect_is(ci <- intensity(a = 100, major = "b", unit = "mV") + intensity(a = 1000, major = "b", unit = "mV"), "Intensity")
+    expect_equal(as.value(ci), 1100.)
+    expect_equal(ci@isoname, "a")
+    expect_equal(ci@major, "b")
+    expect_equal(ci@unit, "mV")
+    expect_is(ci <- intensity(1000) - intensity(500), "Intensity")
+    expect_equal(as.value(ci), 500.)
+    
     # converting intensity to ratio 
     expect_error(intensity(100, unit = "mV") / intensity(1000), "cannot generate an isotope ratio from two intensity objects with differing units")
     expect_error(intensity(100, unit = "mV") / intensity(1000, unit = "V"), "cannot generate an isotope ratio from two intensity objects with differing units")
@@ -36,4 +48,27 @@ test_that("Testing proper response to math operators", {
     expect_equal(as.numeric(r), 1:5/5:9)
     expect_equal(r@isoname, "13C")
     expect_equal(r@major, "12C")
+    
+    # mixing abundances
+    expect_error(abundance(a = 0.2) + abundance(b = 0.3), "trying to mix two isotope objects that don't have matching attributes")
+    expect_error(abundance(c(0.1, 0.2)) + abundance(0.3), "trying to mix two isotope objects that don't have matching lengths")
+    expect_is(amix <- abundance(0.2) + abundance(0.4), "Abundance")
+    expect_equal(as.value(amix), 0.3)
+    expect_equal(as.weight(amix), 2)
+    expect_equal(as.weighted_value(amix), 0.6)
+    expect_is({
+        amix <- abundance(`13C` = 0.2, weight = 2, compound = "a") + 
+            abundance(`13C` = 0.5, compound = "b") + 
+            abundance(`13C` = 0.3, weight = 3, compound = "c")}, "Abundance")
+    expect_equal(label(amix), "a+b+c F 13C") # compound name propagation
+    expect_equal(as.value(amix), (0.2*2 + 0.5 + 0.3*3) / (2+1+3)) # formula test
+    expect_equal(as.weight(amix), (2+1+3)) # formula test
+    expect_equal(as.weighted_value(amix), (0.2*2 + 0.5 + 0.3*3)) # formula test
+    
+    # mixing ratios
+    expect_error(ratio(a = 0.2) + ratio(b = 0.3), "trying to mix two isotope objects that don't have matching attributes")
+    expect_error(ratio(c(0.1, 0.2)) + ratio(0.3), "trying to mix two isotope objects that don't have matching lengths")
+    expect_is(amix <- ratio(0.2) + ratio(0.4), "Ratio")
+    expect_error(ratio(0.2, 0.3) + ratio(0.3, 0.4), "this really needs to be implemented") # FIXME
+    
 })

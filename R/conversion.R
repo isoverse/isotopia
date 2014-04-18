@@ -18,10 +18,9 @@ convert_isosys <- function(iso, class_isosys, conv_fun) {
     
     # pull out just the isotope version
     iso_idx <- which(sapply(iso, is.isoval))
-    df <- as.data.frame(iso[iso_idx], stringsAsFactors = F)
     
     # converted isovals
-    values <- do.call(conv_fun, list(df))
+    values <- do.call(conv_fun, list(df = iso[iso_idx, drop = F]))
     
     # create new object
     rs <- new(class_isosys, cbind(values, iso[-iso_idx, drop = FALSE])) # keep additional data around
@@ -31,86 +30,13 @@ convert_isosys <- function(iso, class_isosys, conv_fun) {
     rs[names(iso), drop = F]
 }
  
-#' generic function to recast an isotope value object
-#' 
-#' This is strictly an internal function to facilitate recasting 
-#' converted data objects. It transfers all relevant slot
-#' information and adds extra attributes as passed in
-#' 
-#' @param init_fun - initialization function
-#' @param iso - isotope value object to be recast
-#' @param attribs - list of attributes to overwrite
-#' @note perhaps make this one faster rather than so dynamic
-recast_isoval <- function(iso, init_fun, attribs = list()) {
-    if (!is.isoval(iso))
-        stop("Can't recast an object that isn't an isotopic value, class: ", class(iso))
-    
-    # find arguments of the init function and look for slots to fill with
-    args <- names(formals(init_fun)) 
-    args <- args[! args %in% c("...", "single_as_df")]
-    slots <- lapply(
-        setNames(as.list(args), args), 
-        function(i) if (i %in% slotNames(iso)) slot(iso, i) else NULL) # find matching slot values
-    slots[sapply(slots, is.null)] <- NULL # remove slots that were not found
-    
-    # add value and name if designated
-    value <- list(as.numeric(iso))
-    if (nchar(iso@isoname) > 0)
-        names(value) <- iso@isoname
-    
-    # combine all attributes and call init function
-    attribs <- modifyList(c(value, slots), attribs)
-    do.call(init_fun, attribs)
-}
-
 # small function that informs about conversion errors
 conversion_error <- function(from, to) {
     stop(sprintf("Don't know how to convert object of class %s to %s. ", class(from)[1], to),
          if (is(to, "numeric")) "Please us the appropriate functions - ratio(), abundance(), delta(), etc. - to initialize new isotope objects.")
 }
 
-# definition of basic conversion, generics and identity conversions ===================================
-
-#' Convert isotope object to primitive
-#' 
-#' This function converts an isotope object (single value or isotope system) to 
-#' its primitive data value(s).  
-#' 
-#' @return In the case of a single isotope object (Isoval), returns the numeric
-#' vector of raw values stored in the object. In the case of an isotope system (Isosys),
-#' returns the data frame underlying the object with all its isotope value
-#' objects also replaced with their numeric raw values. To just get the data
-#' frame but keep the isotope values intact, use \code{\link{as.data.frame}} instead.
-#' @seealso \code{\link{as.data.frame}}, \code{\link[base]{as.data.frame}} (base method)
-#' @family data type conversions
-#' @export
-as.primitive <- function(x) {
-    if (is.isoval(x)) {
-        x <- x@.Data
-    } else if (is.isosys(x)) {
-        x <- as.data.frame(x)
-        for (i in 1:ncol(x)) {
-            if (is.isoval(x[[i]]))
-                x[[i]] <- x[[i]]@.Data
-        }
-    } 
-    return(x)
-}
-
-#' Convert isotope system to a data frame.
-#' 
-#' This function returns the underlying data frame of an isotope system. The
-#' individual columns that hold isotope values keep their status as isotope
-#' value objects. 
-#' @seealso \code{\link[base]{as.data.frame}}
-#' @name as.data.frame
-#' @export
-as.data.frame.Isosys <- function(x, ..., stringsAsFactors = default.stringsAsFactors()){
-    df <- data.frame(x@.Data, stringsAsFactors = stringsAsFactors)
-    names(df) <- names(x) 
-    df
-}
-
+# definition of generics and identity conversions ===================================
 
 #' Convert to isotope ratio
 #' 
@@ -164,10 +90,13 @@ setMethod("as.abundance", "Ratios", function(iso) {
     convert_isosys(iso, "Abundances", 
                    function(df) {
                        # convert ratio to abundance
-                       rs <- rowSums(as.primitive(df))
+                       rs <- rowSums(as.value(df))
                        lapply(df, function(r) {
-                           r@.Data <- r@.Data / (1 + rs)
-                           recast_isoval(r, "abundance")
+                           r@.Data <- r@.Data / (1 + rs) # ratio to abundance
+                           attr(r, "class") <- attributes(new("Abundance"))$class
+                           validObject(r)
+                           r
+                           #recast_isoval(r, "abundance")
                        })
                    })
 })
@@ -179,12 +108,13 @@ setMethod("as.ratio", "Abundances", function(iso) {
     convert_isosys(iso, "Ratios", 
         function(df) {
             # convert abundance to ratio
-            abs <- rowSums(as.primitive(df))
+            abs <- rowSums(as.value(df))
             lapply(df, function(ab) {
-                ab@.Data <- ab@.Data / (1 - abs)
-                recast_isoval(ab, "ratio")
+                ab@.Data <- ab@.Data / (1 - abs) # abundance to ratio
+                attr(ab, "class") <- attributes(new("Ratio"))$class
+                validObject(ab)
+                ab
             })
-            #lapply(df / (1 - rowSums(df)), recast_isoval, "ratio")
         })
 })
 
@@ -201,6 +131,8 @@ setMethod("as.ratio", "Deltas", function(iso) {
 
 setMethod("as.ratio", "Intensities", function(iso) {
     fun <- function(df) {
+        df <- as.data.frame(df) # will be manipulating the isotope objects inside
+        
         # find major isotope in system
         major <- sapply(df, function(i) {
             if (is.isoval(i) && nchar(i@isoname) > 0)
@@ -217,9 +149,7 @@ setMethod("as.ratio", "Intensities", function(iso) {
         # convert intensities to ratios
         major_i <- df[[which(major)]]
         df[[which(major)]]@isoname <- ".MAJORISOTOPE" # will be discarded later on
-        lapply(df, function(i) {
-            recast_isoval(i / major_i, "ratio")
-        })
+        lapply(df, function(i) i/major_i) # intensity to ratio defined by the / operator for intensities
     }
     
     con_val <- convert_isosys(iso, "Ratios", fun)

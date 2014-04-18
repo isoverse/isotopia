@@ -1,22 +1,12 @@
 #' @include classes.R
 NULL
 
-#' Check for isotope value objects
+#' Checks for isotope value objects
 #' 
 #' Checks for different kinds of isotope value objects. All checks recognize
 #' both the vector (single isotope value) and the data.frame (isotope system) 
 #' version of an isotope value object. \code{is.isosys(obj)} can be used to
 #' make the distinction between the two.
-#' 
-#' @note Isotope value objects that are subset or extended loose their identification
-#' as isotope value objects and will no longer be recognized as such by these functions.
-#' For example, a \code{r <- \link{ratio}(x)} object that is subset with \code{r <- r[i]}
-#' or extended with \code{r <- c(r, y)} looses its identification as a Ratio. The same
-#' is true for an isotope system \code{sys <- \link{ratio}(x, y)} that is subset with
-#' \code{sys <- sys[i, j]} or \code{\link{subset}} or extended with \code{\link{rbind}}.
-#' Hopefully, this will be remedied in future versions. For now, modification requires
-#' recasting, i.e. rerunning, for example, the \code{\link{ratio}} function on the modified
-#' isotope values.
 #' 
 #' @details
 #' \code{is.iso} checks whether the object is an isotope value object of any kind. 
@@ -75,6 +65,24 @@ is.delta <- function(obj) inherits(obj, "Delta") || inherits(obj, "Deltas")
 #' @export
 is.intensity <- function(obj) inherits(obj, "Intensity") || inherits(obj, "Intensities")
 
+#' @details
+#' \code{is.weighted} checks if an isotope object is weighted. An object
+#' counts as weighted if any of the weights associated with the data values
+#' is != 1, that means only objects whose weights are ALL 1 is considered
+#' unweighted.
+#' 
+#' @usage
+#' \code{is.weighted(iso)}
+#' @examples
+#' is.weighted(ratio(0.2)) # returns FALSE
+#' is.weighted(ratio(0.2, weight = 1)) # returns FALSE
+#' is.weighted(ratio(c(0.1, 0.2), weight = c(1,2))) # returns TRUE
+#' @rdname is.iso
+#' @export
+#' @genericMethods
+setGeneric("is.weighted", function(iso) standardGeneric("is.weighted"))
+setMethod("is.weighted", signature("Isoval"), function(iso) any(iso@weight != 1))
+
 # =====================================
 # Built-in object validity checks 
 # Triggered automatically when new instance is created
@@ -84,6 +92,10 @@ setValidity(
     "Isoval",
     function(object) {             
         if (any(is.na(object))) return('NA is not a valid isotope data type')
+        
+        if (length(object@weight) > 0 && length(object@weight) != length(object@.Data))
+             return(sprintf("Not the same number of data values and weights. Found %s data values and %s weights. ", length(object@.Data), length(object@weight)))
+         
         return(TRUE)
     })
 
@@ -137,9 +149,8 @@ setValidity(
             return(paste("If specified, the compound name of all isotope value objects in an isotope system must be the same.",
                          "Found:", paste(compounds, collapse=", ")))
         
-        weights <- lapply(isovals, function(i) if(!is.na(i@weight)[1]) i@weight)
-        weights[sapply(weights, is.null)] <- NULL
-        if (length(weights) > 0 && !all(sapply(weights, function(i) all(i == weights[[1]]))))
+        weights <- lapply(isovals, as.weight)
+        if (length(weights) > 0 && any(sapply(weights, function(i) any(i != weights[[1]]))))
             return(paste("If specified, the weights of all isotope value objects in an isotope system must be the same."))
         
         return (TRUE)

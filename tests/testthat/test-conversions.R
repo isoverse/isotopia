@@ -17,8 +17,8 @@ test_that("Testing that isotope data type conversations behave correctly", {
     expect_error(as.delta("test"), "Don't know how to convert object of class .* to delta value")
     
     # conversions to primtivie
-    expect_identical(as.primitive(ratio(0.1*(1:5))), 0.1*(1:5))
-    expect_equal(as.primitive(ratio(a = 1:5, b = 6:10)), data.frame(a = 1:5, b = 6:10))
+    expect_identical(as.value(ratio(0.1*(1:5))), 0.1*(1:5))
+    expect_equal(as.value(ratio(a = 1:5, b = 6:10)), data.frame(a = 1:5, b = 6:10))
     
     # conversation from abundance to ratio
     expect_equal(as.ratio(abundance(.4)), ratio(.4/.6)) # convertion of single abundance to ratio
@@ -37,7 +37,7 @@ test_that("Testing that isotope data type conversations behave correctly", {
     # back and forth conversions
     ab <- abundance(x, y)
     expect_equal(as.abundance(as.ratio(ab)), ab)
-    expect_true(all(abs(as.primitive(as.abundance(as.ratio(ab))) - as.primitive(ab)) < 10^(-15))) # test that machine error from back and forth conversion is smaller than 10^-15
+    expect_true(all(abs(as.value(as.abundance(as.ratio(ab))) - as.value(ab)) < 10^(-15))) # test that machine error from back and forth conversion is smaller than 10^-15
     
     # conversion from intensity to ratio and abundace
     expect_error(as.ratio(intensity(100)), "Don't know how to convert object of class Intensity to isotope ratio")
