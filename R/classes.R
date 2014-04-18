@@ -1,8 +1,8 @@
 # Detailed documentation is in the functions that generate instances of these classes.
 
 # Isotope value as the basis for any ratio, abundance, delta value or ion count
-setClass("Isoval", representation(isoname = "character", major = "character"), contains = "numeric", 
-         prototype = prototype(numeric(), isoname = "", major = ""))
+setClass("Isoval", representation(isoname = "character", major = "character", compound = "character", weight = "numeric"), contains = "numeric", 
+         prototype = prototype(numeric(), isoname = "", major = "", compound = "", weight = NA_real_))
 setMethod("initialize", "Isoval", function(.Object, ...){
     if (nargs() > 1 && is(..1, "Isoval"))
         stop("Cannot initialize an isotope value with another isotope value.\n",

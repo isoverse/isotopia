@@ -132,6 +132,15 @@ setValidity(
             return(paste("If specified, the major ion of all isotope value object in an isotope system must be the same.",
                          "Found:", paste(majors, collapse=", ")))
         
+        compounds <- unlist(sapply(isovals, function(i) if (nchar(i@compound) > 0) i@compound))
+        if (!is.null(compounds) && !all(compounds == compounds[1]))
+            return(paste("If specified, the compound name of all isotope value objects in an isotope system must be the same.",
+                         "Found:", paste(compounds, collapse=", ")))
+        
+        weights <- lapply(isovals, function(i) if(!is.na(i@weight)[1]) i@weight)
+        weights[sapply(weights, is.null)] <- NULL
+        if (length(weights) > 0 && !all(sapply(weights, function(i) all(i == weights[[1]]))))
+            return(paste("If specified, the weights of all isotope value objects in an isotope system must be the same."))
         
         return (TRUE)
     })

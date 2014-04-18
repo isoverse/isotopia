@@ -10,7 +10,12 @@ test_that("Testing that basic single data types' (ratio, abundance, delta, etc.)
     expect_error(ratio(-0.2), "cannot be negative")
     expect_is(ratio(c(0.1, 0.2, 0.3)), "Ratio")
     expect_error(ratio(`12C` = 0.1, major = "12C"), "isotope ratios cannot be defined for the same isotope as minor and major isotope")
+    expect_error(ratio(1:5, weights = 2:3), "not same number of measures and weights") # FIXME: continue here
+    
+    # testing labels
     expect_equal(name(ratio(`12C` = 0.2, major = "13C")), "R 12C/13C")
+    expect_equal(label(ratio(`13C` = 1:5, compound = "CO2", major = "12C")), "CO2 R 13C/12C")
+    expect_equal(label(intensity(`13C` = 1:5, compound = "CO2", major = "12C", unit = "mV")), "CO2 13C [mV]")
     
     # testing Abundance data type
     expect_error(abundance(-0.2), "cannot be negative")
@@ -21,22 +26,25 @@ test_that("Testing that basic single data types' (ratio, abundance, delta, etc.)
     # testing attribute updates and reinitialization
     expect_error(ratio(abundance(0.1)), "Cannot initialize an isotope value with another isotope value")
     expect_is(ratio(ratio(0.1)), "Ratio")
+
     
-    # update name and major
+    # update name, major and compound
     expect_equal({
         r <- ratio(0.1)
-        r2 <- ratio(`13C` = r, major = "12C")
+        r2 <- ratio(`13C` = r, major = "12C", compound = "CO2")
         r2@isoname
         }, "13C")
     expect_equal(r2@major, "12C")
+    expect_equal(r2@compound, "CO2")
     
-    # keep name and major
+    # keep name, major and compound
     expect_equal({
-        r <- ratio(`13C` = 0.1, major = "12C")
+        r <- ratio(`13C` = 0.1, major = "12C", compound = "CO2")
         r2 <- ratio(r)
         r2@isoname
         }, "13C")
     expect_equal(r2@major, "12C")
+    expect_equal(r2@compound, "CO2")
     
     # overwrite name (with warning)
     expect_warning({
@@ -51,6 +59,13 @@ test_that("Testing that basic single data types' (ratio, abundance, delta, etc.)
         r2 <- ratio(r, major = "11C")
     }, "changing the major isotope")
     expect_equal(r2@major, "11C")
+    
+    # overwrite compound (with warning)
+    expect_warning({
+        r <- ratio(`13C` = 0.1, major = "12C", compound = "CO2")
+        r2 <- ratio(r, compound = "DIC")
+    }, "changing the compound name")
+    expect_equal(r2@compound, "DIC")
     
     # change unit on intensity (with warning)
     expect_warning({
@@ -73,6 +88,9 @@ test_that("Testing that isotope systems' (ratios, abundances, etc.) validity con
     expect_false(is.data.frame(ratio(0.1)))
     expect_true(is.data.frame(ratio(0.1, single_as_df = T)))
     
+    # testing weights
+    expect_error(ratio(ratio(1:5, weight = 1:5), ratio(1:5, weight = 6:10)), "the weights of all isotope value objects in an isotope system must be the same")
+    
     # specific test of different isotope systems
     expect_is(ratio(0.2, 0.5), "Ratios")
     expect_is(abundance(0.2, 0.5), "Abundances")
@@ -85,13 +103,15 @@ test_that("Testing that isotope systems' (ratios, abundances, etc.) validity con
     expect_is(ratio(ratio(0.2, 0.5)), "Ratios")
     expect_warning({
         rs <- ratio(`33S` = 0.1, `34S` = 0.2, major = "32S")
-        rs2 <- ratio(rs, major = "12C")
+        rs2 <- ratio(rs, major = "12C", compound = "SO4")
     }, "changing the major")
     expect_equal(rs2$`33S`@major, "12C")
     expect_equal(rs2$`34S`@major, "12C")
+    expect_equal(rs2$`33S`@compound, "SO4")
+    expect_equal(rs2$`34S`@compound, "SO4")
     
     # testing compound data frame isotope systems to throw the appropriate errors and warnings
-    expect_is(rs <- ratio(`33S` = c(0.1, 0.2), `34S` = c(0.2, 0.3), major = "32S"), "Ratios")
+    expect_is(rs <- ratio(`33S` = c(0.1, 0.2), `34S` = c(0.2, 0.3), major = "32S", compound = "H2S"), "Ratios")
     expect_error({
         rs2 <- rs
         rs2$c <- abundance(c(0.2, 0.3))
@@ -101,6 +121,10 @@ test_that("Testing that isotope systems' (ratios, abundances, etc.) validity con
         rs$`18O` <- ratio(c(0.2, 0.3), major = "16O")
         ratio(rs)
     }, "major ion of all isotope value object in an isotope system must be the same")
+    expect_error({
+        rs$`18O` <- ratio(c(0.2, 0.3), major = "32S", compound = "SO4")
+        ratio(rs)
+    }, "compound name of all isotope value objects in an isotope system must be the same")
     expect_error({
         is <- intensity(c(0.1, 0.2), unit = "mV", single_as_df = T)
         is$`ion.2` <- intensity(c(0.2, 0.3), unit = "V")

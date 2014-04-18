@@ -66,7 +66,7 @@ recast_isoval <- function(iso, init_fun, attribs = list()) {
 # small function that informs about conversion errors
 conversion_error <- function(from, to) {
     stop(sprintf("Don't know how to convert object of class %s to %s. ", class(from)[1], to),
-         "Please us the approriate functions - ratio(), abundance(), delta(), etc. - to initialize new isotope objects.")
+         if (is(to, "numeric")) "Please us the appropriate functions - ratio(), abundance(), delta(), etc. - to initialize new isotope objects.")
 }
 
 # definition of basic conversion, generics and identity conversions ===================================
@@ -86,12 +86,12 @@ conversion_error <- function(from, to) {
 #' @export
 as.primitive <- function(x) {
     if (is.isoval(x)) {
-        x <- as.numeric(x)
+        x <- x@.Data
     } else if (is.isosys(x)) {
         x <- as.data.frame(x)
         for (i in 1:ncol(x)) {
             if (is.isoval(x[[i]]))
-                x[[i]] <- as.numeric(x[[i]])
+                x[[i]] <- x[[i]]@.Data
         }
     } 
     return(x)
@@ -164,7 +164,11 @@ setMethod("as.abundance", "Ratios", function(iso) {
     convert_isosys(iso, "Abundances", 
                    function(df) {
                        # convert ratio to abundance
-                       lapply(df / (1 + rowSums(df)), recast_isoval, "abundance")
+                       rs <- rowSums(as.primitive(df))
+                       lapply(df, function(r) {
+                           r@.Data <- r@.Data / (1 + rs)
+                           recast_isoval(r, "abundance")
+                       })
                    })
 })
 
@@ -175,7 +179,12 @@ setMethod("as.ratio", "Abundances", function(iso) {
     convert_isosys(iso, "Ratios", 
         function(df) {
             # convert abundance to ratio
-            lapply(df / (1 - rowSums(df)), recast_isoval, "ratio")
+            abs <- rowSums(as.primitive(df))
+            lapply(df, function(ab) {
+                ab@.Data <- ab@.Data / (1 - abs)
+                recast_isoval(ab, "ratio")
+            })
+            #lapply(df / (1 - rowSums(df)), recast_isoval, "ratio")
         })
 })
 
@@ -205,12 +214,12 @@ setMethod("as.ratio", "Intensities", function(iso) {
         else if (s > 1)
             stop("there was more than one isotope identified as the major ion")
         
-        major_i <- which(major)
-        
         # convert intensities to ratios
-        values <- df / as.numeric(df[[major_i]])
-        values[[major_i]]@isoname <- ".MAJORISOTOPE" # will be discarded later on
-        lapply(values, recast_isoval, "ratio")
+        major_i <- df[[which(major)]]
+        df[[which(major)]]@isoname <- ".MAJORISOTOPE" # will be discarded later on
+        lapply(df, function(i) {
+            recast_isoval(i / major_i, "ratio")
+        })
     }
     
     con_val <- convert_isosys(iso, "Ratios", fun)

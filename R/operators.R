@@ -53,7 +53,7 @@ setMethod("/", signature(e1 = "Intensity", e2 = "Intensity"), function(e1, e2) {
         stop(sprintf("cannot generate an isotope ratio from two intensity objects with differing units: '%s', '%s'", e1@unit, e2@unit))
     
     oldopt <- options(warn = 2); on.exit(options(oldopt))  # throw warnings as errors for the calculations
-    value <- e1@.Data / e2@.Data 
-    ratio(setNames(list(value), e1@isoname), major = e2@isoname)
+    e1@.Data <- e1@.Data / e2@.Data 
+    recast_isoval(e1, "ratio", attribs = list(major = e2@isoname))
 })
 

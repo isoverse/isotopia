@@ -50,10 +50,11 @@ setMethod("unit", "Intensity", function(object) object@unit)
 setGeneric("label", function(object) standardGeneric("label"))
 
 setMethod("label", "Isoval", function(object) {
-    if (nchar(unit(object)) > 0)
-        paste0(name(object), " [", unit(object), "]")
-    else
-        name(object)
+    label <- c(
+        if (nchar(object@compound) > 0) object@compound,
+        name(object),
+        if (nchar(unit(object)) > 0) paste0("[", unit(object), "]"))
+    paste(label, collapse=" ")
 })
 
 setMethod("label", "Isosys", function(object) {

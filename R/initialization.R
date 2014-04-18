@@ -9,6 +9,9 @@ NULL
 #' 
 #' @param ... - numeric vectors (can be named) to turn into isotope ratio objects
 #' @param major - name of the major isotope in the single ratio or isotope system [optional]
+#' @param compound - name of the compound the isotopic values belong to [optional]
+#' @param weight - weight the isotope value (mass, concentration, etc.) for easy mass balance calculations [optional]
+#' In addition to reinitializing existing values, this can also be achieved with the \code{\link{weight}} function
 #' @family isotope data types
 #' @export
 #' @examples
@@ -16,8 +19,8 @@ NULL
 #' ratio(c(0.1, 0.2, 0.3)) # multiple values
 #' ratio(`13C` = c(0.1, 0.2, 0.3)) # named ratio
 #' ratio(`33S` = c(0.1, 0.2, 0.3), `34S` = c(0.2, 0.4, 0.6), major = "32S") # isotope system
-ratio <- function(..., major = "", single_as_df = FALSE) {
-    iso("Ratios", ..., attribs = list(major = major), single_as_df = single_as_df)
+ratio <- function(..., major = "", compound = "", weight = NA_real_, single_as_df = FALSE) {
+    iso("Ratios", ..., attribs = list(major = major, compound = compound, weight = weight), single_as_df = single_as_df)
 }
 
 #' Fractional abundance
@@ -29,10 +32,11 @@ ratio <- function(..., major = "", single_as_df = FALSE) {
 #' @param major - name of the major isotope in the isotope system [optional], 
 #' only of importance if converting from abundance to ratio or delta value, 
 #' and want automatic name propagation
+#' @param compound - name of the compound the isotopic values belong to [optional]
 #' @family isotope data types
 #' @export
-abundance <- function(..., major = "", single_as_df = FALSE) {
-    iso("Abundances", ..., attribs = list(major = major), single_as_df = single_as_df)
+abundance <- function(..., major = "", compound = "", weight = NA_real_, single_as_df = FALSE) {
+    iso("Abundances", ..., attribs = list(major = major, compound = compound, weight = weight), single_as_df = single_as_df)
 }
 
 
@@ -47,12 +51,13 @@ delta <- function(x) {
 #' 
 #' @param ... - numeric vectors (can be named) to turn into ion intensity objects
 #' @param major - name of the major isotope in the isotope system [optional], 
+#' @param compound - name of the compound the isotopic values belong to [optional]
 #' @param unit - units of the measurement (e.g. #, V, mV)
 #' @family isotope data types
 #' @export
-intensity <- function(..., major = "", unit = "", single_as_df = FALSE) {
+intensity <- function(..., major = "", compound = "", unit = "", single_as_df = FALSE) {
     iso("Intensities", ..., 
-        attribs = list(major = major, unit = unit), single_as_df = single_as_df)
+        attribs = list(major = major, compound = compound, unit = unit), single_as_df = single_as_df)
 }
 
 #' create an isotope value object (this function is not exported and should
