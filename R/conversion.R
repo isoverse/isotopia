@@ -69,7 +69,48 @@ conversion_error <- function(from, to) {
          "Please us the approriate functions - ratio(), abundance(), delta(), etc. - to initialize new isotope objects.")
 }
 
-# definition of generics and identity conversions ===================================
+# definition of basic conversion, generics and identity conversions ===================================
+
+#' Convert isotope object to primitive
+#' 
+#' This function converts an isotope object (single value or isotope system) to 
+#' its primitive data value(s).  
+#' 
+#' @return In the case of a single isotope object (Isoval), returns the numeric
+#' vector of raw values stored in the object. In the case of an isotope system (Isosys),
+#' returns the data frame underlying the object with all its isotope value
+#' objects also replaced with their numeric raw values. To just get the data
+#' frame but keep the isotope values intact, use \code{\link{as.data.frame}} instead.
+#' @seealso \code{\link{as.data.frame}}, \code{\link[base]{as.data.frame}} (base method)
+#' @family data type conversions
+#' @export
+as.primitive <- function(x) {
+    if (is.isoval(x)) {
+        x <- as.numeric(x)
+    } else if (is.isosys(x)) {
+        x <- as.data.frame(x)
+        for (i in 1:ncol(x)) {
+            if (is.isoval(x[[i]]))
+                x[[i]] <- as.numeric(x[[i]])
+        }
+    } 
+    return(x)
+}
+
+#' Convert isotope system to a data frame.
+#' 
+#' This function returns the underlying data frame of an isotope system. The
+#' individual columns that hold isotope values keep their status as isotope
+#' value objects. 
+#' @seealso \code{\link[base]{as.data.frame}}
+#' @name as.data.frame
+#' @export
+as.data.frame.Isosys <- function(x, ..., stringsAsFactors = default.stringsAsFactors()){
+    df <- data.frame(x@.Data, stringsAsFactors = stringsAsFactors)
+    names(df) <- names(x) 
+    df
+}
+
 
 #' Convert to isotope ratio
 #' 
@@ -83,8 +124,8 @@ conversion_error <- function(from, to) {
 #' @genericMethods
 setGeneric("as.ratio", function(iso) standardGeneric("as.ratio"))
 setMethod("as.ratio", "ANY", function(iso) conversion_error(iso, "isotope ratio"))
-setMethod("as.ratio", "Ratio", identity)
-setMethod("as.ratio", "Ratios", identity)
+setMethod("as.ratio", "Ratio", function(iso) iso)
+setMethod("as.ratio", "Ratios", function(iso) iso)
 
 #' Convert to isotope abundance
 #' 
@@ -98,8 +139,8 @@ setMethod("as.ratio", "Ratios", identity)
 #' @genericMethods
 setGeneric("as.abundance", function(iso) standardGeneric("as.abundance"))
 setMethod("as.abundance", "ANY", function(iso) conversion_error(iso, "isotope abundance"))
-setMethod("as.abundance", "Abundance", identity)
-setMethod("as.abundance", "Abundances", identity)
+setMethod("as.abundance", "Abundance", function(iso) iso)
+setMethod("as.abundance", "Abundances", function(iso) iso)
 
 #' Convert to delta value
 #' 
@@ -113,8 +154,8 @@ setMethod("as.abundance", "Abundances", identity)
 #' @genericMethods
 setGeneric("as.delta", function(iso) standardGeneric("as.delta"))
 setMethod("as.delta", "ANY", function(iso) conversion_error(iso, "delta value"))
-setMethod("as.delta", "Delta", identity)
-setMethod("as.delta", "Deltas", identity)
+setMethod("as.delta", "Delta", function(iso) iso)
+setMethod("as.delta", "Deltas", function(iso) iso)
 
 # ratio conversions ===================================
 
@@ -167,7 +208,7 @@ setMethod("as.ratio", "Intensities", function(iso) {
         major_i <- which(major)
         
         # convert intensities to ratios
-        values <- df / df[[major_i]]
+        values <- df / as.numeric(df[[major_i]])
         values[[major_i]]@isoname <- ".MAJORISOTOPE" # will be discarded later on
         lapply(values, recast_isoval, "ratio")
     }

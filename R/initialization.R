@@ -85,6 +85,10 @@ iso <- function(class_isosys, ..., attribs = list(), single_as_df = FALSE) {
     if (length(values) == 0)
         values <- list(numeric()) 
     
+    # list with single value --> go single
+    if (is(values[[1]], 'list') && length(values[[1]]) == 1L)
+        values <- values[[1]]
+    
     if (length(values) == 1L && (is(values[[1]], 'data.frame') || is(values[[1]], 'list'))) {
         # argument is a single data frame or list
         values <- values[[1]]

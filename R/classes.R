@@ -22,9 +22,13 @@ setClass("Abundance", contains="Isoval")
 # Ratio
 setClass("Ratio", contains = "Isoval")
 
+# Alpha
+setClass("Alpha", representation(compound2 = "character"), contains = "Isoval",
+         prototype = prototype(new("Isoval"), compound2 = ""))
+
 # Delta
-setClass("Delta", representation(ref = "numeric"), contain = "Isoval",
-         prototype = prototype(new("Isoval"), ref = NA_real_))
+setClass("Delta", representation(ref = "numeric"), contains = "Alpha",
+         prototype = prototype(new("Alpha"), ref = NA_real_))
 
 # Ion intensity
 setClass("Intensity", representation(unit = "character"), contains = "Isoval",
@@ -80,16 +84,10 @@ setClass("Abundances", contains = "Isosys",
          prototype = prototype(new("Isosys"), isoval_class = "Abundance"))
 setClass("Ratios", contains = "Isosys",
          prototype = prototype(new("Isosys"), isoval_class = "Ratio"))
+setClass("Alphas", contains = "Isosys",
+         prototype = prototype(new("Isosys"), isoval_class = "Alpha"))
 setClass("Deltas", contains = "Isosys",
          prototype = prototype(new("Isosys"), isoval_class = "Delta"))
 setClass("Intensities", contains = "Isosys",
          prototype = prototype(new("Isosys"), isoval_class = "Intensity"))
 
-#' enable conversion back to a normal data frame
-#' this can also be done simply by running data.frame(x)
-#' @export
-as.data.frame.Isosys <- function(x, ..., stringsAsFactors = default.stringsAsFactors()){
-    df <- data.frame(x@.Data, stringsAsFactors = stringsAsFactors)
-    names(df) <- names(x) 
-    df
-}
