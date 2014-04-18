@@ -1,6 +1,8 @@
 #' @include classes.R
 NULL
 
+# general conversion function ===================================
+
 #' generic function to convert an isotope system that is part of a data frame
 #' and stitch it back together with the columns in the proper positions. uses
 #' a callback function that has to do the conversion of the isotope values
@@ -28,7 +30,7 @@ convert_isosys <- function(iso, class_isosys, conv_fun) {
     names(rs) <- c(names(iso)[iso_idx], names(iso)[-iso_idx])
     rs[names(iso), drop = F]
 }
-
+ 
 #' generic function to recast an isotope value object
 #' 
 #' This is strictly an internal function to facilitate recasting 
@@ -61,6 +63,14 @@ recast_isoval <- function(iso, init_fun, attribs = list()) {
     do.call(init_fun, attribs)
 }
 
+# small function that informs about conversion errors
+conversion_error <- function(from, to) {
+    stop(sprintf("Don't know how to convert object of class %s to %s. ", class(from)[1], to),
+         "Please us the approriate functions - ratio(), abundance(), delta(), etc. - to initialize new isotope objects.")
+}
+
+# definition of generics and identity conversions ===================================
+
 #' Convert to isotope ratio
 #' 
 #' \code{as.ratio} converts another isotopic data type to a ratio.
@@ -72,9 +82,53 @@ recast_isoval <- function(iso, init_fun, attribs = list()) {
 #' @export
 #' @genericMethods
 setGeneric("as.ratio", function(iso) standardGeneric("as.ratio"))
-setMethod("as.ratio", "ANY", function(iso) stop(sprintf("Don't know how to convert object of class %s to isotope ratio.", class(iso)[1])))
-setMethod("as.ratio", "Ratio", function(iso) iso)
-setMethod("as.ratio", "Ratios", function(iso) iso)
+setMethod("as.ratio", "ANY", function(iso) conversion_error(iso, "isotope ratio"))
+setMethod("as.ratio", "Ratio", identity)
+setMethod("as.ratio", "Ratios", identity)
+
+#' Convert to isotope abundance
+#' 
+#' \code{as.abundance} converts another isotopic data type to an abundance.
+#'
+#' @param iso isotopic data object (\code{\link{ratio}}, \code{\link{abundance}}, \code{\link{delta}}, etc.)
+#' @return isotope \code{\link{abundance}} object if iso can be converted to a \code{\link{abundance}}, an error otherwise
+#' @rdname as.abundance
+#' @family data type conversions
+#' @export
+#' @genericMethods
+setGeneric("as.abundance", function(iso) standardGeneric("as.abundance"))
+setMethod("as.abundance", "ANY", function(iso) conversion_error(iso, "isotope abundance"))
+setMethod("as.abundance", "Abundance", identity)
+setMethod("as.abundance", "Abundances", identity)
+
+#' Convert to delta value
+#' 
+#' \code{as.delta} converts another isotopic data type to a delta value.
+#'
+#' @param iso isotopic data object (\code{\link{ratio}}, \code{\link{abundance}}, \code{\link{delta}}, etc.)
+#' @return isotope \code{\link{delta}} object if iso can be converted to a \code{\link{delta}}, an error otherwise
+#' @rdname as.delta
+#' @family data type conversions
+#' @export
+#' @genericMethods
+setGeneric("as.delta", function(iso) standardGeneric("as.delta"))
+setMethod("as.delta", "ANY", function(iso) conversion_error(iso, "delta value"))
+setMethod("as.delta", "Delta", identity)
+setMethod("as.delta", "Deltas", identity)
+
+# ratio conversions ===================================
+
+setMethod("as.abundance", "Ratio", function(iso) as.abundance(new("Ratios", data.frame(iso)))[1]) # converts to a system (slightly slower but tidier)
+setMethod("as.abundance", "Ratios", function(iso) {
+    convert_isosys(iso, "Abundances", 
+                   function(df) {
+                       # convert ratio to abundance
+                       lapply(df / (1 + rowSums(df)), recast_isoval, "abundance")
+                   })
+})
+
+# abundance conversions ===================================
+
 setMethod("as.ratio", "Abundance", function(iso) as.ratio(new("Abundances", data.frame(iso)))[1]) # converts to a system (slightly slower but tidier)
 setMethod("as.ratio", "Abundances", function(iso) {
     convert_isosys(iso, "Ratios", 
@@ -83,10 +137,22 @@ setMethod("as.ratio", "Abundances", function(iso) {
             lapply(df / (1 - rowSums(df)), recast_isoval, "ratio")
         })
 })
+
+# delta conversions ===================================
+
+setMethod("as.ratio", "Deltas", function(iso) {
+    stop("not implemented")
+    # now can do proper conversion
+    # --> validation whether everything is in order for conversion will happen at this point!
+    # i.e. checks that all have same major isotope, have corrent ratio defined, etc., etc.
+})
+
+# intensity conversions ===================================
+
 setMethod("as.ratio", "Intensities", function(iso) {
     fun <- function(df) {
         # find major isotope in system
-        major <- sapply(iso, function(i) {
+        major <- sapply(df, function(i) {
             if (is.isoval(i) && nchar(i@isoname) > 0)
                 i@major == i@isoname
             else
@@ -111,41 +177,8 @@ setMethod("as.ratio", "Intensities", function(iso) {
     con_val
 })
 
-#' Convert to isotope abundance
-#' 
-#' \code{as.abundance} converts another isotopic data type to an abundance.
-#'
-#' @param iso isotopic data object (\code{\link{ratio}}, \code{\link{abundance}}, \code{\link{delta}}, etc.)
-#' @return isotope \code{\link{abundance}} object if iso can be converted to a \code{\link{abundance}}, an error otherwise
-#' @rdname as.abundance
-#' @family data type conversions
-#' @export
-#' @genericMethods
-setGeneric("as.abundance", function(iso) standardGeneric("as.abundance"))
-setMethod("as.abundance", "ANY", function(iso) stop(sprintf("Don't know how to convert object of class %s to isotope abundance.", class(iso)[1])))
-setMethod("as.abundance", "Abundance", function(iso) iso)
-setMethod("as.abundance", "Abundances", function(iso) iso)
-setMethod("as.abundance", "Ratio", function(iso) as.abundance(new("Ratios", data.frame(iso)))[1]) # converts to a system (slightly slower but tidier)
-setMethod("as.abundance", "Ratios", function(iso) {
-    convert_isosys(iso, "Abundances", 
-       function(df) {
-           # convert ratio to abundance
-           lapply(df / (1 + rowSums(df)), recast_isoval, "abundance")
-       })
-})
 setMethod("as.abundance", "Intensities", function(iso) as.abundance(as.ratio(iso)))
 
 
-setMethod("as.ratio", "data.frame", function(iso) {
-    stop("not implemented yet")
-    # implement that it basically takes all parts of the df. that are Isoval and tries to make an isosys
-    # out of that portion of the data frame --> apply the as.ratio on that part of the df and cbind the thing
-    # back together - only allow one type of system (they must all be the same)
-})
-setMethod("as.ratio", "Deltas", function(iso) {
-    stop("not implemented")
-    # now can do proper conversion
-    # --> validation whether everything is in order for conversion will happen at this point!
-    # i.e. checks that all have same major isotope, have corrent ratio defined, etc., etc.
-})
+
 

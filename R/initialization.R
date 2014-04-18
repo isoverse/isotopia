@@ -13,7 +13,7 @@ NULL
 #' @export
 #' @examples
 #' ratio(0.1) # single value
-#' ratio(c(0.1, 0.2, 0.3) # multiple values
+#' ratio(c(0.1, 0.2, 0.3)) # multiple values
 #' ratio(`13C` = c(0.1, 0.2, 0.3)) # named ratio
 #' ratio(`33S` = c(0.1, 0.2, 0.3), `34S` = c(0.2, 0.4, 0.6), major = "32S") # isotope system
 ratio <- function(..., major = "", single_as_df = FALSE) {
@@ -76,7 +76,7 @@ iso <- function(class_isosys, ..., attribs = list(), single_as_df = FALSE) {
     new_isoval <- function(data, isoname) {
         if (!is (data, class_isoval))
             data <- new(class_isoval, data) # initialize new if not already the right object
-        obj <- update(data, isoname = isoname, attribs = attribs) # update attributes
+        obj <- update_iso(data, attribs = c(list(isoname = isoname), attribs)) # update attributes
         validObject(obj) # test validity
         return(obj)
     }

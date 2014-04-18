@@ -1,60 +1,62 @@
 context("Data Conversation")
 
 test_that("Testing that isotope data type conversations behave correctly", {
-  expect_error(abundance(ratio(.1)), "Cannot initialize an isotope value with another isotope value")
-  
-  #  initialization tests and system keeping
-  expect_error(as.ratio("test"), "Don't know how to convert object of class .* to isotope ratio")
-  expect_identical(as.ratio(ratio(.1)), ratio(.1))
-  expect_identical(as.ratio(ratio(.1, .2)), ratio(.1, .2))
-  expect_error(as.abundance("test"), "Don't know how to convert object of class .* to isotope abundance")
-  expect_identical(as.abundance(abundance(.1)), abundance(.1))
-  expect_identical(as.abundance(abundance(.1, .2)), abundance(.1, .2))
-  expect_is(r <- as.ratio(a <- abundance(`13C` = .1, major = "12C")), "Ratio")
-  expect_equal(r@isoname, a@isoname)
-  expect_equal(r@major, a@major)
-  
-  # conversation from abundance to ratio
-  expect_equal(as.ratio(abundance(.4)), ratio(.4/.6)) # convertion of single abundance to ratio
-  x <- c(0.0001, 0.001, 0.01, 0.1, 0.5) 
-  expect_equal(as.ratio(abundance(x)), ratio(x / (1 - x))) # converting multiple values with the formula
-  expect_equal(as.ratio(abundance(.1, .3)), ratio(.1/.6, .3/.6)) # convertion of abundance system to ratio system
-  y <- sample(x)/5 
-  expect_equal(as.ratio(abundance(x, y)), ratio(x / (1 - x - y), y / (1 - x - y))) # converting multiple values in a system
-  
-  # conversation from ratio to abundance
-  expect_equal(as.abundance(ratio(.2)), abundance(.2/1.2)) # convertion of single ratio to abundance
-  expect_equal(as.abundance(ratio(x)), abundance(x / (1 + x))) # converting multiple values with the formula
-  expect_equal(as.abundance(ratio(.2, .3)), abundance(.2/1.5, .3/1.5)) # convertion of ratio system to abundance system
-  expect_equal(as.abundance(ratio(x, y)), abundance(x / (1 + x + y), y / (1 + x + y))) # converting multiple values in a system
-  
-  # back and forth conversions
-  ab <- abundance(x, y)
-  expect_equal(as.abundance(as.ratio(ab)), ab)
-  expect_true(all(abs(as.abundance(as.ratio(ab)) - ab) < 10^(-15))) # test that machine error from back and forth conversion is smaller than 10^-15
-  
-  # conversion from intensity to ratio and abundace
-  expect_error(as.ratio(intensity(100)), "Don't know how to convert object of class Intensity to isotope ratio")
-  expect_error(as.ratio(intensity(100, 1000)), "none of the isotopes .* could be identified as the major ion")
-  expect_error(as.ratio(intensity(intensity(`13C` = 100, major = "13C"), intensity(`12C` = 1000, major = "12C"))), "major ion of all isotope value object in an isotope system must be the same")
-  expect_is({ # single ratio conversion
-      is <- intensity(`12C` = 1000, `13C` = 100, major = "12C", unit = "#")
-      rs <- as.ratio(is)
-  }, "Ratios")
-  expect_equal(names(rs)[1], "13C")
-  expect_equal(rs$`13C`@major, "12C")
-  expect_equal(rs$`13C`, ratio(`13C` = 100/1000, major = "12C"))
-  expect_is({ # multiple ratio conversions
-      is <- intensity(`32S` = 9502, `33S` = 75, `34S` = 421, `36S` = 2, major = "32S", unit = "#")
-      rs <- as.ratio(is)
-  }, "Ratios")
-  expect_equal(rs, ratio(`33S` = 75/9502, `34S` = 421/9502, `36S` = 2/9502, major = "32S")) # value check 
-  expect_equal(as.ratio(intensity(x = x, y = y, major = "x")), ratio(y = y/x, major = "x", single_as_df = T)) # formula check
-  expect_is(ab <- as.abundance(is), "Abundances")
-  expect_equal(ab, abundance(`33S` = 0.0075, `34S` = 0.0421, `36S` = 0.0002, major = "32S")) # value check
-  expect_equal(as.abundance(intensity(x = x, y = y, major = "x")), abundance(y = y/(y + x), major = "x", single_as_df = T)) # formula check
-})
+    expect_error(abundance(ratio(.1)), "Cannot initialize an isotope value with another isotope value")
+    
+    #  initialization tests and system keeping
+    expect_error(as.ratio("test"), "Don't know how to convert object of class .* to isotope ratio")
+    expect_identical(as.ratio(ratio(.1)), ratio(.1))
+    expect_identical(as.ratio(ratio(.1, .2)), ratio(.1, .2))
+    expect_error(as.abundance("test"), "Don't know how to convert object of class .* to isotope abundance")
+    expect_identical(as.abundance(abundance(.1)), abundance(.1))
+    expect_identical(as.abundance(abundance(.1, .2)), abundance(.1, .2))
+    expect_is(r <- as.ratio(a <- abundance(`13C` = .1, major = "12C")), "Ratio")
+    expect_equal(r@isoname, a@isoname)
+    expect_equal(r@major, a@major)
+    expect_error(as.delta("test"), "Don't know how to convert object of class .* to delta value")
+    
+    # conversation from abundance to ratio
+    expect_equal(as.ratio(abundance(.4)), ratio(.4/.6)) # convertion of single abundance to ratio
+    x <- c(0.0001, 0.001, 0.01, 0.1, 0.5) 
+    expect_equal(as.ratio(abundance(x)), ratio(x / (1 - x))) # converting multiple values with the formula
+    expect_equal(as.ratio(abundance(.1, .3)), ratio(.1/.6, .3/.6)) # convertion of abundance system to ratio system
+    y <- sample(x)/5 
+    expect_equal(as.ratio(abundance(x, y)), ratio(x / (1 - x - y), y / (1 - x - y))) # converting multiple values in a system
+    
+    # conversation from ratio to abundance
+    expect_equal(as.abundance(ratio(.2)), abundance(.2/1.2)) # convertion of single ratio to abundance
+    expect_equal(as.abundance(ratio(x)), abundance(x / (1 + x))) # converting multiple values with the formula
+    expect_equal(as.abundance(ratio(.2, .3)), abundance(.2/1.5, .3/1.5)) # convertion of ratio system to abundance system
+    expect_equal(as.abundance(ratio(x, y)), abundance(x / (1 + x + y), y / (1 + x + y))) # converting multiple values in a system
+    
+    # back and forth conversions
+    ab <- abundance(x, y)
+    expect_equal(as.abundance(as.ratio(ab)), ab)
+    expect_true(all(abs(as.abundance(as.ratio(ab)) - ab) < 10^(-15))) # test that machine error from back and forth conversion is smaller than 10^-15
+    
+    # conversion from intensity to ratio and abundace
+    expect_error(as.ratio(intensity(100)), "Don't know how to convert object of class Intensity to isotope ratio")
+    expect_error(as.ratio(intensity(100, 1000)), "none of the isotopes .* could be identified as the major ion")
+    expect_error(intensity(intensity(`13C` = 100, major = "13C"), intensity(`12C` = 1000, major = "12C")), "major ion of all isotope value object in an isotope system must be the same")
+    expect_is({ # single ratio conversion
+        is <- intensity(`12C` = 1000, `13C` = 100, major = "12C", unit = "#")
+        rs <- as.ratio(is)
+    }, "Ratios")
+    expect_equal(names(rs)[1], "13C")
+    expect_equal(rs$`13C`@major, "12C")
+    expect_equal(rs$`13C`, ratio(`13C` = 100/1000, major = "12C"))
+    expect_is({ # multiple ratio conversions
+        is <- intensity(`32S` = 9502, `33S` = 75, `34S` = 421, `36S` = 2, major = "32S", unit = "#")
+        rs <- as.ratio(is)
+    }, "Ratios")
+    expect_equal(rs, ratio(`33S` = 75/9502, `34S` = 421/9502, `36S` = 2/9502, major = "32S")) # value check 
+    expect_equal(as.ratio(intensity(x = x, y = y, major = "x")), ratio(y = y/x, major = "x", single_as_df = T)) # formula check
+    expect_is(ab <- as.abundance(is), "Abundances")
+    expect_equal(ab, abundance(`33S` = 0.0075, `34S` = 0.0421, `36S` = 0.0002, major = "32S")) # value check
+    expect_equal(as.abundance(intensity(x = x, y = y, major = "x")), abundance(y = y/(y + x), major = "x", single_as_df = T)) # formula check
 
+})
+ 
 
 test_that("Testing that additional data in Isosys data frames doesn't get lost during conversions", {
     expect_is({

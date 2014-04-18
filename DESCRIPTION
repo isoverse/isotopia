@@ -17,5 +17,6 @@ Collate:
     'update.R'
     'initialization.R'
     'isotopia.R'
+    'operators.R'
     'show.R'
     'validation.R'

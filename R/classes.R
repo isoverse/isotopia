@@ -93,4 +93,3 @@ as.data.frame.Isosys <- function(x, ..., stringsAsFactors = default.stringsAsFac
     names(df) <- names(x) 
     df
 }
-    
