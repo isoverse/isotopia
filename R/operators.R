@@ -40,7 +40,7 @@ setMethod("+", signature(e1 = "Abundance", e2 = "Abundance"), function(e1, e2) {
     weightsum <- as.weight(e1) + as.weight(e2)
     e1@.Data <- (as.weighted_value(e1) + as.weighted_value(e2))/weightsum
     e1@weight <- weightsum
-    e1@compound <- paste(e1@compound, e2@compound, sep = "+")
+    e1@compound <- paste(sub("^$", "?", c(e1@compound, e2@compound)), collapse = "+")
     e1
 })
 
@@ -109,6 +109,6 @@ setMethod("/", signature(e1 = "Intensity", e2 = "Intensity"), function(e1, e2) {
     
     oldopt <- options(warn = 2); on.exit(options(oldopt))  # throw warnings as errors for the calculations
     e1@.Data <- e1@.Data / e2@.Data 
-    recast_isoval(e1, "ratio", attribs = list(major = e2@isoname))
+    recast_isoval(e1, "Ratio", list(unit = NULL, major = e2@isoname))
 })
 

@@ -41,6 +41,21 @@ abundance <- function(..., major = "", compound = "", weight = numeric(), single
     iso("Abundances", ..., attribs = list(major = major, compound = compound, weight = weight), single_as_df = single_as_df)
 }
 
+#' Alpha value
+#'
+#' Generate an isotope alpha value (ratio of two isotope ratios) object. See \link{isotopia} for general information on initializing
+#' and converting isotope data objects.
+#' 
+#' @param ... - numeric vectors (can be named) to turn into alpha values
+#' @param major - name of the major isotope in the isotope system [optional]
+#' @param ctop - name of the compound representing the top isotope ratio, default="a"
+#' @param cbot - name of the compound representing the bottom isotope ratio, default="b"
+#' @family isotope data types
+#' @export
+alpha <- function(..., major = "", ctop = "a", cbot = "b", single_as_df = FALSE) {
+    iso("Alphas", ..., attribs = list(major = major, compound = ctop, compound2 = cbot), single_as_df = single_as_df)
+}
+
 
 delta <- function(x) {
     

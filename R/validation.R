@@ -117,6 +117,13 @@ setValidity(
     })
 
 setValidity(
+    "Alpha",
+    function(object) {
+        if (any(object < 0)) return('alpha values cannot be negative')
+        return(TRUE)
+    })
+
+setValidity(
     "Intensity",
     function(object) {             
         if (any(object < 0)) return('ion intensities cannot be negative')

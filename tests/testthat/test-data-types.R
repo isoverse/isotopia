@@ -34,6 +34,9 @@ test_that("Testing that basic single data types' (ratio, abundance, delta, etc.)
     expect_is(abundance(c(0.1, 0.2, 0.3)), "Abundance")
     expect_equal(name(abundance(`12C` = 0.1)), "F 12C")
     
+    # testing alpha data type
+    expect_error(alpha(-0.2), "cannot be negative")
+    
     # testing attribute updates and reinitialization
     expect_error(ratio(abundance(0.1)), "Cannot initialize an isotope value with another isotope value")
     expect_is(ratio(ratio(0.1)), "Ratio")

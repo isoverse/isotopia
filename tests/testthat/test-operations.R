@@ -56,6 +56,7 @@ test_that("Testing proper response to math operators", {
     expect_equal(as.value(amix), 0.3)
     expect_equal(as.weight(amix), 2)
     expect_equal(as.weighted_value(amix), 0.6)
+    expect_equal(amix@compound, "?+?")
     expect_is({
         amix <- abundance(`13C` = 0.2, weight = 2, compound = "a") + 
             abundance(`13C` = 0.5, compound = "b") + 
@@ -68,7 +69,11 @@ test_that("Testing proper response to math operators", {
     # mixing ratios
     expect_error(ratio(a = 0.2) + ratio(b = 0.3), "trying to mix two isotope objects that don't have matching attributes")
     expect_error(ratio(c(0.1, 0.2)) + ratio(0.3), "trying to mix two isotope objects that don't have matching lengths")
-    expect_is(amix <- ratio(0.2) + ratio(0.4), "Ratio")
+    expect_is(rmix <- as.ratio(abundance(0.2)) + as.ratio(abundance(0.4)), "Ratio")
+    expect_equal(as.value(rmix), as.value(as.ratio(abundance(0.3))))
+    expect_equal(as.weight(rmix), 2)
     expect_error(ratio(0.2, 0.3) + ratio(0.3, 0.4), "this really needs to be implemented") # FIXME
     
+    # mixing delta values
+    expect_true("implement delta value mixing")
 })

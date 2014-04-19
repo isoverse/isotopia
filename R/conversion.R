@@ -30,6 +30,21 @@ convert_isosys <- function(iso, class_isosys, conv_fun) {
     rs[names(iso), drop = F]
 }
  
+#' generic function to recast an isotopic value object during conversions
+#' @param iso object
+#' @param to_class - which class to cast to
+#' @param mods - list of modifications to existing attributes (can be list(x = NULL) for removing attribute x)
+#' @param validate - whether to validate after the recast, default TRUE
+recast_isoval <- function(iso, to_class, mods = list(), validate = TRUE){
+    if (!is.isoval(iso))
+        stop("don't use this to modify non isoval objects, can be tricky to modify attributes")
+    attr(iso, "class") <- attr(new(to_class), "class")
+    attributes(iso) <- modifyList(attributes(iso), mods)
+    if (validate)
+        validObject(iso)
+    iso
+}
+
 # small function that informs about conversion errors
 conversion_error <- function(from, to) {
     stop(sprintf("Don't know how to convert object of class %s to %s. ", class(from)[1], to),
@@ -93,10 +108,7 @@ setMethod("as.abundance", "Ratios", function(iso) {
                        rs <- rowSums(as.value(df))
                        lapply(df, function(r) {
                            r@.Data <- r@.Data / (1 + rs) # ratio to abundance
-                           attr(r, "class") <- attributes(new("Abundance"))$class
-                           validObject(r)
-                           r
-                           #recast_isoval(r, "abundance")
+                           recast_isoval(r, "Abundance")
                        })
                    })
 })
@@ -111,9 +123,7 @@ setMethod("as.ratio", "Abundances", function(iso) {
             abs <- rowSums(as.value(df))
             lapply(df, function(ab) {
                 ab@.Data <- ab@.Data / (1 - abs) # abundance to ratio
-                attr(ab, "class") <- attributes(new("Ratio"))$class
-                validObject(ab)
-                ab
+                recast_isoval(ab, "Ratio")
             })
         })
 })
