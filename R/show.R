@@ -8,8 +8,7 @@ setMethod("show", "Isoval", function(object) {
     if (is.weighted(object)) {
         print(data.frame(
                 value = object@.Data, 
-                weight = object@weight,
-                weighted_value = object@.Data * object@weight))
+                weight = object@weight))
     } else {
         print(as.value(object))
     }
@@ -40,12 +39,34 @@ setMethod("name", "Ratio", function(object) {
     else "R"
 })
 setMethod("name", "Abundance", function(object) paste0("F ", object@isoname))
+setMethod("name", "Alpha", function(object) {
+    text <- paste(c(
+        if (nchar(object@isoname) > 0) object@isoname,
+        "α"), collapse = " ")
+    
+    tlen <- nchar(object@compound)
+    blen <- nchar(object@compound2)
+    if ( tlen > 0 && blen > 0)
+        paste0(text, "_", object@compound, "/", object@compound2)
+    else if (tlen > 0)
+        paste0(text, "_", object@compound, "/?")
+    else if (blen > 0)
+        paste0(text, "_", "?/", object@compound2)
+    else 
+        text
+})
+setMethod("name", "Delta", function(object) {
+    paste(c("δ", if (nchar(object@isoname) > 0) object@isoname), collapse = "")
+})
 
 #' Get the units of an isotope data object
 #' @export
 #' @genericMethods
 setGeneric("unit", function(object) standardGeneric("unit"))
 setMethod("unit", "Isoval", function(object) "")
+setMethod("unit", "Delta", function(object) {
+    if(object@permil) "‰" else ""
+})
 setMethod("unit", "Intensity", function(object) object@unit)
 
 #' Get the full label of an isotope data object
@@ -66,6 +87,14 @@ setMethod("label", "Isoval", function(object) {
         if (nchar(unit(object)) > 0) paste0("[", unit(object), "]"))
     paste(label, collapse=" ")
 })
+
+setMethod("label", "Delta", function(object) {
+    paste(c(callNextMethod(object), 
+            if (nchar(object@ref) > 0) "vs.",
+            if (nchar(object@ref) > 0) object@ref), collapse = " ")
+})
+
+setMethod("label", "Alpha", function(object) name(object))
 
 setMethod("label", "Isosys", function(object) {
     isos <- sapply(object, function(i) is(i, "Isoval"))

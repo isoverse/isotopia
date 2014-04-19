@@ -36,6 +36,20 @@ test_that("Testing that basic single data types' (ratio, abundance, delta, etc.)
     
     # testing alpha data type
     expect_error(alpha(-0.2), "cannot be negative")
+    expect_is(alpha(0.9), "Alpha")
+    expect_equal(label(alpha(0.9)), "α")
+    expect_equal(label(alpha(`13C` = 0.9)), "13C α")
+    expect_equal(label(alpha(`34S` = 0.9, ctop = "SO4", cbot = "H2S")), "34S α_SO4/H2S")
+    
+    # testing delta data type
+    expect_is(delta(c(-20, 20)), "Delta")
+    expect_true(delta(c(-20, 20))@permil)
+    expect_false(delta(c(-0.2, 0.2), permil = FALSE)@permil)
+    expect_true(delta(delta(20))@permil)
+    expect_error(delta(delta(20), permil = FALSE), "changing .* from permil to non-permil must be done using the appropriate .* functions")
+    expect_equal(label(delta(-10)), "δ [‰]")
+    expect_equal(label(delta(`13C` = -0.01, permil = FALSE)), "δ13C")
+    expect_equal(label(delta(`13C` = -10, compound = "DIC", ref = "SMOW")), "DIC δ13C [‰] vs. SMOW")
     
     # testing attribute updates and reinitialization
     expect_error(ratio(abundance(0.1)), "Cannot initialize an isotope value with another isotope value")

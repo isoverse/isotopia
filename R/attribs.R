@@ -32,9 +32,29 @@ setMethod("update_iso", "Isoval", function(obj, attribs) {
     obj
 })
 
+setMethod("update_iso", "Alpha", function(obj, attribs) {
+    obj <- callNextMethod(obj, attribs)
+    if (!is.null(compound2 <- attribs$compound2) && nchar(compound2) > 0) {
+        if (nchar(obj@compound2) > 0 && obj@compound2 != compound2)
+            warning("changing the bottom compound of a '", class(obj), " value' object from '", obj@compound2, "' to '", compound2, "'")
+        obj@compound2 <- compound2
+    }
+    obj
+})
+
 setMethod("update_iso", "Delta", function(obj, attribs) {
     obj <- callNextMethod(obj, attribs)
-    # IMPELEMENT ME - take different ref options from attribs and match them to this objects isoname
+    if (!is.null(ref <- attribs$ref) && nchar(ref) > 0) {
+        if (nchar(obj@ref) > 0 && obj@ref != ref)
+            warning("changing the reference name of a '", class(obj), " value' object from '", obj@ref, "' to '", ref, "'")
+        obj@ref <- ref
+    }
+    if (!is.null(permil <- attribs$permil) && length(permil) > 0) {
+        if (length(obj@permil) > 0 && obj@permil != permil)
+            stop("changing the type of an already initialized delta value from permil to non-permil must be done using the appropriate as.delta() and as.deltax functions")
+        obj@permil <- permil
+    }
+    obj
 })
 
 setMethod("update_iso", "Intensity", function(obj, attribs) {

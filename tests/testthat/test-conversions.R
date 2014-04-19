@@ -61,6 +61,21 @@ test_that("Testing that isotope data type conversations behave correctly", {
     expect_equal(ab, abundance(`33S` = 0.0075, `34S` = 0.0421, `36S` = 0.0002, major = "32S")) # value check
     expect_equal(as.abundance(intensity(x = x, y = y, major = "x")), abundance(y = y/(y + x), major = "x", single_as_df = T)) # formula check
 
+    # delta conversions (delta to deltax and back)
+    expect_is(dx <- as.deltax(delta(0.02, permil = F)), "Delta")
+    expect_equal(dx@permil, TRUE)
+    expect_equal(as.value(dx), 20)
+    expect_equal(label(dx), "δ [‰]")
+    expect_is(d <- as.delta(delta(20, permil = T)), "Delta")
+    expect_equal(d@permil, FALSE)
+    expect_equal(as.value(d), 0.02)
+    expect_equal(label(d), "δ")
+    expect_identical(as.deltax(as.delta(as.delta(as.deltax(as.delta(dx))))), dx) # try multiple back and forth
+    expect_is(dx <- as.deltax(delta(a = 0.02, b = 0.01, permil = F)), "Deltas") # test isotope system
+    expect_equal(as.value(dx$a), 20)
+    expect_equal(as.value(dx$b), 10)
+    expect_equal(as.value((d <- as.delta(dx))$a), 0.02)
+    expect_equal(as.value(d$b), 0.01)
 })
  
 

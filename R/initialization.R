@@ -48,17 +48,38 @@ abundance <- function(..., major = "", compound = "", weight = numeric(), single
 #' 
 #' @param ... - numeric vectors (can be named) to turn into alpha values
 #' @param major - name of the major isotope in the isotope system [optional]
-#' @param ctop - name of the compound representing the top isotope ratio, default="a"
-#' @param cbot - name of the compound representing the bottom isotope ratio, default="b"
+#' @param ctop - name of the compound representing the top isotope ratio [optional]
+#' @param cbot - name of the compound representing the bottom isotope ratio [optional]
 #' @family isotope data types
 #' @export
-alpha <- function(..., major = "", ctop = "a", cbot = "b", single_as_df = FALSE) {
+alpha <- function(..., major = "", ctop = "", cbot = "", single_as_df = FALSE) {
     iso("Alphas", ..., attribs = list(major = major, compound = ctop, compound2 = cbot), single_as_df = single_as_df)
 }
 
-
-delta <- function(x) {
-    
+#' Delta value
+#'
+#' Generate an isotope delta value object. See \link{isotopia} for general information on initializing
+#' and converting isotope data objects.
+#' 
+#' @param ... - numeric vectors (can be named) to turn into delta values
+#' @param major - name of the major isotope in the isotope system [optional]
+#' @param compound - name of the compound the isotopic values belong to [optional]
+#' @param ref - name of the reference material
+#' @param ref_ratio - value of the reference material (can be numeric or any valid isotope value object)
+#' @param permil - whether the values passed in are in permil or raw values (i.e. no 1000x multiplication)
+#' @param weight - weight the isotope value (with a mass, concentration, etc.) for easy mass balance calculations.
+#' The default value is 1, i.e. an unweighted isotope value.
+#' If specified, \code{weight} must be a single value or a numeric vector of the same size as the data values. 
+#' The weight of an isotope value obejct can be retrieved and (re)set with the \code{\link{weight}} function.
+#' @family isotope data types
+#' @examples
+#' delta(50, permil = T) # enter as permil value
+#' delta(0.05, permil = F) # enter as non-permil value
+#' @export
+delta <- function(..., major = "", compound = "", ref = "", ref_ratio = numeric(), permil = TRUE, weight = numeric(), single_as_df = FALSE) {
+    if (is.isoval(ref_ratio))
+        ref_ratio <- as.value(as.ratio(ref_ratio))
+    iso("Deltas", ..., attribs = list(major = major, compound = compound, ref = ref, ref_ratio = ref_ratio, permil = permil, weight = numeric()), single_as_df = single_as_df)
 }
 
 #' Ion intensity

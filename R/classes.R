@@ -35,8 +35,8 @@ setClass("Alpha", representation(compound2 = "character"), contains = "Isoval",
          prototype = prototype(new("Isoval"), compound2 = ""))
 
 # Delta
-setClass("Delta", representation(ref = "numeric"), contains = "Alpha",
-         prototype = prototype(new("Alpha"), ref = NA_real_))
+setClass("Delta", representation(ref = "character", ref_ratio = "numeric", permil = "logical"), contains = "Isoval",
+         prototype = prototype(new("Alpha"), ref = "", ref_ratio = numeric(), permil = logical()))
 
 # Ion intensity
 setClass("Intensity", representation(unit = "character"), contains = "Isoval",

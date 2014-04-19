@@ -83,9 +83,41 @@ setMethod("as.abundance", "ANY", function(iso) conversion_error(iso, "isotope ab
 setMethod("as.abundance", "Abundance", function(iso) iso)
 setMethod("as.abundance", "Abundances", function(iso) iso)
 
+#' Convert to alpha value
+#' 
+#' \code{as.alpha} converts other isotopic data types to alpha values
+#'
+#' @param iso1 isotopic data object (\code{\link{ratio}}, \code{\link{abundance}}, \code{\link{delta}}, etc.)
+#' @param iso2 isotopic data object (\code{\link{ratio}}, \code{\link{abundance}}, \code{\link{delta}}, etc.)
+#' @return isotope \code{\link{alpha}} object if iso can be converted to a \code{\link{alpha}}, an error otherwise
+#' @rdname as.alpha
+#' @family data type conversions
+#' @export
+#' @genericMethods
+setGeneric("as.alpha", function(iso1, iso2) standardGeneric("as.alpha"))
+setMethod("as.alpha", "ANY", function(iso1, iso2) conversion_error(iso, "alpha value (ratio of ratios)"))
+
+# two ratios to alpha
+setMethod("as.alpha", signature("Ratio", "Ratio"), function(iso1, iso2) {
+    stop("make alpha value, check for isoname and major properly, store names")
+})
+### consider adding combinations Ratio / Abundance and Abundance / Abundance and Abundance / Ratio
+
+# delta to alpha
+setMethod("as.alpha", signature("Delta", "missing"), function(iso1, iso2) {
+    stop("make alpha value")
+})
+
+# two deltas to alpha
+setMethod("as.alpha", signature("Delta", "Delta"), function(iso1, iso2) {
+    stop("make alpha value, check that the references are the same!")
+    # this one can also be defined by the / operator for two delta values!
+})
+
+
 #' Convert to delta value
 #' 
-#' \code{as.delta} converts another isotopic data type to a delta value.
+#' \code{as.delta} converts another isotopic data type to a delta value (raw, not permil!)
 #'
 #' @param iso isotopic data object (\code{\link{ratio}}, \code{\link{abundance}}, \code{\link{delta}}, etc.)
 #' @return isotope \code{\link{delta}} object if iso can be converted to a \code{\link{delta}}, an error otherwise
@@ -93,13 +125,19 @@ setMethod("as.abundance", "Abundances", function(iso) iso)
 #' @family data type conversions
 #' @export
 #' @genericMethods
-setGeneric("as.delta", function(iso) standardGeneric("as.delta"))
-setMethod("as.delta", "ANY", function(iso) conversion_error(iso, "delta value"))
-setMethod("as.delta", "Delta", function(iso) iso)
-setMethod("as.delta", "Deltas", function(iso) iso)
+setGeneric("as.delta", function(iso, ref_ratio) standardGeneric("as.delta"))
+setMethod("as.delta", "ANY", function(iso, ref_ratio) conversion_error(iso, "delta value"))
+
+#' \code{as.deltax} converts another isotopic data type to a delta value in permil (i.e. x 1000)
+#' @rdname as.delta
+#' @export
+#' @genericMethods
+setGeneric("as.deltax", function(iso, ref_ratio) standardGeneric("as.deltax"))
+setMethod("as.deltax", "ANY", function(iso, ref_ratio) conversion_error(iso, "delta value"))
 
 # ratio conversions ===================================
 
+# ratio to abundance
 setMethod("as.abundance", "Ratio", function(iso) as.abundance(new("Ratios", data.frame(iso)))[1]) # converts to a system (slightly slower but tidier)
 setMethod("as.abundance", "Ratios", function(iso) {
     convert_isosys(iso, "Abundances", 
@@ -112,6 +150,26 @@ setMethod("as.abundance", "Ratios", function(iso) {
                        })
                    })
 })
+
+# ratio to delta (with numeric ref ratio)
+setMethod("as.delta", signature("Ratio", "numeric"), function(iso, ref_ratio) {
+    as.delta(iso, update_iso(ratio(ref_ratio), list(isoname = iso@isoname, major = iso@isoname)))
+})
+
+# ratio to delta (with Ratio object as ref ratio)
+setMethod("as.delta", signature("Ratio", "Ratio"), function(iso, ref_ratio) {
+    if (length(ref_ratio) != 1)
+        stop("reference ratio for a delta value object must be exactly one numeric value, supplied ", length(ref_ratio))
+    a <- as.alpha(iso, ref_ratio) # convert via alpha (for attribute checks)
+    d <- as.delta(a)
+    d@ref_ratio <- ref_ratio@compound # store reference ratio value
+    d
+})
+
+
+
+# ratio to deltax
+setMethod("as.deltax", signature("Ratio", "ANY"), function(iso, ref_ratio) as.deltax(as.delta(iso, ref_ratio)))
 
 # abundance conversions ===================================
 
@@ -130,12 +188,32 @@ setMethod("as.ratio", "Abundances", function(iso) {
 
 # delta conversions ===================================
 
-setMethod("as.ratio", "Deltas", function(iso) {
-    stop("not implemented")
-    # now can do proper conversion
-    # --> validation whether everything is in order for conversion will happen at this point!
-    # i.e. checks that all have same major isotope, have corrent ratio defined, etc., etc.
+# delta to delta
+setMethod("as.delta", signature(iso = "Delta", ref_ratio = "missing"), function(iso, ref_ratio) {
+    if (iso@permil) { 
+        iso@.Data <- iso@.Data/1000 # convert from permil to non-permil
+        iso@permil <- FALSE
+    }
+    iso
 })
+setMethod("as.delta", signature(iso = "Deltas", ref_ratio = "missing"), function(iso, ref_ratio) {
+    convert_isosys(iso, "Deltas", function(df) lapply(as.data.frame(df), as.delta))
+})
+
+# delta to deltax
+setMethod("as.deltax", signature(iso = "Delta", ref_ratio = "missing"), function(iso, ref_ratio) {
+    if  (!iso@permil) {
+        iso@.Data <- iso@.Data * 1000 # convert from non-permil to permil value
+        iso@permil <- TRUE
+    }
+    iso
+})
+setMethod("as.deltax", signature(iso = "Deltas", ref_ratio = "missing"), function(iso, ref_ratio) {
+    convert_isosys(iso, "Deltas", function(df) lapply(as.data.frame(df), as.deltax))
+})
+
+
+
 
 # intensity conversions ===================================
 
