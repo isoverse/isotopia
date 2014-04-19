@@ -56,6 +56,25 @@ alpha <- function(..., major = "", ctop = "", cbot = "", single_as_df = FALSE) {
     iso("Alphas", ..., attribs = list(major = major, compound = ctop, compound2 = cbot), single_as_df = single_as_df)
 }
 
+#' Epsilon value
+#'
+#' Generate an isotope epsilon value object. See \link{isotopia} for general information on initializing
+#' and converting isotope data objects.
+#' 
+#' @param ... - numeric vectors (can be named) to turn into epsilon values
+#' @param major - name of the major isotope in the isotope system [optional]
+#' @param ctop - name of the compound representing the top isotope ratio [optional]
+#' @param cbot - name of the compound representing the bottom isotope ratio [optional]
+#' @param permil - whether the values passed in are in permil or raw values (i.e. no 1000x multiplication)
+#' @family isotope data types
+#' @examples
+#' epsilon(50, permil = T) # enter as permil value
+#' epsilon(0.05, permil = F) # enter as non-permil value
+#' @export
+epsilon <- function(..., major = "", ctop = "", cbot = "", permil = TRUE, single_as_df = FALSE) {
+    iso("Epsilons", ..., attribs = list(major = major, compound = ctop, compound2 = cbot, permil = permil), single_as_df = single_as_df)
+}
+
 #' Delta value
 #'
 #' Generate an isotope delta value object. See \link{isotopia} for general information on initializing
@@ -79,7 +98,7 @@ alpha <- function(..., major = "", ctop = "", cbot = "", single_as_df = FALSE) {
 delta <- function(..., major = "", compound = "", ref = "", ref_ratio = numeric(), permil = TRUE, weight = numeric(), single_as_df = FALSE) {
     if (is.isoval(ref_ratio))
         ref_ratio <- as.value(as.ratio(ref_ratio))
-    iso("Deltas", ..., attribs = list(major = major, compound = compound, ref = ref, ref_ratio = ref_ratio, permil = permil, weight = numeric()), single_as_df = single_as_df)
+    iso("Deltas", ..., attribs = list(major = major, compound = compound, compound2 = ref, ref_ratio = ref_ratio, permil = permil, weight = weight), single_as_df = single_as_df)
 }
 
 #' Ion intensity
@@ -106,7 +125,6 @@ intensity <- function(..., major = "", compound = "", unit = "", single_as_df = 
 #' @param single_as_df whether to return a single value as a data frame
 #' @note the setup for this function also means that you can modify
 #' e.g. an existing ratio with the paramters passed in (say to set the name later on)
-#' @export
 iso <- function(class_isosys, ..., attribs = list(), single_as_df = FALSE) {
     values <- list(...)
     

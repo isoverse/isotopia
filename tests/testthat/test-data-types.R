@@ -10,6 +10,8 @@ test_that("Testing that basic single data types' (ratio, abundance, delta, etc.)
     expect_error(ratio(-0.2), "cannot be negative")
     expect_is(ratio(c(0.1, 0.2, 0.3)), "Ratio")
     expect_error(ratio(`12C` = 0.1, major = "12C"), "isotope ratios cannot be defined for the same isotope as minor and major isotope")
+    expect_equal(label(ratio(`12C` = 0.2, major = "13C")), "R 12C/13C")
+    expect_equal(label(ratio(`13C` = 0.1, major = "12C", compound = "CO2")), "CO2 R 13C/12C")
     
     # testing weights
     expect_output(ratio(1), "An isotope value .*")
@@ -22,36 +24,18 @@ test_that("Testing that basic single data types' (ratio, abundance, delta, etc.)
     expect_equal(as.weight(ratio(1:5, weight = 0.2)), rep(0.2, 5)) # retrieve weight
     expect_equal(as.weight(ratio(1:5)), rep(1, 5)) # retrieve weight
     expect_equal(as.weighted_value(ratio(1:5, weight = 2)), 2*1:5) # retrieve weight
-
-    # testing labels
-    expect_equal(name(ratio(`12C` = 0.2, major = "13C")), "R 12C/13C")
-    expect_equal(label(ratio(`13C` = 1:5, compound = "CO2", major = "12C")), "CO2 R 13C/12C")
-    expect_equal(label(intensity(`13C` = 1:5, compound = "CO2", major = "12C", unit = "mV")), "CO2 13C [mV]")
     
     # testing Abundance data type
     expect_error(abundance(-0.2), "cannot be negative")
     expect_error(abundance(1.1), "cannot be larger than 1")
     expect_is(abundance(c(0.1, 0.2, 0.3)), "Abundance")
-    expect_equal(name(abundance(`12C` = 0.1)), "F 12C")
+    expect_equal(label(abundance(`12C` = 0.1)), "F 12C")
+    expect_equal(label(abundance(`13C` = 0.1, major = "12C", compound = "CO2")), "CO2 F 13C")
     
-    # testing alpha data type
-    expect_error(alpha(-0.2), "cannot be negative")
-    expect_is(alpha(0.9), "Alpha")
-    expect_equal(label(alpha(0.9)), "α")
-    expect_equal(label(alpha(`13C` = 0.9)), "13C α")
-    expect_equal(label(alpha(`34S` = 0.9, ctop = "SO4", cbot = "H2S")), "34S α_SO4/H2S")
+    # testing intesnity
+    expect_equal(label(intensity(`13C` = 1:5, compound = "CO2", major = "12C", unit = "mV")), "CO2 13C [mV]")
     
-    # testing delta data type
-    expect_is(delta(c(-20, 20)), "Delta")
-    expect_true(delta(c(-20, 20))@permil)
-    expect_false(delta(c(-0.2, 0.2), permil = FALSE)@permil)
-    expect_true(delta(delta(20))@permil)
-    expect_error(delta(delta(20), permil = FALSE), "changing .* from permil to non-permil must be done using the appropriate .* functions")
-    expect_equal(label(delta(-10)), "δ [‰]")
-    expect_equal(label(delta(`13C` = -0.01, permil = FALSE)), "δ13C")
-    expect_equal(label(delta(`13C` = -10, compound = "DIC", ref = "SMOW")), "DIC δ13C [‰] vs. SMOW")
-    
-    # testing attribute updates and reinitialization
+    # testing standard attribute updates and reinitialization
     expect_error(ratio(abundance(0.1)), "Cannot initialize an isotope value with another isotope value")
     expect_is(ratio(ratio(0.1)), "Ratio")
 
@@ -77,7 +61,7 @@ test_that("Testing that basic single data types' (ratio, abundance, delta, etc.)
     expect_warning({
         r <- ratio(`13C` = 0.1, major = "12C")
         r2 <- ratio(`14C` = r)
-    }, "changing the name")
+    }, "changing the isotope name")
     expect_equal(r2@isoname, "14C")
     
     # overwrite major (with warning)
@@ -107,6 +91,38 @@ test_that("Testing that basic single data types' (ratio, abundance, delta, etc.)
         i2 <- intensity(i, unit = "V")
     }, "changing the unit")
     expect_equal(i2@unit, "V")
+    
+    # testing alpha data type
+    expect_error(alpha(-0.2), "cannot be negative")
+    expect_is(alpha(0.9), "Alpha")
+    expect_equal(label(alpha(0.9)), "α")
+    expect_equal(label(alpha(`13C` = 0.9)), "13C α")
+    expect_equal(label(alpha(`34S` = 0.9, ctop = "SO4", cbot = "H2S")), "34S α_SO4/H2S")
+    expect_warning({
+        a <- alpha(0.1, ctop = "CO2", cbot = "DIC")
+        a <- alpha(a, cbot = "Corg")
+    }, "changing the bottom compound name")
+    expect_equal(a@compound2, "Corg")
+    
+    # testing epsilon data type
+    expect_is(epsilon(c(-20, 20)), "Epsilon")
+    expect_true(epsilon(c(-20, 20))@permil)
+    expect_false(epsilon(c(-0.2, 0.2), permil = FALSE)@permil)
+    expect_true(epsilon(epsilon(20))@permil)
+    expect_error(epsilon(epsilon(20), permil = FALSE), "changing .* from permil to non-permil must be done using the appropriate .* functions")
+    expect_equal(label(epsilon(-10)), "ε [‰]")
+    expect_equal(label(epsilon(`13C` = -0.01, permil = FALSE)), "13C ε")
+    expect_equal(label(epsilon(`13C` = -10, ctop = "SO4", cbot = "H2S")), "13C ε_SO4/H2S [‰]")
+    
+    # testing delta data type
+    expect_is(delta(c(-20, 20)), "Delta")
+    expect_true(delta(c(-20, 20))@permil)
+    expect_false(delta(c(-0.2, 0.2), permil = FALSE)@permil)
+    expect_true(delta(delta(20))@permil)
+    expect_error(delta(delta(20), permil = FALSE), "changing .* from permil to non-permil must be done using the appropriate .* functions")
+    expect_equal(label(delta(-10)), "δ [‰]")
+    expect_equal(label(delta(`13C` = -0.01, permil = FALSE)), "δ13C")
+    expect_equal(label(delta(`13C` = -10, compound = "DIC", ref = "SMOW")), "DIC δ13C [‰] vs. SMOW")
 })
 
 

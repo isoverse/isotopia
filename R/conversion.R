@@ -97,6 +97,7 @@ setMethod("as.abundance", "Abundances", function(iso) iso)
 setGeneric("as.alpha", function(iso1, iso2) standardGeneric("as.alpha"))
 setMethod("as.alpha", "ANY", function(iso1, iso2) conversion_error(iso, "alpha value (ratio of ratios)"))
 
+#FIXME CONTINUE HERE
 # two ratios to alpha
 setMethod("as.alpha", signature("Ratio", "Ratio"), function(iso1, iso2) {
     stop("make alpha value, check for isoname and major properly, store names")

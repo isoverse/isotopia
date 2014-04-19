@@ -4,7 +4,7 @@
 #' by calling the respective \code{\link{ratio}}, \code{\link{abundance}},
 #' \code{\link{delta}} and \code{\link{intensity}} functions. Each data type
 #' has additional attributes (such as name of the major isotope for all data
-#' types, reference ratio for \code{\link{delta}} values, unit for \code{\link{intensity}}
+#' types, reference ratio for \code{\link{delta}} values, unit for \code{\link{intensity}})
 #' and these are described in detail in the help for each function. The attributes of any
 #' existing isotope data object can be modified easily by calling the initialization
 #' function (\code{\link{ratio}}, \code{\link{abundance}}, etc.) again and passing the object as 
@@ -32,7 +32,7 @@
 #' @name isotopia-package
 #' @aliases isotopia
 #' @docType package
-#' @title isotoper package
+#' @title isotopia package
 #' @author Sebastian Kopf
 #' @seealso \code{\link{ratio}}, \code{\link{is.ratio}}, \code{\link{as.ratio}}, etc.
 #' @examples

@@ -17,10 +17,10 @@ setMethod("initialize", "Isoval", function(.Object, ...){
 })
 
 # Enable regular subsetting of all isotope values (while maintaining their status as an isotope value class)
+# and keeping the weights around
 setMethod("[", "Isoval", function(x, i) { 
     x@.Data <- x@.Data[i]
-    if (!identical(x@weight, NA_real_))
-        x@weight <- x@weight[i]
+    x@weight <- x@weight[i]
     x 
 })
 
@@ -34,9 +34,13 @@ setClass("Ratio", contains = "Isoval")
 setClass("Alpha", representation(compound2 = "character"), contains = "Isoval",
          prototype = prototype(new("Isoval"), compound2 = ""))
 
+# Epsilon (not derived from Alpha because of validation in alpha > 0 !)
+setClass("Epsilon", representation(compound2 = "character", permil = "logical"), contains = "Isoval",
+         prototype = prototype(new("Isoval"), compound2 = "", permil = logical()))
+
 # Delta
-setClass("Delta", representation(ref = "character", ref_ratio = "numeric", permil = "logical"), contains = "Isoval",
-         prototype = prototype(new("Alpha"), ref = "", ref_ratio = numeric(), permil = logical()))
+setClass("Delta", representation(ref_ratio = "numeric"), contains = "Epsilon",
+         prototype = prototype(new("Epsilon"), ref_ratio = numeric()))
 
 # Ion intensity
 setClass("Intensity", representation(unit = "character"), contains = "Isoval",
@@ -94,6 +98,8 @@ setClass("Ratios", contains = "Isosys",
          prototype = prototype(new("Isosys"), isoval_class = "Ratio"))
 setClass("Alphas", contains = "Isosys",
          prototype = prototype(new("Isosys"), isoval_class = "Alpha"))
+setClass("Epsilons", contains = "Isosys",
+         prototype = prototype(new("Isosys"), isoval_class = "Epsilon"))
 setClass("Deltas", contains = "Isosys",
          prototype = prototype(new("Isosys"), isoval_class = "Delta"))
 setClass("Intensities", contains = "Isosys",

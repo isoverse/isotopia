@@ -3,25 +3,24 @@ NULL
 
 # update attributes =================================
 
+# helper function for updating text attributes
+update_text_attrib <- function(obj, attribs, slot_name, msg) {
+    if (!is.null(value <- attribs[[slot_name]]) && nchar(value) > 0){
+        if (nchar(slot(obj, slot_name)) > 0 && slot(obj, slot_name) != value) 
+            warning(msg, " ('", class(obj), " value' object) from '", slot(obj, slot_name), "' to '", value, "'")
+        slot(obj, slot_name) <- value
+    }
+    obj
+}
+
 #' update_iso the attributes of an isotope value object
 #' @genericMethods
 setGeneric("update_iso", function(obj, attribs) standardGeneric("update_iso"))
 setMethod("update_iso", "Isoval", function(obj, attribs) {
-    if (!is.null(isoname <- attribs$isoname) && nchar(isoname) > 0){
-        if (nchar(obj@isoname) > 0 && obj@isoname != isoname) 
-            warning("changing the name of a '", class(obj), " value' object from '", obj@isoname, "' to '", isoname, "'")
-        obj@isoname <- isoname
-    }
-    if (!is.null(major <- attribs$major) && nchar(major) > 0) {
-        if (nchar(obj@major) > 0 && obj@major != major)
-            warning("changing the major isotope of a '", class(obj), " value' object from '", obj@major, "' to '", major, "'")
-        obj@major <- major
-    }
-    if (!is.null(compound <- attribs$compound) && nchar(compound) > 0) {
-        if (nchar(obj@compound) > 0 && obj@compound != compound)
-            warning("changing the compound name of a '", class(obj), " value' object from '", obj@compound, "' to '", compound, "'")
-        obj@compound <- compound
-    }
+    obj <- update_text_attrib(obj, attribs, "isoname", "changing the isotope name")
+    obj <- update_text_attrib(obj, attribs, "major", "changing the major isotope")
+    obj <- update_text_attrib(obj, attribs, "compound", "changing the compound name")
+    # weight
     if (!is.null(weight <- attribs$weight) && length(weight) > 0) {
         if (length(weight) == 1L) weight <- rep(weight, length(obj@.Data))
         if (is.weighted(obj) && 
@@ -34,28 +33,30 @@ setMethod("update_iso", "Isoval", function(obj, attribs) {
 
 setMethod("update_iso", "Alpha", function(obj, attribs) {
     obj <- callNextMethod(obj, attribs)
-    if (!is.null(compound2 <- attribs$compound2) && nchar(compound2) > 0) {
-        if (nchar(obj@compound2) > 0 && obj@compound2 != compound2)
-            warning("changing the bottom compound of a '", class(obj), " value' object from '", obj@compound2, "' to '", compound2, "'")
-        obj@compound2 <- compound2
+    obj <- update_text_attrib (obj, attribs, "compound2", "changing the bottom compound name of a fractionation factor")    
+    obj
+})
+
+setMethod("update_iso", "Epsilon", function(obj, attribs) {
+    obj <- callNextMethod(obj, attribs)
+    obj <- update_text_attrib (obj, attribs, "compound2", "changing the bottom compound name of a fractionation factor")    
+    if (!is.null(permil <- attribs$permil) && length(permil) > 0) {
+        if (length(obj@permil) > 0 && obj@permil != permil)
+            stop("changing the type of an already initialized ", tolower(class(obj)), 
+                 " value from permil to non-permil must be done using the appropriate as.", 
+                 tolower(class(obj)), "() and as.", tolower(class(obj)), "x() functions")
+        obj@permil <- permil
     }
     obj
 })
 
 setMethod("update_iso", "Delta", function(obj, attribs) {
+    obj <- update_text_attrib (obj, attribs, "compound2", "changing the reference name")    
     obj <- callNextMethod(obj, attribs)
-    if (!is.null(ref <- attribs$ref) && nchar(ref) > 0) {
-        if (nchar(obj@ref) > 0 && obj@ref != ref)
-            warning("changing the reference name of a '", class(obj), " value' object from '", obj@ref, "' to '", ref, "'")
-        obj@ref <- ref
-    }
-    if (!is.null(permil <- attribs$permil) && length(permil) > 0) {
-        if (length(obj@permil) > 0 && obj@permil != permil)
-            stop("changing the type of an already initialized delta value from permil to non-permil must be done using the appropriate as.delta() and as.deltax functions")
-        obj@permil <- permil
-    }
+    
     obj
 })
+
 
 setMethod("update_iso", "Intensity", function(obj, attribs) {
     obj <- callNextMethod(obj, attribs)
