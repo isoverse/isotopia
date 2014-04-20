@@ -44,16 +44,27 @@ setMethod("update_iso", "Epsilon", function(obj, attribs) {
         if (length(obj@permil) > 0 && obj@permil != permil)
             stop("changing the type of an already initialized ", tolower(class(obj)), 
                  " value from permil to non-permil must be done using the appropriate as.", 
-                 tolower(class(obj)), "() and as.", tolower(class(obj)), "x() functions")
+                 tolower(class(obj)), "(..., permil = TRUE/FALSE) function")
         obj@permil <- permil
     }
     obj
 })
 
 setMethod("update_iso", "Delta", function(obj, attribs) {
+    # ref ratio
+    if (!is.null(ref_ratio <- attribs$ref_ratio) && length(ref_ratio) > 0) {
+        if (is.isoval(ref_ratio)) {
+            if (is.null(attribs$compound2) || nchar(attribs$compound2) == 0) attribs$compound2 <- ref_ratio@compound # take compound value
+            ref_ratio <- as.value(as.ratio(ref_ratio)) # convert to numeric
+        }
+        if (length(ref_ratio) != 1)
+            stop("reference ratio for a delta value object must be exactly one numeric value, supplied", length(ref_ratio))
+        if (length(obj@ref_ratio) > 0 && obj@ref_ratio != ref_ratio)
+            warning(sprintf("changing the reference ratio of a delta value object from %s to %s", obj@ref_ratio, ref_ratio))
+        obj@ref_ratio <- ref_ratio
+    }
     obj <- update_text_attrib (obj, attribs, "compound2", "changing the reference name")    
     obj <- callNextMethod(obj, attribs)
-    
     obj
 })
 

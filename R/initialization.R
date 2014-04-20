@@ -43,7 +43,7 @@ abundance <- function(..., major = "", compound = "", weight = numeric(), single
 
 #' Alpha value
 #'
-#' Generate an isotope alpha value (ratio of two isotope ratios) object. See \link{isotopia} for general information on initializing
+#' Generate a fractionation factor (alpha value = ratio of two isotope ratios) object. See \link{isotopia} for general information on initializing
 #' and converting isotope data objects.
 #' 
 #' @param ... - numeric vectors (can be named) to turn into alpha values
@@ -58,7 +58,7 @@ alpha <- function(..., major = "", ctop = "", cbot = "", single_as_df = FALSE) {
 
 #' Epsilon value
 #'
-#' Generate an isotope epsilon value object. See \link{isotopia} for general information on initializing
+#' Generate a a fractionation factor (epsilon value). See \link{isotopia} for general information on initializing
 #' and converting isotope data objects.
 #' 
 #' @param ... - numeric vectors (can be named) to turn into epsilon values
@@ -68,10 +68,10 @@ alpha <- function(..., major = "", ctop = "", cbot = "", single_as_df = FALSE) {
 #' @param permil - whether the values passed in are in permil or raw values (i.e. no 1000x multiplication)
 #' @family isotope data types
 #' @examples
-#' epsilon(50, permil = T) # enter as permil value
-#' epsilon(0.05, permil = F) # enter as non-permil value
+#' epsilon(50, permil = TRUE) # enter as permil value
+#' epsilon(0.05, permil = FALSE) # enter as non-permil value
 #' @export
-epsilon <- function(..., major = "", ctop = "", cbot = "", permil = TRUE, single_as_df = FALSE) {
+epsilon <- function(..., major = "", ctop = "", cbot = "", permil = use_permil(), single_as_df = FALSE) {
     iso("Epsilons", ..., attribs = list(major = major, compound = ctop, compound2 = cbot, permil = permil), single_as_df = single_as_df)
 }
 
@@ -80,11 +80,15 @@ epsilon <- function(..., major = "", ctop = "", cbot = "", permil = TRUE, single
 #' Generate an isotope delta value object. See \link{isotopia} for general information on initializing
 #' and converting isotope data objects.
 #' 
+#' For mass balance calculations with delta values, simply add the appropriate weights (if different from
+#' the default) and use \code{delta(...) + delta(...)}. Use \code{\link{exact_mass_balance}(TRUE/FALSE)}
+#' to adjust how these are calculated.
+#' 
 #' @param ... - numeric vectors (can be named) to turn into delta values
 #' @param major - name of the major isotope in the isotope system [optional]
 #' @param compound - name of the compound the isotopic values belong to [optional]
 #' @param ref - name of the reference material
-#' @param ref_ratio - value of the reference material (can be numeric or any valid isotope value object)
+#' @param ref_ratio - value of the reference material
 #' @param permil - whether the values passed in are in permil or raw values (i.e. no 1000x multiplication)
 #' @param weight - weight the isotope value (with a mass, concentration, etc.) for easy mass balance calculations.
 #' The default value is 1, i.e. an unweighted isotope value.
@@ -92,12 +96,10 @@ epsilon <- function(..., major = "", ctop = "", cbot = "", permil = TRUE, single
 #' The weight of an isotope value obejct can be retrieved and (re)set with the \code{\link{weight}} function.
 #' @family isotope data types
 #' @examples
-#' delta(50, permil = T) # enter as permil value
-#' delta(0.05, permil = F) # enter as non-permil value
+#' delta(50, permil = TRUE) # enter as permil value
+#' delta(0.05, permil = FALSE) # enter as non-permil value
 #' @export
-delta <- function(..., major = "", compound = "", ref = "", ref_ratio = numeric(), permil = TRUE, weight = numeric(), single_as_df = FALSE) {
-    if (is.isoval(ref_ratio))
-        ref_ratio <- as.value(as.ratio(ref_ratio))
+delta <- function(..., major = "", compound = "", ref = "", ref_ratio = numeric(), permil = use_permil(), weight = numeric(), single_as_df = FALSE) {
     iso("Deltas", ..., attribs = list(major = major, compound = compound, compound2 = ref, ref_ratio = ref_ratio, permil = permil, weight = weight), single_as_df = single_as_df)
 }
 
@@ -155,12 +157,21 @@ iso <- function(class_isosys, ..., attribs = list(), single_as_df = FALSE) {
         values <- values[[1]]
     } else if (length(values) == 1L && !single_as_df) {
         # single isotope value object as vector
-        return(new_isoval(values[[1]], isoname = names(values)[1]))
+        value <- suppressWarnings(if (is.isoval(values[[1]])) values[[1]] else as.numeric(values[[1]]))
+        return(new_isoval(value, isoname = names(values)[1]))
     }
     
     # system of values / data frame 
     if (!all((val <- sapply(values, length)) == length(values[[1]])))
         stop("Not the same number of measurements provided for each isotope: ", paste(val, collapse = ", "))
+    
+    # tansform to numeric and check completeness
+    values <- suppressWarnings(lapply(values, function(i) if (is.isoval(i)) i else as.numeric(i)))
+    if (!all(vals <- complete.cases(values))) {
+        message("incomplete values in isotope system:")
+        print(data.frame(values)[!vals,])
+        stop("NA is not a valid isotope data type")
+    }
     
     # initialize each value 
     if (is.null(isonames <- names(values))) isonames <- ""

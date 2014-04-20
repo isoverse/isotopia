@@ -7,6 +7,8 @@ test_that("Testing that basic single data types' (ratio, abundance, delta, etc.)
     
     # testing Ratio data type
     expect_error(ratio(NA), "not a valid isotope data type")
+    expect_error(ratio(c(1, NA, 2, 3)), "not a valid isotope data type")
+    expect_error(ratio('test'), "not a valid isotope data type")
     expect_error(ratio(-0.2), "cannot be negative")
     expect_is(ratio(c(0.1, 0.2, 0.3)), "Ratio")
     expect_error(ratio(`12C` = 0.1, major = "12C"), "isotope ratios cannot be defined for the same isotope as minor and major isotope")
@@ -32,7 +34,8 @@ test_that("Testing that basic single data types' (ratio, abundance, delta, etc.)
     expect_equal(label(abundance(`12C` = 0.1)), "F 12C")
     expect_equal(label(abundance(`13C` = 0.1, major = "12C", compound = "CO2")), "CO2 F 13C")
     
-    # testing intesnity
+    # testing intesnity    
+    expect_error(intensity(-1), "ion intensities cannot be negative")
     expect_equal(label(intensity(`13C` = 1:5, compound = "CO2", major = "12C", unit = "mV")), "CO2 13C [mV]")
     
     # testing standard attribute updates and reinitialization
@@ -109,29 +112,48 @@ test_that("Testing that basic single data types' (ratio, abundance, delta, etc.)
     expect_true(epsilon(c(-20, 20))@permil)
     expect_false(epsilon(c(-0.2, 0.2), permil = FALSE)@permil)
     expect_true(epsilon(epsilon(20))@permil)
-    expect_error(epsilon(epsilon(20), permil = FALSE), "changing .* from permil to non-permil must be done using the appropriate .* functions")
+    expect_error(epsilon(epsilon(20), permil = FALSE), "changing .* from permil to non-permil must be done using the appropriate .* function")
     expect_equal(label(epsilon(-10)), "ε [‰]")
     expect_equal(label(epsilon(`13C` = -0.01, permil = FALSE)), "13C ε")
     expect_equal(label(epsilon(`13C` = -10, ctop = "SO4", cbot = "H2S")), "13C ε_SO4/H2S [‰]")
+    expect_warning({
+        e <- epsilon(25, ctop = "CO2", cbot = "DIC")
+        e <- epsilon(e, cbot = "Corg")
+    }, "changing the bottom compound name")
+    expect_equal(e@compound2, "Corg")
     
     # testing delta data type
     expect_is(delta(c(-20, 20)), "Delta")
     expect_true(delta(c(-20, 20))@permil)
     expect_false(delta(c(-0.2, 0.2), permil = FALSE)@permil)
     expect_true(delta(delta(20))@permil)
-    expect_error(delta(delta(20), permil = FALSE), "changing .* from permil to non-permil must be done using the appropriate .* functions")
+    expect_error(delta(delta(20), permil = FALSE), "changing .* from permil to non-permil must be done using the appropriate .* function")
     expect_equal(label(delta(-10)), "δ [‰]")
     expect_equal(label(delta(`13C` = -0.01, permil = FALSE)), "δ13C")
     expect_equal(label(delta(`13C` = -10, compound = "DIC", ref = "SMOW")), "DIC δ13C [‰] vs. SMOW")
+    expect_warning({
+        d <- delta(25, ref = "SMOW")
+        d <- delta(d, ref = "Air")
+    }, "changing the reference name")
+    expect_equal(d@compound2, "Air")
+    expect_error(delta(10, ref_ratio = c(0.1, 0.2)), "reference ratio for a delta value object must be exactly one numeric value")
+    expect_equal(delta(10, ref_ratio = 0.1)@ref_ratio, 0.1)
+    expect_equal(delta(10, ref_ratio = ratio(0.1))@ref_ratio, 0.1)
+    expect_equal(delta(10, ref_ratio = ratio(0.1, compound = "SMOW"))@compound2, "SMOW")
+    expect_equal(delta(10, ref_ratio = abundance(0.2))@ref_ratio, 0.25)
+    expect_warning({
+        d <- delta(25, ref_ratio = 0.2)
+        d <- delta(d, ref_ratio = abundance(0.2))
+    }, "changing the reference ratio")
+    expect_equal(d@ref_ratio, 0.25)
 })
 
 
 test_that("Testing that isotope systems' (ratios, abundances, etc.) validity controls are working", {
-   
-    # testing basic initialization
-    expect_error(iso("Isoval", "InvalidClass"), "not an Isosys class")
     
     # testing isotope system
+    expect_error(capture.output(ratio(1:3, c(1, 2, NA))), "not a valid isotope data type")
+    expect_error(capture.output(ratio(1:3, paste('test', 1:3))), "not a valid isotope data type")
     expect_error(ratio(c(0.1, 0.2, 0.3), 0.2), "Not the same number of measurements")
     expect_error(ratio(`13C` = 0.2, `13C` = 0.1), "All isotopes in a system must be unique")
     expect_true(is.data.frame(ratio(0.1, 0.2)))

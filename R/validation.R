@@ -91,7 +91,8 @@ setMethod("is.weighted", signature("Isoval"), function(iso) any(iso@weight != 1)
 setValidity(
     "Isoval",
     function(object) {             
-        if (any(is.na(object))) return('NA is not a valid isotope data type')
+        if (any(is.na(object))) 
+            return(paste('NA is not a valid isotope data type, found: ', paste(as.value(object), collapse = ", ")))
         
         if (length(object@weight) > 0 && length(object@weight) != length(object@.Data))
              return(sprintf("Not the same number of data values and weights. Found %s data values and %s weights. ", length(object@.Data), length(object@weight)))
