@@ -1,0 +1,16 @@
+\name{as.data.frame}
+\alias{as.data.frame}
+\title{Convert isotope system to a data frame.}
+\usage{
+\method{as.data.frame}{Isosys}(x, ...,
+  stringsAsFactors = default.stringsAsFactors())
+}
+\description{
+This function returns the underlying data frame of an
+isotope system. The individual columns that hold isotope
+values keep their status as isotope value objects.
+}
+\seealso{
+\code{\link[base]{as.data.frame}}
+}
+

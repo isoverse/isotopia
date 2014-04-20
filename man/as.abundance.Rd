@@ -1,0 +1,25 @@
+\name{as.abundance}
+\alias{as.abundance}
+\title{Convert to isotope abundance}
+\usage{
+as.abundance(iso)
+}
+\arguments{
+  \item{iso}{isotopic data object (\code{\link{ratio}},
+  \code{\link{abundance}}, \code{\link{delta}}, etc.)}
+}
+\value{
+isotope \code{\link{abundance}} object if iso can be
+converted to a \code{\link{abundance}}, an error otherwise
+}
+\description{
+\code{as.abundance} converts another isotopic data type to
+an abundance.
+}
+\seealso{
+Other data type conversions: \code{\link{as.alpha}};
+\code{\link{as.delta}}; \code{\link{as.epsilon}};
+\code{\link{as.ratio}}; \code{\link{as.value}};
+\code{\link{as.weighted_value}}; \code{\link{as.weight}}
+}
+

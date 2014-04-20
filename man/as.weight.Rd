@@ -1,0 +1,26 @@
+\name{as.weight}
+\alias{as.weight}
+\title{Retrieve isotope object's weight values}
+\usage{
+as.weight(iso)
+}
+\value{
+In the case of a single isotope object (Isoval), returns
+the numeric vector of weights stored in the object. In the
+case of an isotope system (Isosys), returns the data frame
+underlying the object with all its isotope value objects
+replaced with their weight values.
+}
+\description{
+This function returns an isotope object's weight values.
+}
+\seealso{
+\code{\link{as.data.frame}},
+\code{\link[base]{as.data.frame}} (base method)
+
+Other data type conversions: \code{\link{as.abundance}};
+\code{\link{as.alpha}}; \code{\link{as.delta}};
+\code{\link{as.epsilon}}; \code{\link{as.ratio}};
+\code{\link{as.value}}; \code{\link{as.weighted_value}}
+}
+

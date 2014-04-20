@@ -1,0 +1,26 @@
+\name{convert_isosys}
+\alias{convert_isosys}
+\title{generic function to convert an isotope system that is part of a data frame
+and stitch it back together with the columns in the proper positions. uses
+a callback function that has to do the conversion of the isotope values}
+\usage{
+convert_isosys(iso, class_isosys, conv_fun)
+}
+\arguments{
+  \item{iso}{- the isotope system object}
+
+  \item{class_isosys}{- the class of the isotope system to
+  convert to}
+
+  \item{conv_fun}{- the function which converts the isotope
+  value objects of the data frame, has to accept one
+  parameter that is a data.frame of only the isotope value
+  objects}
+}
+\description{
+generic function to convert an isotope system that is part
+of a data frame and stitch it back together with the
+columns in the proper positions. uses a callback function
+that has to do the conversion of the isotope values
+}
+

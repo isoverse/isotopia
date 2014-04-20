@@ -1,0 +1,48 @@
+\name{epsilon}
+\alias{epsilon}
+\alias{use_permil}
+\title{Epsilon value}
+\usage{
+epsilon(..., major = "", ctop = "", cbot = "", permil = use_permil(),
+  single_as_df = FALSE)
+
+use_permil(permil)
+}
+\arguments{
+  \item{...}{- numeric vectors (can be named) to turn into
+  epsilon values}
+
+  \item{major}{- name of the major isotope in the isotope
+  system [optional]}
+
+  \item{ctop}{- name of the compound representing the top
+  isotope ratio [optional]}
+
+  \item{cbot}{- name of the compound representing the
+  bottom isotope ratio [optional]}
+
+  \item{permil}{- whether the values passed in are in
+  permil or raw values (i.e. no 1000x multiplication)}
+}
+\description{
+Generate a a fractionation factor (epsilon value). See
+\link{isotopia} for general information on initializing and
+converting isotope data objects.
+}
+\note{
+\code{use_permil} is a function to globally enable/disable
+the use of permil values in conversions from/to delta and
+epsilon values. It can always be overwritten in individual
+conversions using the \code{permil} parameter.
+}
+\examples{
+epsilon(50, permil = TRUE) # enter as permil value
+epsilon(0.05, permil = FALSE) # enter as non-permil value
+}
+\seealso{
+Other isotope data types: \code{\link{abundance}};
+\code{\link{alpha}}; \code{\link{delta}},
+\code{\link{use_permil}}; \code{\link{intensity}};
+\code{\link{ratio}}
+}
+

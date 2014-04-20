@@ -1,0 +1,82 @@
+\name{is.iso}
+\alias{is.abundance}
+\alias{is.delta}
+\alias{is.intensity}
+\alias{is.iso}
+\alias{is.isosys}
+\alias{is.isoval}
+\alias{is.ratio}
+\alias{is.weighted}
+\title{Checks for isotope value objects}
+\usage{
+is.iso(obj)
+
+is.isoval(obj)
+
+is.isosys(obj)
+
+is.ratio(obj)
+
+is.abundance(obj)
+
+is.delta(obj)
+
+is.intensity(obj)
+
+\code{is.weighted(iso)}
+}
+\arguments{
+  \item{obj}{- object to test}
+}
+\description{
+Checks for different kinds of isotope value objects. All
+checks recognize both the vector (single isotope value) and
+the data.frame (isotope system) version of an isotope value
+object. \code{is.isosys(obj)} can be used to make the
+distinction between the two.
+}
+\details{
+\code{is.iso} checks whether the object is an isotope value
+object of any kind. Returns TRUE if it is (e.g. ratio,
+abundance, delta, etc. - single or system of values), FALSE
+otherwise.
+
+\code{is.isoval} checks whether the object is a single
+isotope value. Returns TRUE if it's a single isotope value
+object (of any kind, ratio, abundance, delta, etc.) and
+FALSE otherwise.
+
+\code{is.isosys} checks whether the object is a an isotope
+system. Returns TRUE if it's an isotope system (of any
+kind, ratios, abundances, deltas, etc.) and FALSE
+otherwise.
+
+\code{is.ratio} checks whether the object is an isotope
+ratio object. Returns TRUE if it's a single isotope ratio
+object or an isotope system of ratios, FALSE otherwise.
+
+\code{is.abundance} checks whether the object is an isotope
+abundance object. Returns TRUE if it's a single isotope
+abundance object or an isotope system of abundances, FALSE
+otherwise.
+
+\code{is.delta} checks whether the object is a delta value
+object. Returns TRUE if it's a single delta value object or
+an isotope system of delta values, FALSE otherwise.
+
+\code{is.intensity} checks whether the object is an ion
+intensity object. Returns TRUE if it's a single ion
+intensity object or an isotope system of ion intensities,
+FALSE otherwise.
+
+\code{is.weighted} checks if an isotope object is weighted.
+An object counts as weighted if any of the weights
+associated with the data values is != 1, that means only
+objects whose weights are ALL 1 is considered unweighted.
+}
+\examples{
+is.weighted(ratio(0.2)) # returns FALSE
+is.weighted(ratio(0.2, weight = 1)) # returns FALSE
+is.weighted(ratio(c(0.1, 0.2), weight = c(1,2))) # returns TRUE
+}
+

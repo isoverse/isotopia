@@ -1,0 +1,30 @@
+\name{shift_reference}
+\alias{shift_reference}
+\title{Shift reference frame}
+\usage{
+shift_reference(iso, ref)
+}
+\arguments{
+  \item{iso}{the isotope object whose reference frame to
+  shift (\link{delta})}
+
+  \item{ref}{the isotope object which is relative to the
+  new reference frame (\link{delta})}
+}
+\value{
+a \link{delta} value with the shifted reference
+}
+\description{
+This function shifts the reference frame of an isotopic
+data object that has a reference associated (currently only
+\code{\link{delta}} values.
+}
+\note{
+The function requires the reference of the first delta
+value to the compound measured in the second delta value.
+This calculations is also implemented with an
+\code{\link{arithmetic}} shorthand. All calculatinos are
+only permissible if the fractionation factors and isotope
+values have matching attributes.
+}
+

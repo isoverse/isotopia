@@ -1,0 +1,29 @@
+\name{as.value}
+\alias{as.value}
+\title{Retrieve isotope object's primitive values}
+\usage{
+as.value(iso)
+}
+\value{
+In the case of a single isotope object (Isoval), returns
+the numeric vector of raw values stored in the object. In
+the case of an isotope system (Isosys), returns the data
+frame underlying the object with all its isotope value
+objects also replaced with their numeric raw values. To
+just get the data frame but keep the isotope values intact,
+use \code{\link{as.data.frame}} instead.
+}
+\description{
+This function returns an isotope object's (single value or
+isotope system) primitive data value(s).
+}
+\seealso{
+\code{\link{as.data.frame}},
+\code{\link[base]{as.data.frame}} (base method)
+
+Other data type conversions: \code{\link{as.abundance}};
+\code{\link{as.alpha}}; \code{\link{as.delta}};
+\code{\link{as.epsilon}}; \code{\link{as.ratio}};
+\code{\link{as.weighted_value}}; \code{\link{as.weight}}
+}
+

@@ -1,0 +1,82 @@
+\name{arithmetic}
+\alias{arithmetic}
+\title{Isotope arithmetic}
+\usage{
+intensity +- intensity
+
+abundance +- abundance
+
+delta +- delta
+
+alpha - 1
+
+alpha * ratio
+
+delta * delta
+
+intensity / intensity
+
+ratio / ratio
+
+alpha / alpha
+
+delta / delta
+}
+\description{
+Several arithmetic operators (+, -, *, /) are implemented
+to work with specific isotope value object to allow
+shorthand data type conversions and calculations.
+Operations are generally only permitted if the two isotope
+objects being combined have matching attributes (isotope
+name, major isotope, etc.).
+}
+\details{
+\code{intensity+-intensity} allows the addition of
+intensity values, the result is a another
+\code{\link{intensity}} object
+
+\code{abundance+-abundance} is a shorthand for calculating
+the isotopic mass balance of two \code{\link{abundance}}
+objects, see \code{\link{mass_balance}} for details
+
+\code{delta+-delta} is a shorthand for calculating the
+isotopic mass balance of two \code{\link{delta}} objects,
+see \code{\link{mass_balance}} for details, will use the
+global \code{\link{exact_mass_balance}} setting for the
+calculation
+
+\code{alpha - 1} is a shorthand for converting an alpha
+value into an epsilon value. Returns epsilon value in units
+depending on globally defined \code{use_permil()}.
+
+\code{alpha*ratio}, \code{alpha*alpha}, \code{alpha*delta}
+are a shorthand for fractionating an isotope object with an
+alpha fractionation factor, see \code{\link{fractionate}}
+for details
+
+\code{delta*delta}, is a shorthand for shifting the
+reference frame of the first delta value to that of the
+second (requires the compound measured in the second to be
+the reference of the first!), see
+\code{\link{shift_reference}} for details
+
+\code{intensity/intensity} allows the creation of an
+isotope \code{\link{ratio}} object
+
+\code{ratio/ratio} allows the creation of an isotope
+\code{\link{alpha}} object (a fractionation factor)
+
+\code{alpha/ alpha} allows the creation of another isotope
+\code{\link{alpha}} object but requires that either the
+denominator names or numerator names of the two alpha
+objects are identical (i.e. they "cancel")
+
+\code{delta/delta} creates a \code{\link{epsilon}}
+fractionation factor object that describes the
+fractionation factor between the two compounds, requires
+the reference name of the two delta values to be identical.
+Returns epsilon value in units depending on globally
+defined \code{use_permil()}. Works identically for two
+epsilon values.
+}
+

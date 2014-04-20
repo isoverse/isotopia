@@ -1,0 +1,35 @@
+\name{as.delta}
+\alias{as.delta}
+\title{Convert to delta value}
+\usage{
+as.delta(iso, ref_ratio, permil = use_permil())
+}
+\arguments{
+  \item{iso}{isotopic data object (\code{\link{ratio}},
+  \code{\link{abundance}}, \code{\link{delta}}, etc.)}
+
+  \item{ref_ratio}{the refernce ratio associated with the
+  delta value. This is optional but required if planning
+  later conversions back to ratios or abundane values. Can
+  be supplied as a raw numeric numer or a Ratio object (in
+  the case of the latter, the compound name of the Ratio
+  object will be registered as the name of the reference).}
+
+  \item{permil}{whether to generate epsilon object in
+  permil values (x1000) or not}
+}
+\value{
+isotope \code{\link{delta}} object if iso can be converted
+to a \code{\link{delta}}, an error otherwise
+}
+\description{
+\code{as.delta} converts another isotopic data type to a
+delta value
+}
+\seealso{
+Other data type conversions: \code{\link{as.abundance}};
+\code{\link{as.alpha}}; \code{\link{as.epsilon}};
+\code{\link{as.ratio}}; \code{\link{as.value}};
+\code{\link{as.weighted_value}}; \code{\link{as.weight}}
+}
+

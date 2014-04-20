@@ -1,0 +1,48 @@
+\name{exact_mass_balance}
+\alias{exact_mass_balance}
+\alias{mass_balance}
+\title{Calculate isotope mass balance}
+\usage{
+exact_mass_balance(exact)
+
+mass_balance(iso, iso2, ..., exact = exact_mass_balance())
+}
+\arguments{
+  \item{...}{- any number of weighted isotope value objects
+  (have to be all either abundance or delta)}
+
+  \item{exact}{- whether to calculate mass balance of delta
+  values exactly (default FALSE), use exact_mass_balance to
+  set this paramter globally}
+}
+\value{
+weighted abundance or delta value object that represents
+the combination of the parameters
+}
+\description{
+This function calculates the isotope mass balance from
+combining multiple weighted isotope \code{\link{abundance}}
+or \code{\link{delta}} value objects. This calculation is
+also implemented with an \code{\link{arithmetic}}
+shorthand.
+}
+\note{
+\code{exact_mass_balance} is a function to enable/disable
+exact mass balance calculations.
+
+If enabled, mass balance calculations with delta values
+(i.e. \code{mass_balance(delta, delta, delta...} or
+\code{\link{delta}() + \link{delta}()}) will be performed
+exact by converting to natural abundances first and making
+the addition in abundance space (will be converted back to
+delta value afterwards). This is only possible if the
+\code{ref_ratio} in the delta values is set and will lead
+to an error if attempted without the reference ratios set.
+
+If disabled, mass balance calculations with delta values
+(\code{\link{delta}() + \link{delta}()}) will be performed
+in delta space (which is not exact but the discrepancy is
+negligible unless the minor isotopes in an isotope system
+make up a significant portion)
+}
+

@@ -1,0 +1,25 @@
+\name{as.ratio}
+\alias{as.ratio}
+\title{Convert to isotope ratio}
+\usage{
+as.ratio(iso)
+}
+\arguments{
+  \item{iso}{isotopic data object (\code{\link{ratio}},
+  \code{\link{abundance}}, \code{\link{delta}}, etc.)}
+}
+\value{
+isotope \code{\link{ratio}} object if iso can be converted
+to a \code{\link{ratio}}, an error otherwise
+}
+\description{
+\code{as.ratio} converts another isotopic data type to a
+ratio.
+}
+\seealso{
+Other data type conversions: \code{\link{as.abundance}};
+\code{\link{as.alpha}}; \code{\link{as.delta}};
+\code{\link{as.epsilon}}; \code{\link{as.value}};
+\code{\link{as.weighted_value}}; \code{\link{as.weight}}
+}
+

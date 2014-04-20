@@ -1,0 +1,35 @@
+\name{as.alpha}
+\alias{as.alpha}
+\title{Convert to alpha value}
+\usage{
+as.alpha(iso1, iso2)
+}
+\arguments{
+  \item{iso1}{isotopic data object (\code{\link{ratio}},
+  \code{\link{abundance}}, \code{\link{delta}}, etc.)}
+
+  \item{iso2}{isotopic data object (\code{\link{ratio}},
+  \code{\link{abundance}}, \code{\link{delta}}, etc.)}
+}
+\value{
+isotope \code{\link{alpha}} object if iso can be converted
+to a \code{\link{alpha}}, an error otherwise
+}
+\description{
+\code{as.alpha} converts other isotopic data types to alpha
+values (fractionation factors)
+}
+\details{
+Some of the conversions are also implemented in arithmetic
+shorthand, for example to generate an alpha value from two
+ratios, \code{as.alpha(ratio(), ratio())} is the same as
+\code{ratio() / ratio()}. See \link{arithmetic} for
+details.
+}
+\seealso{
+Other data type conversions: \code{\link{as.abundance}};
+\code{\link{as.delta}}; \code{\link{as.epsilon}};
+\code{\link{as.ratio}}; \code{\link{as.value}};
+\code{\link{as.weighted_value}}; \code{\link{as.weight}}
+}
+

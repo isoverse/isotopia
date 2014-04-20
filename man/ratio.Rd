@@ -1,0 +1,43 @@
+\name{ratio}
+\alias{ratio}
+\title{Isotope ratio}
+\usage{
+ratio(..., major = "", compound = "", weight = numeric(),
+  single_as_df = FALSE)
+}
+\arguments{
+  \item{...}{- numeric vectors (can be named) to turn into
+  isotope ratio objects}
+
+  \item{major}{- name of the major isotope in the single
+  ratio or isotope system [optional]}
+
+  \item{compound}{- name of the compound the isotopic
+  values belong to [optional]}
+
+  \item{weight}{- weight the isotope value (with a mass,
+  concentration, etc.) for easy mass balance calculations.
+  The default value is 1, i.e. an unweighted isotope value.
+  If specified, \code{weight} must be a single value or a
+  numeric vector of the same size as the data values. The
+  weight of an isotope value obejct can be retrieved and
+  (re)set with the \code{\link{weight}} function.}
+}
+\description{
+Generate isotope ratio objects. See \link{isotopia} for
+general information on initializing and converting isotope
+data objects.
+}
+\examples{
+ratio(0.1) # single value
+ratio(c(0.1, 0.2, 0.3)) # multiple values
+ratio(`13C` = c(0.1, 0.2, 0.3)) # named ratio
+ratio(`33S` = c(0.1, 0.2, 0.3), `34S` = c(0.2, 0.4, 0.6), major = "32S") # isotope system
+}
+\seealso{
+Other isotope data types: \code{\link{abundance}};
+\code{\link{alpha}}; \code{\link{delta}},
+\code{\link{use_permil}}; \code{\link{epsilon}},
+\code{\link{use_permil}}; \code{\link{intensity}}
+}
+

@@ -1,0 +1,31 @@
+\name{iso}
+\alias{iso}
+\title{create an isotope value object (this function is not exported and should
+be access via the appropriate wrapper functions, e.g. \code{ratio}, \code{abundance}, etc.)}
+\usage{
+iso(class_isosys, ..., attribs = list(), single_as_df = FALSE)
+}
+\arguments{
+  \item{class_isosys}{name of the class for an isotope
+  system (which holds the info on which isoval class
+  belongs to the system as well)}
+
+  \item{attribs}{named list of attributes to pass to the
+  isotope data object constructors}
+
+  \item{...}{values (can be single data frame or list)}
+
+  \item{single_as_df}{whether to return a single value as a
+  data frame}
+}
+\description{
+create an isotope value object (this function is not
+exported and should be access via the appropriate wrapper
+functions, e.g. \code{ratio}, \code{abundance}, etc.)
+}
+\note{
+the setup for this function also means that you can modify
+e.g. an existing ratio with the paramters passed in (say to
+set the name later on)
+}
+
