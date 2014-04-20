@@ -152,3 +152,8 @@ test_that("Testing proper response to math operators", {
     expect_error(mass_balance(delta(100), delta(200), exact = TRUE), "not implemented yet")
     expect_error(mass_balance(delta(100, 200), delta(200, 200), exact = TRUE), "not implemented yet")
 })
+
+test_that("Testing more complex computation", {
+    expect_equal(alpha(0.8) * delta(500) + delta(100), 
+                 as.delta(delta( (0.8*1.5 - 1 + 0.1)/2, compound = "?+?", weight=2, permil = F)))
+})

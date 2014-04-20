@@ -23,7 +23,13 @@ iso_attribs_check <- function(e1, e2, include = names(attributes(e1)), exclude =
     e1.attribs <- e1.attribs[which(names(e1.attribs) %in% setdiff(include, exclude))]
     e2.attribs <- attributes(e2)
     e2.attribs <- e2.attribs[which(names(e2.attribs) %in% setdiff(include, exclude))]
-    if (!identical(e1.attribs, e2.attribs)) {
+    failed <- FALSE
+    if (any(!names(e1.attribs) %in% names(e2.attribs)) && any(!names(e2.attribs) %in% names(e1.attribs))) 
+        failed <- TRUE
+    else
+        e1.attribs <- e1.attribs[names(e2.attribs)] # sort properly
+    
+    if (failed || !identical(e1.attribs, e2.attribs)) {
         attr_names <- paste0("'", names(e1.attribs)[names(e1.attribs)!="class"], "'")
         stop(sprintf("%s that don't have matching attributes (%s):\n%s\n%s", 
                      text, paste(attr_names, collapse = " or "), label(e1), label(e2)))

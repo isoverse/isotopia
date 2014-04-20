@@ -83,14 +83,11 @@ setMethod("update_iso", "Intensity", function(obj, attribs) {
 #' 
 #' \code{weight(iso, weight)} adds a weight (can be thought of as mass or concentration) to an isotopic value
 #' which will be used to weigh the isotope value when adding together multiple isotope values. 
-#' \code{weight(iso)} returns the weight of an isotope value object or \code{NULL} if it is undefined.
+#' \code{\link{as.weight}(iso)} returns the weight of an isotope value object.
 #' 
 #' @param iso - object to get weight or add weight
 #' @param weight - vector of weight values, has to be a single value or the same length
 #' as the data stored in the isotope value object.
-#' @usage
-#' \code{weight(iso)}
-#' \code{weight(iso, weight)}
 #' @export
 #' @note This can also be achieved when first initializing (or updating) an object 
 #' via calls to \code{\link{ratio}}, \code{\link{abundance}}, \code{\link{delta}}, etc.
