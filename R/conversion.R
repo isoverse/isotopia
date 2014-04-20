@@ -1,4 +1,4 @@
-#' @include classes.R
+#' @include validation.R
 NULL
 
 # general conversion function ===================================
@@ -113,6 +113,20 @@ setMethod("as.ratio", "Intensities", function(iso) {
 
 # delta to ratio ======
 setMethod("as.ratio", "Delta", function(iso) {
+    if (length(iso@ref_ratio) == 0) {
+        # no, reference, let's see if we can find one
+        stds <- get_standards(minor = iso@isoname, major = iso@major, name = iso@compound2)
+        if (length(stds) == 0)
+            message("No reference ratio registered with the delta value, tried to find one from the registered standards but none were found, delta: ", label(iso))
+        else if (length(stds) > 1)
+            message("No reference ratio registered with the delta value, tried to find one from the registered standards but found multiple, delta: ", label(iso))
+        else if (length(stds) == 1) {
+            message("No reference ratio registered with the delta value, successfully found a matching standard: ", stds$ratio)
+            iso@ref_ratio <- as.value(stds[[1]])
+        }
+    }
+    
+    # continue as usual
     if (length(iso@ref_ratio) != 1)
         stop("cannot convert from a ratio to a delta value without the reference ratio set in the delta value object")
     a <- as.alpha(iso)
@@ -290,7 +304,7 @@ setMethod("as.delta", signature(iso = "Epsilon", ref_ratio = "missing"), functio
 # alpha to delta ====
 setMethod("as.delta", signature(iso = "Alpha", ref_ratio = "ANY"), function(iso, ref_ratio, permil = use_permil()) {
     e <- as.epsilon(iso)
-    if (missing(ref_ratio))
+    if (missing(ref_ratio) || length(ref_ratio) == 0)
         as.delta(e, permil = permil)
     else
         as.delta(e, ref_ratio, permil = permil)

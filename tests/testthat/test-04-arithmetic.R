@@ -59,6 +59,15 @@ test_that("Testing proper response to math operators", {
     expect_error(alpha(0.8, cbot = "Corg") * alpha(0.9, ctop = "CO2"), "cannot combine two fractionation factors if their denominator .* numerator .* don't cancel")
     expect_equal(alpha(0.8, ctop = "CO2", cbot = "DIC") * alpha(0.9, ctop = "DIC", cbot = "Corg"), alpha(0.8*0.9, ctop = "CO2", cbot = "Corg"))
     
+    # converting alpha * delta to delta (fractionate it)
+    expect_error(alpha(a = 0.8) * delta(b = 0.9), "cannot generate a fractionation factor from two fractionation factors that don't have matching attributes")
+    expect_equal(alpha(0.8) * delta(200), delta((0.8*1.2 - 1)*1000))
+    expect_equal(alpha(0.8) * delta(0.2, permil = F), delta(0.8*1.2 - 1, permil = F))
+    expect_equal(alpha(0.8) * delta(200), fractionate(alpha(0.8), delta(200))) # test actual fractionate function does the same
+    
+    # testing the same with epsilon
+    expect_equal(fractionate(epsilon(-200), delta(0.2, permil = F)), delta(0.8*1.2 - 1, permil = F))
+    
     # converting alpha / alpha to alpha
     expect_error(alpha(a = 0.8) / alpha(b = 0.9), "cannot generate a fractionation factor from two fractionation factors that don't have matching attributes")
     expect_error(alpha(0.8, ctop = "CO2", cbot = "Corg") / alpha(0.9, ctop = "Corg", cbot = "CO2"), "cannot combine two fractionation factors if neither their denominators .* numerators .* cancel")
@@ -72,6 +81,13 @@ test_that("Testing proper response to math operators", {
     
     # convert deltas to epsilon (with delta/delta)
     expect_equal(delta(200) / delta(-200), epsilon((1.2 / 0.8 - 1) * 1000))
+    
+    # shift refrence frame
+    expect_equal(delta(200) * delta(-200), delta( (1.2 * 0.8 - 1) * 1000)) # formula test
+    expect_equal(delta(200) * delta(-200), shift_reference(delta(200), delta(-200))) # actual function equivalent to arithmetic
+    expect_error(delta(200, ref = "CO2") * delta(-200, compound = "DIC"),"cannot combine two fractionation factors .* denominator .* numerator .* don't cancel")
+    expect_equal(delta(200, compound = "CO2", ref = "internal") * delta(-200, compound = "internal", ref = "SMOW", ref_ratio = 0.1), 
+                 delta(-40, compound = "CO2", ref = "SMOW", ref_ratio = 0.1))
     
     # combining intensities with same definition
     expect_error(intensity(a = 100) + intensity(b = 1000), "trying to combine two intensity objects that don't have matching attributes")
@@ -108,13 +124,31 @@ test_that("Testing proper response to math operators", {
     
     # mixing ratios (currently not allowed, only abundances and delta values!)
     expect_error(ratio(a = 0.2) + ratio(b = 0.3), "not meaningful for these isotope objects")
-#     expect_error(ratio(a = 0.2) + ratio(b = 0.3), "trying to mix two isotope objects that don't have matching attributes")
-#     expect_error(ratio(c(0.1, 0.2)) + ratio(0.3), "trying to mix two isotope objects that don't have matching lengths")
-#     expect_is(rmix <- as.ratio(abundance(0.2)) + as.ratio(abundance(0.4)), "Ratio")
-#     expect_equal(as.value(rmix), as.value(as.ratio(abundance(0.3))))
-#     expect_equal(as.weight(rmix), 2)
-#     expect_error(ratio(0.2, 0.3) + ratio(0.3, 0.4), "this really needs to be implemented") # FIXME
+    #     expect_error(ratio(a = 0.2) + ratio(b = 0.3), "trying to mix two isotope objects that don't have matching attributes")
+    #     expect_error(ratio(c(0.1, 0.2)) + ratio(0.3), "trying to mix two isotope objects that don't have matching lengths")
+    #     expect_is(rmix <- as.ratio(abundance(0.2)) + as.ratio(abundance(0.4)), "Ratio")
+    #     expect_equal(as.value(rmix), as.value(as.ratio(abundance(0.3))))
+    #     expect_equal(as.weight(rmix), 2)
+    #     expect_error(ratio(0.2, 0.3) + ratio(0.3, 0.4), "this really needs to be implemented") # FIXME
     
     # mixing delta values
-    expect_true("implement delta value mixing")
+    expect_error(delta(a = 200) + delta(b = -300), "trying to calculate the mass balance of two delta values that don't have matching attributes")
+    expect_error(delta(c(100, 200)) + delta(-300), "trying to calculate the mass balance of two delta values that don't have matching lengths")
+    expect_is(amix <- delta(200) + delta(-300), "Delta")
+    expect_equal(as.value(amix), -50)
+    expect_equal(as.weight(amix), 2)
+    expect_equal(as.weighted_value(amix), -100)
+    expect_equal(amix@compound, "?+?")
+    expect_is({
+        amix <- delta(`13C` = 200, weight = 2, compound = "a") + 
+            delta(`13C` = 0.5, compound = "b") + 
+            delta(`13C` = -300, weight = 3, compound = "c")}, "Delta")
+    expect_equal(label(amix), "a+b+c δ13C [‰]") # compound name propagation
+    expect_equal(as.value(amix), (200*2 + 0.5 + -300*3) / (2+1+3)) # formula test
+    expect_equal(as.weight(amix), (2+1+3)) # formula test
+    expect_equal(as.weighted_value(amix), (200*2 + 0.5 + -300*3)) # formula test
+    expect_is(ab <- delta(0.4, weight = 10) - delta(0.04, weight = 1), "Delta") # removing material from a reservoir
+
+    expect_error(mass_balance(delta(100), delta(200), exact = TRUE), "not implemented yet")
+    expect_error(mass_balance(delta(100, 200), delta(200, 200), exact = TRUE), "not implemented yet")
 })

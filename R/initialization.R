@@ -1,4 +1,4 @@
-#' @include attribs.R
+#' @include show.R
 #' @include conversion.R
 NULL
 

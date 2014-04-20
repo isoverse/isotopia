@@ -1,30 +1,5 @@
-#' @include classes.R
-#' @include conversion.R
+#' @include operations.R
 NULL
-
-#' Calculate isotope mass balance
-#' 
-#' This function calculates the isotope mass balance from combining multiple weighted
-#' isotope \code{\link{abundance}} or \code{\link{delta}} value objects. This calculation
-#' is also implemented with an \code{\link{arithmetic}} shorthand.
-#'
-#' @param ... - any number of weighted isotope value objects (have to be all either abundance or delta)
-#' @param exact - whether to calculate mass balance of delta values exactly (default FALSE), 
-#' use exact_mass_balance to set this paramter globally 
-#' @return weighted abundance or delta value object that represents the combination of the parameters
-#' @export
-#' @genericMethods
-setGeneric("mass_balance", function(iso, iso2, ..., exact = FALSE) standardGeneric("mass_balance"))
-setMethod("mass_balance", signature("Abundance", "Abundance"), function(iso, iso2, ..., exact = FALSE) {
-    # consider implementing a performance optimized version for many additions
-    all <- c(list(iso2), list(...))
-    for (i in all)
-        iso = iso + i
-    iso
-})
-setMethod("mass_balance", signature("Delta", "Delta"), function(iso, iso2, ..., exact = FALSE) {
-    
-})
 
 #' Isotope arithmetic
 #' 
@@ -110,7 +85,13 @@ NULL
 
 # adding deltas (i.e. isotope mixing/mass balance calculations)
 setMethod("+", signature(e1 = "Delta", e2 = "Delta"), function(e1, e2) {
-    mass_balance(e1, e2)
+    iso_attribs_check(e1, e2, exclude = c("weight", "compound"), text = "trying to calculate the mass balance of two delta values")
+    weightsum <- as.weight(e1) + as.weight(e2)
+    e1@.Data <- (as.weighted_value(e1) + as.weighted_value(e2))/weightsum
+    e1@weight <- weightsum
+    e1@compound <- paste(sub("^$", "?", c(e1@compound, e2@compound)), collapse = "+")
+    validObject(e1)
+    e1
 })
 
 # Subtraction  ========================
@@ -161,37 +142,38 @@ setMethod("*", signature(e1 = "Isoval", e2 = "ANY"), function(e1, e2) operation_
 setMethod("*", signature(e1 = "ANY", e2 = "Isoval"), function(e1, e2) operation_error("Multiplication", e1, e2))
 setMethod("*", signature(e1 = "Isosys", e2 = "Isosys"), function(e1, e2) operation_error("Multiplication", e1, e2))
 
+#' @usage alpha * ratio
+#' @details
+#' \code{alpha*ratio}, \code{alpha*alpha}, \code{alpha*delta} are a shorthand for 
+#' fractionating an isotope object with an alpha fractionation factor,
+#' see \code{\link{fractionate}} for details
+#' @name arithmetic 
+#' @rdname arithmetic
+NULL
+
 # alpha * ratio and ratio * alpha (always the weight of the ratio is carried over, alpha is considered a modifier)
-setMethod("*", signature(e1 = "Alpha", e2 = "Ratio"), function(e1, e2) {
-    iso_attribs_check(e1, e2, include = c("isoname", "major"), text = "cannot generate a ratio from a fractionation factor and a ratio")
-    if (e1@compound2 != e2@compound)
-        stop(sprintf("cannot generate a ratio if the fractionation factor's denominator (%s) does not match the ratio compound (%s)", e1@compound2, e2@compound))
-    e2@.Data <- e1@.Data * e2@.Data # weight carried in second value
-    recast_isoval(e2, "Ratio", list(compound = e1@compound))
-})
-setMethod("*", signature(e1 = "Ratio", e2 = "Alpha"), function(e1, e2) e2 * e1)
+setMethod("*", signature(e1 = "Alpha", e2 = "Ratio"), function(e1, e2) fractionate(e1, e2))
+setMethod("*", signature(e1 = "Ratio", e2 = "Alpha"), function(e1, e2) e2 * e1) # just reverse
 
 # alpha * alpha (weight of first alpha is carried)
-setMethod("*", signature(e1 = "Alpha", e2 = "Alpha"), function(e1, e2) {
-    iso_attribs_check(e1, e2, include = c("isoname", "major"), text = "cannot generate a fractionation factor from two fractionation factors")
-    if (e1@compound2 != e2@compound)
-        stop(sprintf("cannot combine two fractionation factors if their denominator (%s) and numerator (%s) don't cancel", e1@compound2, e2@compound))
-    e1@.Data <- e1@.Data * e2@.Data
-    recast_isoval(e1, "Alpha", list(compound2 = e2@compound2))
-})
+setMethod("*", signature(e1 = "Alpha", e2 = "Alpha"), function(e1, e2) fractionate(e1, e2))
 
 # alpha * delta(x) and delta(x) * alpha (always the weight of the delta value is carried over, alpha considered a modifier)
-setMethod("*", signature(e1 = "Alpha", e2 = "Delta"), function(e1, e2) {
-    # take delta and deltax into consideration!
-    stop("not implemented yet")
-})
+setMethod("*", signature(e1 = "Alpha", e2 = "Delta"), function(e1, e2) fractionate(e1, e2))
 setMethod("*", signature(e1 = "Delta", e2 = "Alpha"), function(e1, e2) e2 * e1) # just reverse
 
+#' @usage delta * delta
+#' @details
+#' \code{delta*delta}, is a shorthand for shifting the reference frame of the
+#' first delta value to that of the second (requires the compound measured in the
+#' second to be the reference of the first!), see \code{\link{shift_reference}} 
+#' for details
+#' @name arithmetic 
+#' @rdname arithmetic
+NULL
+
 # delta * delta
-setMethod("*", signature(e1 = "Delta", e2 = "Delta"), function(e1, e2) {
-    stop("this is permissible but not implemented yet")
-    # essentially the same as multiplying two Alpha values (in fact should convert to alpha), except the outcome is a Delta value
-})
+setMethod("*", signature(e1 = "Delta", e2 = "Delta"), function(e1, e2) shift_reference(e1, e2))
 
 # FIXME: isotope systems?
 setMethod("*", signature(e1 = "Alphas", e2 = "Ratios"), function(e1, e2) stop("theoretically permissible but might not be worth implementing"))

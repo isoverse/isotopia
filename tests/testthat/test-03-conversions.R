@@ -162,6 +162,7 @@ test_that("Testing that isotope data type conversations behave correctly", {
     expect_equal(as.ratio(delta(x, ref_ratio = 0.2)), ratio((x/1000 + 1) * 0.2)) # test equation
     expect_equal(as.ratio(delta(`13C` = -100, major = "12C", compound = "CO2", ref_ratio = 0.2)), 
                  ratio(`13C` = 0.18, major = "12C", compound = "CO2")) # test parameters
+    expect_message(as.ratio(delta(`2H` = -100, major = "1H", ref = "VSMOW")), "No reference ratio registered with the delta value, successfully found a matching standard")
     
 })
  

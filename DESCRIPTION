@@ -13,10 +13,11 @@ Depends:
     testthat
 Collate:
     'classes.R'
+    'validation.R'
     'conversion.R'
+    'operations.R'
     'arithmetic.R'
     'attribs.R'
+    'show.R'
     'initialization.R'
     'isotopia.R'
-    'show.R'
-    'validation.R'

@@ -1,4 +1,4 @@
-#' @include classes.R
+#' @include attribs.R
 NULL
 
 setMethod("show", "Isoval", function(object) {

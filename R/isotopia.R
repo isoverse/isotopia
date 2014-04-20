@@ -43,7 +43,9 @@
 #' ratio(`33S` = c(0.1, 0.2, 0.3), `34S` = c(0.2, 0.4, 0.6), major = "32S") # isotope system
 NULL
 
+#' @include operations.R
 #' @include arithmetic.R
+#' @include initialization.R
 NULL
 
 #' @note
@@ -96,3 +98,84 @@ use_permil <- function(permil) {
         return(options("use_permil")[[1]])
 }
 use_permil(TRUE)
+
+#' Register an isotope standard
+#' 
+#' Use this function to register an isotope standard. This can be useful
+#' for keeping track of standards you use internally and will also allow
+#' conversions from \code{\link{delta}} to e.g. \code{\link{ratio}} to 
+#' automatically try to find the approriate standard ratio from the 
+#' registered values.
+#' 
+#' @param ratio - a ratio object with minor, and major isotope as well as compound set,
+#' can be converted from another isotope object if desired (e.g. a measured delta
+#' value or an abundance)
+#' @aliases standards
+#' @export
+#' @rdname standards
+register_standard <- function(ratio) {
+    if (!is.ratio(ratio))
+        stop("can only register standards that are ratio isotope objects")
+    
+    if (length(ratio) != 1L)
+        stop("must be a single ratio value, found ", length(ratio))
+    
+    if (nchar(ratio@isoname) == 0 || nchar(ratio@major) == 0 || nchar(ratio@compound) == 0)
+        stop("can only register ratios that have minor, major isotope and compound name set")
+    
+    if (is.null(refs <- options("isotope_standards")[[1]]))  
+        refs <- data.frame(minor = character(), major = character(), name = character(), ratio = numeric(), stringsAsFactors = F)
+    
+    index <- which(refs$minor == ratio@isoname & refs$major == ratio@major & refs$name == ratio@compound)
+    if (length(index) > 1)
+        stop("more than one reference already exists with these characteristics, they must be unique!")
+    else if (length(index) == 1) {
+        index <- index
+        if (as.value(ratio) != refs$ratio[index])
+            warning("overwriting an existing standard with ratio: ", refs$ratio[index])
+    } else
+        index <- nrow(refs) + 1
+    
+    refs[index,] <- list(minor = ratio@isoname, major = ratio@major, name = ratio@compound, ratio = as.value(ratio))
+    options(isotope_standards = refs)
+    invisible(get_standards())
+}
+
+
+#' Retrive registered isotope standards
+#' 
+#' This function retrieves any number of registered isotope standards
+#' that can be identified with the provided search terms.
+#' @param minor - character vector of minor isotope names to search for
+#' @param major - character vector of major isotope names to search for
+#' @param name - character vector of standards names to search for
+#' @return list of ratio objects
+#' @export 
+#' @rdname standards
+get_standards <- function(minor = NULL, major = NULL, name = NULL) {
+    refs <- options("isotope_standards")[[1]]
+    index <- rep(TRUE, nrow(refs))
+    if (!is.null(minor))
+        index <- index & refs$minor %in% minor
+    if (!is.null(major))
+        index <- index & refs$major %in% major
+    if (!is.null(name))
+        index <- index & refs$name %in% name
+    stds <- list()
+    for (i in which(index)) {
+        stds <- c(stds, list(update_iso(ratio(refs[i, "ratio"]), 
+            list(isoname = refs[i, "minor"], major = refs[i, "major"], compound = refs[i, "name"]))))
+    }
+    stds
+}
+
+# register a few useful standards
+if (exists("is.ratio")) {
+    suppressWarnings({
+        register_standard(ratio(`2H` = 0.00015575, major = "1H", compound = "VSMOW"))
+        register_standard(ratio(`13C` = 0.011237, major = "2H", compound = "VPDB"))
+        register_standard(ratio(`15N` = 0.003677, major = "14N", compound = "Air"))
+        register_standard(ratio(`18O` = 0.0020052, major = "16O", compound = "VSMOW"))
+        register_standard(ratio(`34S` = 0.0045005, major = "32S", compound = "CDT"))
+    })
+}
