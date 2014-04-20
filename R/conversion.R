@@ -121,7 +121,7 @@ setMethod("as.ratio", "Delta", function(iso) {
         else if (length(stds) > 1)
             message("No reference ratio registered with the delta value, tried to find one from the registered standards but found multiple, delta: ", label(iso))
         else if (length(stds) == 1) {
-            message("No reference ratio registered with the delta value, successfully found a matching standard: ", stds$ratio)
+            message("Successfully found a matching standard to convert delta value without registered reference: ", label(stds[[1]]), ": ", as.value(stds[[1]]))
             iso@ref_ratio <- as.value(stds[[1]])
         }
     }
@@ -167,6 +167,12 @@ setMethod("as.abundance", "Ratios", function(iso) {
 
 # intensity to abundance
 setMethod("as.abundance", "Intensities", function(iso) as.abundance(as.ratio(iso)))
+
+# delta to abundance
+setMethod("as.abundance", "Delta", function(iso) {
+    r <- as.ratio(iso)
+    as.abundance(r)
+})
 
 # to.alpha =============================================
 

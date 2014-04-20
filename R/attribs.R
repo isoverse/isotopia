@@ -95,7 +95,7 @@ setMethod("update_iso", "Intensity", function(obj, attribs) {
 #' @examples
 #' r <- ratio(0.2)
 #' r <- weight(r, 10)
-#' print(weight(r)) # returns 10
+#' print(as.weight(r)) # returns 10
 setGeneric("weight", function(iso, weight) standardGeneric("weight"))
 setMethod("weight", signature("Isoval", "numeric"), function(iso, weight) {
     iso <- update_iso(iso, list(weight = weight))
