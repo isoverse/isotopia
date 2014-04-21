@@ -21,7 +21,8 @@ NULL
 #' ratio(c(0.1, 0.2, 0.3)) # multiple values
 #' ratio(`13C` = c(0.1, 0.2, 0.3)) # named ratio
 #' ratio(`33S` = c(0.1, 0.2, 0.3), `34S` = c(0.2, 0.4, 0.6), major = "32S") # isotope system
-ratio <- function(..., major = "", compound = "", weight = numeric(), single_as_df = FALSE) {
+ratio <- function(..., major = default_major_isotope(), compound = "", 
+                  weight = numeric(), single_as_df = FALSE) {
     iso("Ratios", ..., attribs = list(major = major, compound = compound, weight = weight), single_as_df = single_as_df)
 }
 
@@ -37,7 +38,8 @@ ratio <- function(..., major = "", compound = "", weight = numeric(), single_as_
 #' @param compound - name of the compound the isotopic values belong to [optional]
 #' @family isotope data types
 #' @export
-abundance <- function(..., major = "", compound = "", weight = numeric(), single_as_df = FALSE) {
+abundance <- function(..., major = default_major_isotope(), compound = "", 
+                      weight = numeric(), single_as_df = FALSE) {
     iso("Abundances", ..., attribs = list(major = major, compound = compound, weight = weight), single_as_df = single_as_df)
 }
 
@@ -52,7 +54,8 @@ abundance <- function(..., major = "", compound = "", weight = numeric(), single
 #' @param cbot - name of the compound representing the bottom isotope ratio [optional]
 #' @family isotope data types
 #' @export
-alpha <- function(..., major = "", ctop = "", cbot = "", single_as_df = FALSE) {
+alpha <- function(..., major = default_major_isotope(), 
+                  ctop = "", cbot = "", single_as_df = FALSE) {
     iso("Alphas", ..., attribs = list(major = major, compound = ctop, compound2 = cbot), single_as_df = single_as_df)
 }
 
@@ -71,7 +74,8 @@ alpha <- function(..., major = "", ctop = "", cbot = "", single_as_df = FALSE) {
 #' epsilon(50, permil = TRUE) # enter as permil value
 #' epsilon(0.05, permil = FALSE) # enter as non-permil value
 #' @export
-epsilon <- function(..., major = "", ctop = "", cbot = "", permil = use_permil(), single_as_df = FALSE) {
+epsilon <- function(..., major = default_major_isotope(), 
+                    ctop = "", cbot = "", permil = use_permil(), single_as_df = FALSE) {
     iso("Epsilons", ..., attribs = list(major = major, compound = ctop, compound2 = cbot, permil = permil), single_as_df = single_as_df)
 }
 
@@ -99,7 +103,9 @@ epsilon <- function(..., major = "", ctop = "", cbot = "", permil = use_permil()
 #' delta(50, permil = TRUE) # enter as permil value
 #' delta(0.05, permil = FALSE) # enter as non-permil value
 #' @export
-delta <- function(..., major = "", compound = "", ref = "", ref_ratio = numeric(), permil = use_permil(), weight = numeric(), single_as_df = FALSE) {
+delta <- function(..., major = default_major_isotope(), compound = "", 
+                  ref = "", ref_ratio = numeric(), permil = use_permil(), 
+                  weight = numeric(), single_as_df = FALSE) {
     iso("Deltas", ..., attribs = list(major = major, compound = compound, compound2 = ref, ref_ratio = ref_ratio, permil = permil, weight = weight), single_as_df = single_as_df)
 }
 
@@ -114,7 +120,8 @@ delta <- function(..., major = "", compound = "", ref = "", ref_ratio = numeric(
 #' @param unit - units of the measurement (e.g. #, V, mV)
 #' @family isotope data types
 #' @export
-intensity <- function(..., major = "", compound = "", unit = "", single_as_df = FALSE) {
+intensity <- function(..., major = default_major_isotope(), compound = "", 
+                      unit = "", single_as_df = FALSE) {
     iso("Intensities", ..., 
         attribs = list(major = major, compound = compound, unit = unit), single_as_df = single_as_df)
 }
@@ -139,6 +146,8 @@ iso <- function(class_isosys, ..., attribs = list(), single_as_df = FALSE) {
     new_isoval <- function(data, isoname) {
         if (!is (data, class_isoval))
             data <- new(class_isoval, data) # initialize new if not already the right object
+        if (length(isoname) == 0 || nchar(isoname) == 0) 
+            isoname <- default_minor_isotope()
         obj <- update_iso(data, attribs = c(list(isoname = isoname), attribs)) # update attributes
         validObject(obj) # test validity
         return(obj)

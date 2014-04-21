@@ -1,0 +1,17 @@
+\name{default_major_isotope}
+\alias{default_major_isotope}
+\title{Set the default major isotope}
+\usage{
+default_major_isotope(major)
+}
+\arguments{
+  \item{major}{the default major isotope name}
+}
+\description{
+Set a default to be used with all new isotope value
+objects, that are initialized without a specified major
+isotope. To disable, set \code{default_major_isotope("")}.
+To retrieve currently set value, call
+\code{default_major_isotope()} without any parameters.
+}
+

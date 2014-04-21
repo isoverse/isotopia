@@ -2,8 +2,8 @@
 \alias{abundance}
 \title{Fractional abundance}
 \usage{
-abundance(..., major = "", compound = "", weight = numeric(),
-  single_as_df = FALSE)
+abundance(..., major = default_major_isotope(), compound = "",
+  weight = numeric(), single_as_df = FALSE)
 }
 \arguments{
   \item{...}{- numeric vectors (can be named) to turn into

@@ -99,6 +99,52 @@ use_permil <- function(permil) {
 }
 use_permil(TRUE)
 
+
+#' Set the default minor isotope
+#' 
+#' Set a default to be used with all new isotope value objects,
+#' that are initialized without a specified minor isotope. To
+#' disable, set \code{default_minor_isotope("")}. To retrieve
+#' currently set value, call \code{default_minor_isotope()} without
+#' any parameters.
+#' 
+#' @param minor the default minor isotope name
+#' @export
+default_minor_isotope <- function(minor) {
+    if (!missing(minor)) {
+        if (!is.character(minor) || length(minor) == 0)
+            stop("not a valid default name for minor isotopes")
+        options(default_minor_isotope = minor)
+        return(invisible(minor))
+    } else {
+        minor <- options("default_minor_isotope")[[1]]
+        return (ifelse(is.null(minor), "", minor))
+    }
+}
+
+
+#' Set the default major isotope
+#' 
+#' Set a default to be used with all new isotope value objects,
+#' that are initialized without a specified major isotope. To
+#' disable, set \code{default_major_isotope("")}. To retrieve
+#' currently set value, call \code{default_major_isotope()} without
+#' any parameters.
+#' 
+#' @param major the default major isotope name
+#' @export
+default_major_isotope <- function(major) {
+    if (!missing(major)) {
+        if (!is.character(major) || length(major) == 0)
+            stop("not a valid default name for major isotopes")
+        options(default_major_isotope = major)
+        return(invisible(major))
+    } else {
+        major <- options("default_major_isotope")[[1]]
+        return (ifelse(is.null(major), "", major))
+    }
+}
+
 #' Register an isotope standard
 #' 
 #' Use this function to register an isotope standard. This can be useful
@@ -153,7 +199,9 @@ register_standard <- function(ratio) {
 #' @export 
 #' @rdname standards
 get_standards <- function(minor = NULL, major = NULL, name = NULL) {
-    refs <- options("isotope_standards")[[1]]
+    if (is.null(refs <- options("isotope_standards")[[1]]))
+        return (list())
+
     index <- rep(TRUE, nrow(refs))
     if (!is.null(minor))
         index <- index & refs$minor %in% minor
@@ -179,3 +227,4 @@ if (exists("is.ratio")) {
         register_standard(ratio(`34S` = 0.0045005, major = "32S", compound = "CDT"))
     })
 }
+

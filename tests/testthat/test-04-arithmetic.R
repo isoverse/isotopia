@@ -156,6 +156,9 @@ test_that("Testing proper response to math operators", {
 test_that("Testing more complex computation", {
     expect_equal(alpha(0.8) * delta(500) + delta(100), 
                  as.delta(delta( (0.8*1.5 - 1 + 0.1)/2, compound = "?+?", weight=2, permil = F)))
+    
+    register_standard(ratio(`13C` = 0.011237, major = "12C", compound = "VPDB"))
     expect_is(as.abundance(delta(`13C` = alpha(0.8) * delta(500) + delta(100) - alpha(0.9) * delta(300), major = "12C", ref = "VPDB")), "Abundance")
     # FIXME continue
+    
 })

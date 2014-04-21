@@ -3,8 +3,9 @@
 \alias{use_permil}
 \title{Delta value}
 \usage{
-delta(..., major = "", compound = "", ref = "", ref_ratio = numeric(),
-  permil = use_permil(), weight = numeric(), single_as_df = FALSE)
+delta(..., major = default_major_isotope(), compound = "", ref = "",
+  ref_ratio = numeric(), permil = use_permil(), weight = numeric(),
+  single_as_df = FALSE)
 
 use_permil(permil)
 }

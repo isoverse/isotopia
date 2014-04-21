@@ -26,6 +26,6 @@ updating) an object via calls to \code{\link{ratio}},
 \examples{
 r <- ratio(0.2)
 r <- weight(r, 10)
-print(weight(r)) # returns 10
+print(as.weight(r)) # returns 10
 }
 

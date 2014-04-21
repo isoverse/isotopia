@@ -3,8 +3,8 @@
 \alias{use_permil}
 \title{Epsilon value}
 \usage{
-epsilon(..., major = "", ctop = "", cbot = "", permil = use_permil(),
-  single_as_df = FALSE)
+epsilon(..., major = default_major_isotope(), ctop = "", cbot = "",
+  permil = use_permil(), single_as_df = FALSE)
 
 use_permil(permil)
 }

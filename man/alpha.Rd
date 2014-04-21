@@ -2,7 +2,8 @@
 \alias{alpha}
 \title{Alpha value}
 \usage{
-alpha(..., major = "", ctop = "", cbot = "", single_as_df = FALSE)
+alpha(..., major = default_major_isotope(), ctop = "", cbot = "",
+  single_as_df = FALSE)
 }
 \arguments{
   \item{...}{- numeric vectors (can be named) to turn into

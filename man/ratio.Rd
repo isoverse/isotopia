@@ -2,8 +2,8 @@
 \alias{ratio}
 \title{Isotope ratio}
 \usage{
-ratio(..., major = "", compound = "", weight = numeric(),
-  single_as_df = FALSE)
+ratio(..., major = default_major_isotope(), compound = "",
+  weight = numeric(), single_as_df = FALSE)
 }
 \arguments{
   \item{...}{- numeric vectors (can be named) to turn into

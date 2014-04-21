@@ -2,7 +2,7 @@
 \alias{intensity}
 \title{Ion intensity}
 \usage{
-intensity(..., major = "", compound = "", unit = "",
+intensity(..., major = default_major_isotope(), compound = "", unit = "",
   single_as_df = FALSE)
 }
 \arguments{
