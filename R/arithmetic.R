@@ -31,7 +31,7 @@ iso_attribs_check <- function(e1, e2, include = names(attributes(e1)), exclude =
     
     if (failed || !identical(e1.attribs, e2.attribs)) {
         attr_names <- paste0("'", names(e1.attribs)[names(e1.attribs)!="class"], "'")
-        stop(sprintf("%s that don't have matching attributes (%s):\n%s\n%s", 
+        stop(sprintf("%s that don't have matching attributes (%s):\n'%s'\n'%s'", 
                      text, paste(attr_names, collapse = " or "), label(e1), label(e2)))
     }
     if (check_length && length(e1) != length(e2))

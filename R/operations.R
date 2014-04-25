@@ -12,7 +12,6 @@ NULL
 #' use exact_mass_balance to set this paramter globally 
 #' @return weighted abundance or delta value object that represents the combination of the parameters
 #' @export
-#' @genericMethods
 setGeneric("mass_balance", function(iso, iso2, ..., exact = exact_mass_balance()) standardGeneric("mass_balance"))
 setMethod("mass_balance", signature("Abundance", "Abundance"), function(iso, iso2, ..., exact = exact_mass_balance()) {
     # consider implementing a performance optimized version for many additions

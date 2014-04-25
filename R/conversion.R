@@ -62,7 +62,6 @@ conversion_error <- function(from, to) {
 #' @rdname as.ratio
 #' @family data type conversions
 #' @export
-#' @genericMethods
 setGeneric("as.ratio", function(iso) standardGeneric("as.ratio"))
 setMethod("as.ratio", "ANY", function(iso) conversion_error(iso, "isotope ratio"))
 setMethod("as.ratio", "Ratio", function(iso) iso)
@@ -145,7 +144,6 @@ setMethod("as.ratio", "Delta", function(iso) {
 #' @rdname as.abundance
 #' @family data type conversions
 #' @export
-#' @genericMethods
 setGeneric("as.abundance", function(iso) standardGeneric("as.abundance"))
 setMethod("as.abundance", "ANY", function(iso) conversion_error(iso, "isotope abundance"))
 setMethod("as.abundance", "Abundance", function(iso) iso)
@@ -190,7 +188,6 @@ setMethod("as.abundance", "Delta", function(iso) {
 #' @rdname as.alpha
 #' @family data type conversions
 #' @export
-#' @genericMethods
 setGeneric("as.alpha", function(iso1, iso2) standardGeneric("as.alpha"))
 setMethod("as.alpha", "ANY", function(iso1, iso2) conversion_error(iso1, "alpha value (ratio of ratios)"))
 
@@ -221,7 +218,6 @@ setMethod("as.alpha", signature("Epsilon", "Epsilon"), function(iso1, iso2) {
 #' @rdname as.epsilon
 #' @family data type conversions
 #' @export
-#' @genericMethods
 setGeneric("as.epsilon", function(iso, permil = use_permil()) standardGeneric("as.epsilon"))
 setMethod("as.epsilon", "ANY", function(iso, permil = use_permil()) conversion_error(iso, "epsilon value"))
 setMethod("as.epsilon", "Isosys", function(iso, permil = use_permil()) 
@@ -260,7 +256,6 @@ setMethod("as.epsilon", signature(iso = "Epsilon"), function(iso, permil = use_p
 #' @rdname as.delta
 #' @family data type conversions
 #' @export
-#' @genericMethods
 setGeneric("as.delta", function(iso, ref_ratio, permil = use_permil()) standardGeneric("as.delta"))
 setMethod("as.delta", "ANY", function(iso, ref_ratio, permil = use_permil()) conversion_error(iso, "delta value"))
 setMethod("as.delta", signature(iso = "Isosys", ref_ratio = "missing"), function(iso, ref_ratio, permil = use_permil()) {

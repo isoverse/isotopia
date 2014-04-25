@@ -9,7 +9,8 @@ Description: R interface for working with isotopic data (abundances, ratios,
     delta values, etc.).
 License: GPL-3
 LazyLoad: yes
-Depends:
+Roxygen: list(wrap = FALSE)
+Suggests:
     testthat
 Collate:
     'classes.R'

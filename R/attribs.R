@@ -14,7 +14,6 @@ update_text_attrib <- function(obj, attribs, slot_name, msg) {
 }
 
 #' update_iso the attributes of an isotope value object
-#' @genericMethods
 setGeneric("update_iso", function(obj, attribs) standardGeneric("update_iso"))
 setMethod("update_iso", "Isoval", function(obj, attribs) {
     obj <- update_text_attrib(obj, attribs, "isoname", "changing the isotope name")
@@ -91,7 +90,6 @@ setMethod("update_iso", "Intensity", function(obj, attribs) {
 #' @export
 #' @note This can also be achieved when first initializing (or updating) an object 
 #' via calls to \code{\link{ratio}}, \code{\link{abundance}}, \code{\link{delta}}, etc.
-#' @genericMethods
 #' @examples
 #' r <- ratio(0.2)
 #' r <- weight(r, 10)
@@ -118,7 +116,6 @@ setMethod("weight", signature("Isoval", "numeric"), function(iso, weight) {
 #' @seealso \code{\link{as.data.frame}}, \code{\link[base]{as.data.frame}} (base method)
 #' @family data type conversions
 #' @export
-#' @genericMethods
 setGeneric("as.value", function(iso) standardGeneric("as.value"))
 setMethod("as.value", "Isoval", function(iso) iso@.Data)
 setMethod("as.value", "Isosys", function(iso) {
@@ -140,7 +137,6 @@ setMethod("as.value", "Isosys", function(iso) {
 #' @seealso \code{\link{as.data.frame}}, \code{\link[base]{as.data.frame}} (base method)
 #' @family data type conversions
 #' @export
-#' @genericMethods
 setGeneric("as.weight", function(iso) standardGeneric("as.weight"))
 setMethod("as.weight", "Isoval", function(iso) iso@weight)
 setMethod("as.weight", "Isosys", function(iso) {
@@ -162,7 +158,6 @@ setMethod("as.weight", "Isosys", function(iso) {
 #' @seealso \code{\link{as.data.frame}}, \code{\link[base]{as.data.frame}} (base method)
 #' @family data type conversions
 #' @export
-#' @genericMethods
 setGeneric("as.weighted_value", function(iso) standardGeneric("as.weighted_value"))
 setMethod("as.weighted_value", "Isoval", function(iso) as.weight(iso) * as.value(iso))
 setMethod("as.weighted_value", "Isosys", function(iso) {
