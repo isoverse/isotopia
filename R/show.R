@@ -64,6 +64,7 @@ setMethod("unit", "Intensity", function(object) object@unit)
 
 #' Get the full label of an isotope data object
 #' @export
+#' @method label
 #' @examples
 #' \dontrun{
 #' label(ratio(...))
@@ -71,6 +72,10 @@ setMethod("unit", "Intensity", function(object) object@unit)
 #' label(isosys(ratio(...), ratio(...))
 #' }
 setGeneric("label", function(object) standardGeneric("label"))
+
+#' @export
+#' @method label
+setMethod("label", "ANY", function(object) stop("label() not defined for objects of type ", class(object)))
 
 # helper
 iso_label <- function(object, show_compound = TRUE) {
