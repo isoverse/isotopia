@@ -71,7 +71,6 @@ exact_mass_balance <- function(exact) {
     } else
         return(options("exact_mass_balance")[[1]])
 }
-exact_mass_balance(FALSE)
 
 #' @note
 #' \code{use_permil} is a function to globally enable/disable the use of permil values
@@ -97,8 +96,6 @@ use_permil <- function(permil) {
     } else
         return(options("use_permil")[[1]])
 }
-use_permil(TRUE)
-
 
 #' Set the default minor isotope
 #' 
@@ -215,16 +212,5 @@ get_standards <- function(minor = NULL, major = NULL, name = NULL) {
             list(isoname = refs[i, "minor"], major = refs[i, "major"], compound = refs[i, "name"]))))
     }
     stds
-}
-
-# register a few useful standards
-if (exists("is.ratio")) {
-    suppressWarnings({
-        register_standard(ratio(`2H` = 0.00015575, major = "1H", compound = "VSMOW"))
-        register_standard(ratio(`13C` = 0.011237, major = "12C", compound = "VPDB"))
-        register_standard(ratio(`15N` = 0.003677, major = "14N", compound = "Air"))
-        register_standard(ratio(`18O` = 0.0020052, major = "16O", compound = "VSMOW"))
-        register_standard(ratio(`34S` = 0.0045005, major = "32S", compound = "CDT"))
-    })
 }
 
