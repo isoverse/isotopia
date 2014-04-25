@@ -11,8 +11,14 @@ NULL
 #' @param exact - whether to calculate mass balance of delta values exactly (default FALSE), 
 #' use exact_mass_balance to set this paramter globally 
 #' @return weighted abundance or delta value object that represents the combination of the parameters
+#' @method mass_balance
 #' @export
 setGeneric("mass_balance", function(iso, iso2, ..., exact = exact_mass_balance()) standardGeneric("mass_balance"))
+
+#' @method mass_balance
+#' @export
+setMethod("mass_balance", "ANY", function(iso, iso2, ..., exact = exact_mass_balance()) stop("mass_balance not defined for objects of class ", class(iso), ", ", class(iso2))) 
+
 setMethod("mass_balance", signature("Abundance", "Abundance"), function(iso, iso2, ..., exact = exact_mass_balance()) {
     # consider implementing a performance optimized version for many additions
     all <- c(list(iso2), list(...))
@@ -47,8 +53,14 @@ setMethod("mass_balance", signature("Deltas", "Deltas"), function(iso, iso2, ...
 #' implemented with an \code{\link{arithmetic}} shorthand. All calculatinos are
 #' only permissible if the fractionation factors and isotope values have matching
 #' attributes.
+#' @method fractionate
 #' @export
 setGeneric("fractionate", function(frac, iso) standardGeneric("fractionate"))
+
+#' @method fractionate
+#' @export
+setMethod("fractionate", "ANY", function(frac, iso) stop("fractionate not defined for objects of class ", class(frac), ", ", class(iso))) 
+
 setMethod("fractionate", signature("Alpha", "Ratio"), function(frac, iso) {
     iso_attribs_check(frac, iso, include = c("isoname", "major"), text = "cannot generate a ratio from a fractionation factor and a ratio")
     if (frac@compound2 != iso@compound)
@@ -90,8 +102,14 @@ setMethod("fractionate", signature("Epsilon", "ANY"), function(frac, iso) fracti
 #' also implemented with an \code{\link{arithmetic}} shorthand. All calculatinos are
 #' only permissible if the fractionation factors and isotope values have matching
 #' attributes.
+#' @method shift_reference
 #' @export
 setGeneric("shift_reference", function(iso, ref) standardGeneric("shift_reference"))
+
+#' @method shift_reference
+#' @export
+setMethod("shift_reference", "ANY", function(iso, ref) stop("shift_reference not defined for objects of class ", class(iso), ", ", class(ref)))
+
 setMethod("shift_reference", signature("Delta", "Delta"), function(iso, ref) {
     a <- as.alpha(iso) # convert value to shift to an alpha value
     fractionate(a, ref) # "fractionte" new reference with this (will automatically make sure everything is correct)

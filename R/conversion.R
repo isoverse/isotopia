@@ -61,8 +61,12 @@ conversion_error <- function(from, to) {
 #' @return isotope \code{\link{ratio}} object if iso can be converted to a \code{\link{ratio}}, an error otherwise
 #' @rdname as.ratio
 #' @family data type conversions
+#' @method as.ratio
 #' @export
 setGeneric("as.ratio", function(iso) standardGeneric("as.ratio"))
+
+#' @method as.ratio
+#' @export
 setMethod("as.ratio", "ANY", function(iso) conversion_error(iso, "isotope ratio"))
 setMethod("as.ratio", "Ratio", function(iso) iso)
 setMethod("as.ratio", "Ratios", function(iso) iso)
@@ -143,8 +147,12 @@ setMethod("as.ratio", "Delta", function(iso) {
 #' @return isotope \code{\link{abundance}} object if iso can be converted to a \code{\link{abundance}}, an error otherwise
 #' @rdname as.abundance
 #' @family data type conversions
+#' @method as.abundance
 #' @export
 setGeneric("as.abundance", function(iso) standardGeneric("as.abundance"))
+
+#' @method as.abundance
+#' @export
 setMethod("as.abundance", "ANY", function(iso) conversion_error(iso, "isotope abundance"))
 setMethod("as.abundance", "Abundance", function(iso) iso)
 setMethod("as.abundance", "Abundances", function(iso) iso)
@@ -187,8 +195,12 @@ setMethod("as.abundance", "Delta", function(iso) {
 #' @return isotope \code{\link{alpha}} object if iso can be converted to a \code{\link{alpha}}, an error otherwise
 #' @rdname as.alpha
 #' @family data type conversions
+#' @method as.alpha
 #' @export
 setGeneric("as.alpha", function(iso1, iso2) standardGeneric("as.alpha"))
+
+#' @method as.alpha
+#' @export
 setMethod("as.alpha", "ANY", function(iso1, iso2) conversion_error(iso1, "alpha value (ratio of ratios)"))
 
 # two ratios to alpha (uses the arithmetic shorthand) 
@@ -217,8 +229,12 @@ setMethod("as.alpha", signature("Epsilon", "Epsilon"), function(iso1, iso2) {
 #' @return isotope \code{\link{epsilon}} object if iso can be converted to an \code{\link{epsilon}}, an error otherwise
 #' @rdname as.epsilon
 #' @family data type conversions
+#' @method as.epsilon
 #' @export
 setGeneric("as.epsilon", function(iso, permil = use_permil()) standardGeneric("as.epsilon"))
+
+#' @method as.epsilon
+#' @export
 setMethod("as.epsilon", "ANY", function(iso, permil = use_permil()) conversion_error(iso, "epsilon value"))
 setMethod("as.epsilon", "Isosys", function(iso, permil = use_permil()) 
     convert_isosys(iso, "Epsilons", function(df) lapply(as.data.frame(df), function(i) as.epsilon(i, permil = permil))))
@@ -255,8 +271,12 @@ setMethod("as.epsilon", signature(iso = "Epsilon"), function(iso, permil = use_p
 #' @return isotope \code{\link{delta}} object if iso can be converted to a \code{\link{delta}}, an error otherwise
 #' @rdname as.delta
 #' @family data type conversions
+#' @method as.delta
 #' @export
 setGeneric("as.delta", function(iso, ref_ratio, permil = use_permil()) standardGeneric("as.delta"))
+
+#' @method as.delta
+#' @export
 setMethod("as.delta", "ANY", function(iso, ref_ratio, permil = use_permil()) conversion_error(iso, "delta value"))
 setMethod("as.delta", signature(iso = "Isosys", ref_ratio = "missing"), function(iso, ref_ratio, permil = use_permil()) {
     convert_isosys(iso, "Deltas", function(df) lapply(as.data.frame(df), function(i) as.delta(i, permil = permil)))

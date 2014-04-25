@@ -87,14 +87,20 @@ setMethod("update_iso", "Intensity", function(obj, attribs) {
 #' @param iso - object to get weight or add weight
 #' @param weight - vector of weight values, has to be a single value or the same length
 #' as the data stored in the isotope value object.
-#' @export
 #' @note This can also be achieved when first initializing (or updating) an object 
 #' via calls to \code{\link{ratio}}, \code{\link{abundance}}, \code{\link{delta}}, etc.
 #' @examples
 #' r <- ratio(0.2)
 #' r <- weight(r, 10)
 #' print(as.weight(r)) # returns 10
+#' @method weight
+#' @export
 setGeneric("weight", function(iso, weight) standardGeneric("weight"))
+
+#' @method weight
+#' @export
+setMethod("weight", "ANY", function(iso, weight) stop("weight not defined for objects of class ", class(iso)))
+
 setMethod("weight", signature("Isoval", "numeric"), function(iso, weight) {
     iso <- update_iso(iso, list(weight = weight))
     validObject(iso) 
@@ -115,8 +121,13 @@ setMethod("weight", signature("Isoval", "numeric"), function(iso, weight) {
 #' frame but keep the isotope values intact, use \code{\link{as.data.frame}} instead.
 #' @seealso \code{\link{as.data.frame}}, \code{\link[base]{as.data.frame}} (base method)
 #' @family data type conversions
+#' @method as.value
 #' @export
 setGeneric("as.value", function(iso) standardGeneric("as.value"))
+
+#' @method as.value
+#' @export
+setMethod("as.value", "ANY", function(iso) stop("as.value not defined for objects of class ", class(iso)))
 setMethod("as.value", "Isoval", function(iso) iso@.Data)
 setMethod("as.value", "Isosys", function(iso) {
     data.frame(lapply(iso,
@@ -136,8 +147,13 @@ setMethod("as.value", "Isosys", function(iso) {
 #' objects replaced with their weight values. 
 #' @seealso \code{\link{as.data.frame}}, \code{\link[base]{as.data.frame}} (base method)
 #' @family data type conversions
+#' @method as.weight
 #' @export
 setGeneric("as.weight", function(iso) standardGeneric("as.weight"))
+
+#' @method as.weight
+#' @export
+setMethod("as.weight", "ANY", function(iso) stop("as.weight not defined for objects of class ", class(iso)))
 setMethod("as.weight", "Isoval", function(iso) iso@weight)
 setMethod("as.weight", "Isosys", function(iso) {
     data.frame(lapply(iso,
@@ -157,8 +173,13 @@ setMethod("as.weight", "Isosys", function(iso) {
 #' objects replaced with their weighted values. 
 #' @seealso \code{\link{as.data.frame}}, \code{\link[base]{as.data.frame}} (base method)
 #' @family data type conversions
+#' @method as.weighted_value
 #' @export
 setGeneric("as.weighted_value", function(iso) standardGeneric("as.weighted_value"))
+
+#' @method as.weighted_value
+#' @export
+setMethod("as.weighted_value", "ANY", function(iso) stop("as.weighted_value not defined for objects of class ", class(iso)))
 setMethod("as.weighted_value", "Isoval", function(iso) as.weight(iso) * as.value(iso))
 setMethod("as.weighted_value", "Isosys", function(iso) {
     data.frame(lapply(iso,
