@@ -79,9 +79,8 @@ is.intensity <- function(obj) inherits(obj, "Intensity") || inherits(obj, "Inten
 #' is.weighted(ratio(c(0.1, 0.2), weight = c(1,2))) # returns TRUE
 #' @rdname is.iso
 #' @export
-#' @genericMethods
 setGeneric("is.weighted", function(iso) standardGeneric("is.weighted"))
-setMethod("is.weighted", signature("Isoval"), function(iso) any(iso@weight != 1))
+setMethod("is.weighted", signature("Isoval"), function(iso) (!is.null(attr(iso, "weight"))) && any(iso@weight != 1))
 
 # =====================================
 # Built-in object validity checks 
