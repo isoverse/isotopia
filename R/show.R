@@ -43,7 +43,13 @@ ratio_name <- function(text1, text2, spacer = "", top = "", bottom = "") {
 
 #' Get the name of an isotopic data object
 #' @export
+#' @method name
 setGeneric("name", function(object) standardGeneric("name"))
+
+#' @export
+#' @method name
+setMethod("name", "ANY", function(object) stop("the name() function is not defined for objects of type ", class(object)))
+
 setMethod("name", "Isoval", function(object) object@isoname)
 setMethod("name", "Ratio", function(object) ratio_name("R", "", spacer = " ", object@isoname, object@major))
 setMethod("name", "Abundance", function(object) ratio_name("F", object@isoname))
@@ -56,7 +62,6 @@ setMethod("name", "Epsilon", function(object) {
 setMethod("name", "Delta", function(object) paste("δ", object@isoname, sep = ""))
 
 #' Get the units of an isotope data object
-#' @export
 setGeneric("unit", function(object) standardGeneric("unit"))
 setMethod("unit", "Isoval", function(object) "")
 setMethod("unit", "Epsilon", function(object) if(object@permil) "‰" else "")
