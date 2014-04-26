@@ -1,5 +1,5 @@
 # package on load function
-.onLoad <- function(lib, pkg){
+setLoadActions(function(ns) {
     # set default use permil
     use_permil(TRUE)
     
@@ -18,4 +18,4 @@
         register_standard(ratio(`18O` = 0.0020052, major = "16O", compound = "VSMOW"))
         register_standard(ratio(`34S` = 0.0045005, major = "32S", compound = "CDT"))
     })
-}
+})
