@@ -10,8 +10,12 @@ Description: R interface for working with isotopic data (abundances, ratios,
 License: GPL-3
 LazyLoad: yes
 Roxygen: list(wrap = FALSE)
+VignetteBuilder: knitr
+URL: https://github.com/sebkopf/isotopia
+BugReports: https://github.com/sebkopf/isotopia/issues
 Suggests:
-    testthat
+    testthat,
+    knitr
 Collate:
     'classes.R'
     'validation.R'
