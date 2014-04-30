@@ -182,18 +182,30 @@ setMethod("as.abundance", "Delta", function(iso) {
 
 # to.alpha =============================================
 
-#' Convert to alpha value
+#' Fractionation factor
 #' 
-#' \code{as.alpha} converts other isotopic data types to alpha values (fractionation factors)
+#' @description
+#' Calculate/convert to isotope fractionation factors (\code{alpha} values).
 #' 
-#' Some of the conversions are also implemented in arithmetic shorthand, for example to generate
-#' an alpha value from two ratios, \code{as.alpha(ratio(), ratio())} is the same as \code{ratio() / ratio()}.
-#' See \link{arithmetic} for details.
+#' @usage as.alpha(iso1, iso2)
+#' @details
+#' The \code{frac_factor(...)} function calculates the fractionation factor between two isotope data objects
+#' (for example two delta values, two epsilons, two ratios, or two alpha values).
+#' 
+#' \code{as.alpha} is mostly synonymous with \code{frac_fractor} but can additionally be used to perform
+#' conversions such as \code{\link{epsilon}} to \code{\link{alpha}}.
 #'
-#' @param iso1 isotopic data object (\code{\link{ratio}}, \code{\link{abundance}}, \code{\link{delta}}, etc.)
-#' @param iso2 isotopic data object (\code{\link{ratio}}, \code{\link{abundance}}, \code{\link{delta}}, etc.)
-#' @return isotope \code{\link{alpha}} object if iso can be converted to a \code{\link{alpha}}, an error otherwise
-#' @rdname as.alpha
+#' All calculatinos are only permissible if the isotope values have matching
+#' attributes.
+#'
+#' @param iso1 the top compound in the fractionation factor
+#' @param iso2 the bottom compound in the fractionation factor
+#' @return isotope \code{\link{alpha}} object if parameters can be converted to a \code{\link{alpha}}, an error otherwise 
+#' @note 
+#' Some of the conversions are also implemented in arithmetic shorthand, for example to generate
+#' an alpha value from two ratios, \code{frac_factor(ratio(), ratio())} and 
+#' \code{as.alpha(ratio(), ratio())} are the same as \code{ratio() / ratio()}.
+#' See \link{arithmetic} for details.
 #' @family data type conversions
 #' @method as.alpha
 #' @export

@@ -15,8 +15,8 @@ isotope \code{\link{abundance}} object if iso can be converted to a \code{\link{
 \code{as.abundance} converts another isotopic data type to an abundance.
 }
 \seealso{
-Other data type conversions: \code{\link{as.alpha}};
-  \code{\link{as.delta}}; \code{\link{as.epsilon}};
-  \code{\link{as.ratio}}
+Other data type conversions: \code{\link{as.alpha}},
+  \code{\link{frac_factor}}; \code{\link{as.delta}};
+  \code{\link{as.epsilon}}; \code{\link{as.ratio}}
 }
 

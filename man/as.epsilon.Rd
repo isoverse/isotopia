@@ -18,7 +18,7 @@ isotope \code{\link{epsilon}} object if iso can be converted to an \code{\link{e
 }
 \seealso{
 Other data type conversions: \code{\link{as.abundance}};
-  \code{\link{as.alpha}}; \code{\link{as.delta}};
-  \code{\link{as.ratio}}
+  \code{\link{as.alpha}}, \code{\link{frac_factor}};
+  \code{\link{as.delta}}; \code{\link{as.ratio}}
 }
 

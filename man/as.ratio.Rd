@@ -16,7 +16,7 @@ isotope \code{\link{ratio}} object if iso can be converted to a \code{\link{rati
 }
 \seealso{
 Other data type conversions: \code{\link{as.abundance}};
-  \code{\link{as.alpha}}; \code{\link{as.delta}};
-  \code{\link{as.epsilon}}
+  \code{\link{as.alpha}}, \code{\link{frac_factor}};
+  \code{\link{as.delta}}; \code{\link{as.epsilon}}
 }
 
