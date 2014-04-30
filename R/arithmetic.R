@@ -56,7 +56,7 @@ NULL
 # adding intensities
 setMethod("+", signature(e1 = "Intensity", e2 = "Intensity"), function(e1, e2) {
     iso_attribs_check(e1, e2, exclude = "weight", text = "trying to combine two intensity objects")
-    e1@.Data <- as.value(e1) + as.value(e2)
+    e1@.Data <- get_value(e1) + get_value(e2)
     validObject(e1)
     e1
 })
@@ -72,8 +72,8 @@ NULL
 # adding abundances (i.e. isotope mixing/mass balance calculations)
 setMethod("+", signature(e1 = "Abundance", e2 = "Abundance"), function(e1, e2) {
     iso_attribs_check(e1, e2, exclude = c("weight", "compound"), text = "trying to calculate the mass balance of two abundance objects")
-    weightsum <- as.weight(e1) + as.weight(e2)
-    e1@.Data <- (as.weighted_value(e1) + as.weighted_value(e2))/weightsum
+    weightsum <- get_weight(e1) + get_weight(e2)
+    e1@.Data <- (get_weighted_value(e1) + get_weighted_value(e2))/weightsum
     e1@weight <- weightsum
     e1@compound <- paste(sub("^$", "?", c(e1@compound, e2@compound)), collapse = "+")
     validObject(e1)
@@ -92,8 +92,8 @@ NULL
 # adding deltas (i.e. isotope mixing/mass balance calculations)
 setMethod("+", signature(e1 = "Delta", e2 = "Delta"), function(e1, e2) {
     iso_attribs_check(e1, e2, exclude = c("weight", "compound"), text = "trying to calculate the mass balance of two delta values")
-    weightsum <- as.weight(e1) + as.weight(e2)
-    e1@.Data <- (as.weighted_value(e1) + as.weighted_value(e2))/weightsum
+    weightsum <- get_weight(e1) + get_weight(e2)
+    e1@.Data <- (get_weighted_value(e1) + get_weighted_value(e2))/weightsum
     e1@weight <- weightsum
     e1@compound <- paste(sub("^$", "?", c(e1@compound, e2@compound)), collapse = "+")
     validObject(e1)

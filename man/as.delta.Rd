@@ -24,7 +24,6 @@ isotope \code{\link{delta}} object if iso can be converted to a \code{\link{delt
 \seealso{
 Other data type conversions: \code{\link{as.abundance}};
   \code{\link{as.alpha}}; \code{\link{as.epsilon}};
-  \code{\link{as.ratio}}; \code{\link{as.value}};
-  \code{\link{as.weighted_value}}; \code{\link{as.weight}}
+  \code{\link{as.ratio}}
 }
 

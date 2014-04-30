@@ -107,7 +107,7 @@ setValidity(
     "Isoval",
     function(object) {             
         if (any(is.na(object))) 
-            return(paste('NA is not a valid isotope data type, found: ', paste(as.value(object), collapse = ", ")))
+            return(paste('NA is not a valid isotope data type, found: ', paste(get_value(object), collapse = ", ")))
         
         if (length(object@weight) > 0 && length(object@weight) != length(object@.Data))
              return(sprintf("Not the same number of data values and weights. Found %s data values and %s weights. ", length(object@.Data), length(object@weight)))
@@ -172,7 +172,7 @@ setValidity(
             return(paste("If specified, the compound name of all isotope value objects in an isotope system must be the same.",
                          "Found:", paste(compounds, collapse=", ")))
         
-        weights <- lapply(isovals, as.weight)
+        weights <- lapply(isovals, get_weight)
         if (length(weights) > 0 && any(sapply(weights, function(i) any(i != weights[[1]]))))
             return(paste("If specified, the weights of all isotope value objects in an isotope system must be the same."))
         
@@ -188,6 +188,7 @@ setValidity(
                          ", found:", paste(sums[sums > 1.0], collapse = ", ")))
         return (TRUE)
     })
+
 
 setValidity(
     "Intensities",

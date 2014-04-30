@@ -53,8 +53,8 @@ test_that("Testing proper response to math operators", {
     expect_error(alpha(0.5, major = "12C") * ratio(0.1, major = "13C"), "cannot generate a ratio from a fractionation factor and a ratio")
     expect_error(alpha(0.5, cbot = "Corg") * ratio(0.4, compound = "CO2"), "cannot generate a ratio .* denominator .* not match .* compound")
     expect_equal(a * ratio(`13C` = 0.4, major = "12C", compound = "Corg"), ratio(`13C` = 0.2, major = "12C", compound = "CO2"))
-    expect_equal(as.weight(weight(alpha(0.9), 2) * ratio(0.2, weight = 3)), 3) # keeping weight of ratio
-    expect_equal(as.weight(ratio(0.2, weight = 3) * alpha(0.9)), 3) # keeping weight of ratio
+    expect_equal(get_weight(weight(alpha(0.9), 2) * ratio(0.2, weight = 3)), 3) # keeping weight of ratio
+    expect_equal(get_weight(ratio(0.2, weight = 3) * alpha(0.9)), 3) # keeping weight of ratio
     
     # converting alpha * alpha to alpha
     expect_error(alpha(a = 0.8) * alpha(b = 0.9), "cannot generate a fractionation factor from two fractionation factors that don't have matching attributes")
@@ -99,29 +99,29 @@ test_that("Testing proper response to math operators", {
     expect_error(intensity(1:5) + intensity(1000), "trying to combine two intensity objects that don't have matching lengths")
     expect_is(ci <- intensity(100) + intensity(1000), "Intensity")
     expect_is(ci <- intensity(a = 100, major = "b", unit = "mV") + intensity(a = 1000, major = "b", unit = "mV"), "Intensity")
-    expect_equal(as.value(ci), 1100.)
+    expect_equal(get_value(ci), 1100.)
     expect_equal(ci@isoname, "a")
     expect_equal(ci@major, "b")
     expect_equal(ci@unit, "mV")
     expect_is(ci <- intensity(1000) - intensity(500), "Intensity")
-    expect_equal(as.value(ci), 500.)
+    expect_equal(get_value(ci), 500.)
     
     # mixing abundances
     expect_error(abundance(a = 0.2) + abundance(b = 0.3), "trying to calculate the mass balance of two abundance objects that don't have matching attributes")
     expect_error(abundance(c(0.1, 0.2)) + abundance(0.3), "trying to calculate the mass balance of two abundance objects that don't have matching lengths")
     expect_is(amix <- abundance(0.2) + abundance(0.4), "Abundance")
-    expect_equal(as.value(amix), 0.3)
-    expect_equal(as.weight(amix), 2)
-    expect_equal(as.weighted_value(amix), 0.6)
+    expect_equal(get_value(amix), 0.3)
+    expect_equal(get_weight(amix), 2)
+    expect_equal(get_weighted_value(amix), 0.6)
     expect_equal(amix@compound, "?+?")
     expect_is({
         amix <- abundance(`13C` = 0.2, weight = 2, compound = "a") + 
             abundance(`13C` = 0.5, compound = "b") + 
             abundance(`13C` = 0.3, weight = 3, compound = "c")}, "Abundance")
     expect_equal(label(amix), "a+b+c F 13C") # compound name propagation
-    expect_equal(as.value(amix), (0.2*2 + 0.5 + 0.3*3) / (2+1+3)) # formula test
-    expect_equal(as.weight(amix), (2+1+3)) # formula test
-    expect_equal(as.weighted_value(amix), (0.2*2 + 0.5 + 0.3*3)) # formula test
+    expect_equal(get_value(amix), (0.2*2 + 0.5 + 0.3*3) / (2+1+3)) # formula test
+    expect_equal(get_weight(amix), (2+1+3)) # formula test
+    expect_equal(get_weighted_value(amix), (0.2*2 + 0.5 + 0.3*3)) # formula test
     expect_is(ab <- abundance(0.4, weight = 10) - abundance(0.04, weight = 1), "Abundance") # removing material from a reservoir
     expect_error(abundance(0.1) - abundance(0.1), "not a valid isotope")
     expect_error(abundance(0.9, weight = 2) - abundance(0.1), "abundances cannot be larger than 1")
@@ -136,26 +136,26 @@ test_that("Testing proper response to math operators", {
     #     expect_error(ratio(a = 0.2) + ratio(b = 0.3), "trying to mix two isotope objects that don't have matching attributes")
     #     expect_error(ratio(c(0.1, 0.2)) + ratio(0.3), "trying to mix two isotope objects that don't have matching lengths")
     #     expect_is(rmix <- as.ratio(abundance(0.2)) + as.ratio(abundance(0.4)), "Ratio")
-    #     expect_equal(as.value(rmix), as.value(as.ratio(abundance(0.3))))
-    #     expect_equal(as.weight(rmix), 2)
+    #     expect_equal(get_value(rmix), get_value(as.ratio(abundance(0.3))))
+    #     expect_equal(get_weight(rmix), 2)
     #     expect_error(ratio(0.2, 0.3) + ratio(0.3, 0.4), "this really needs to be implemented") # FIXME
     
     # mixing delta values
     expect_error(delta(a = 200) + delta(b = -300), "trying to calculate the mass balance of two delta values that don't have matching attributes")
     expect_error(delta(c(100, 200)) + delta(-300), "trying to calculate the mass balance of two delta values that don't have matching lengths")
     expect_is(amix <- delta(200) + delta(-300), "Delta")
-    expect_equal(as.value(amix), -50)
-    expect_equal(as.weight(amix), 2)
-    expect_equal(as.weighted_value(amix), -100)
+    expect_equal(get_value(amix), -50)
+    expect_equal(get_weight(amix), 2)
+    expect_equal(get_weighted_value(amix), -100)
     expect_equal(amix@compound, "?+?")
     expect_is({
         amix <- delta(`13C` = 200, weight = 2, compound = "a") + 
             delta(`13C` = 0.5, compound = "b") + 
             delta(`13C` = -300, weight = 3, compound = "c")}, "Delta")
     expect_equal(label(amix), paste0("a+b+c ", get_iso_letter("delta"), "13C [", get_iso_letter("permil"), "]")) # compound name propagation
-    expect_equal(as.value(amix), (200*2 + 0.5 + -300*3) / (2+1+3)) # formula test
-    expect_equal(as.weight(amix), (2+1+3)) # formula test
-    expect_equal(as.weighted_value(amix), (200*2 + 0.5 + -300*3)) # formula test
+    expect_equal(get_value(amix), (200*2 + 0.5 + -300*3) / (2+1+3)) # formula test
+    expect_equal(get_weight(amix), (2+1+3)) # formula test
+    expect_equal(get_weighted_value(amix), (200*2 + 0.5 + -300*3)) # formula test
     expect_is(ab <- delta(0.4, weight = 10) - delta(0.04, weight = 1), "Delta") # removing material from a reservoir
 
     expect_error(mass_balance(delta(100), delta(200), exact = TRUE), "not implemented yet")

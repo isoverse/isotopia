@@ -77,7 +77,7 @@ setMethod("as.ratio", "Abundances", function(iso) {
     convert_isosys(iso, "Ratios", 
                    function(df) {
                        # convert abundance to ratio
-                       abs <- rowSums(as.value(df))
+                       abs <- rowSums(get_value(df))
                        lapply(df, function(ab) {
                            ab@.Data <- ab@.Data / (1 - abs) # abundance to ratio
                            recast_isoval(ab, "Ratio")
@@ -124,8 +124,8 @@ setMethod("as.ratio", "Delta", function(iso) {
         else if (length(stds) > 1)
             message("No reference ratio registered with the delta value, tried to find one from the registered standards but found multiple, delta: ", label(iso))
         else if (length(stds) == 1) {
-            message("Successfully found a matching standard to convert delta value without registered reference: ", label(stds[[1]]), ": ", as.value(stds[[1]]))
-            iso@ref_ratio <- as.value(stds[[1]])
+            message("Successfully found a matching standard to convert delta value without registered reference: ", label(stds[[1]]), ": ", get_value(stds[[1]]))
+            iso@ref_ratio <- get_value(stds[[1]])
         }
     }
     
@@ -163,7 +163,7 @@ setMethod("as.abundance", "Ratios", function(iso) {
     convert_isosys(iso, "Abundances", 
                    function(df) {
                        # convert ratio to abundance
-                       rs <- rowSums(as.value(df))
+                       rs <- rowSums(get_value(df))
                        lapply(df, function(r) {
                            r@.Data <- r@.Data / (1 + rs) # ratio to abundance
                            recast_isoval(r, "Abundance")
@@ -295,12 +295,12 @@ setMethod("as.delta", signature(iso = "Epsilon", ref_ratio = "Ratio"), function(
         stop(sprintf("reference ratio for a delta value cannot be a different compound than already specified, found '%s' vs '%s'", 
                      iso@compound2, ref_ratio@compound))
     old_ref_ratio <- if (is.null(attr(iso, "ref_ratio"))) numeric() else iso@ref_ratio
-    if (length(old_ref_ratio) > 0 && old_ref_ratio != as.value(ref_ratio))
+    if (length(old_ref_ratio) > 0 && old_ref_ratio != get_value(ref_ratio))
         stop(sprintf("reference ratio for a delta value cannot be different than previous specification, found '%s' vs '%s'", 
-                     old_ref_ratio, as.value(ref_ratio)))
+                     old_ref_ratio, get_value(ref_ratio)))
     
     # cast as delta value
-    iso <- recast_isoval(iso, "Delta", list(ref_ratio = as.value(ref_ratio)))
+    iso <- recast_isoval(iso, "Delta", list(ref_ratio = get_value(ref_ratio)))
     if (nchar(ref_ratio@compound) > 0) # update compound name
         iso@compound2 <- ref_ratio@compound
     as.delta(iso, permil = permil) # convert to correct permil notation
@@ -346,7 +346,7 @@ setMethod("as.delta", signature("Ratio", "Ratio"), function(iso, ref_ratio, perm
     
     # convert to alpha value
     iso2 <- ref_ratio
-    iso2@.Data <- rep(as.value(ref_ratio), length(iso)) # get ref_ratio to the right length
+    iso2@.Data <- rep(get_value(ref_ratio), length(iso)) # get ref_ratio to the right length
     a <- as.alpha(iso, iso2)
     
     # to delta

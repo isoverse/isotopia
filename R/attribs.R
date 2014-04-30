@@ -54,7 +54,7 @@ setMethod("update_iso", "Delta", function(obj, attribs) {
     if (!is.null(ref_ratio <- attribs$ref_ratio) && length(ref_ratio) > 0) {
         if (is.isoval(ref_ratio)) {
             if (is.null(attribs$compound2) || nchar(attribs$compound2) == 0) attribs$compound2 <- ref_ratio@compound # take compound value
-            ref_ratio <- as.value(as.ratio(ref_ratio)) # convert to numeric
+            ref_ratio <- get_value(as.ratio(ref_ratio)) # convert to numeric
         }
         if (length(ref_ratio) != 1)
             stop("reference ratio for a delta value object must be exactly one numeric value, supplied", length(ref_ratio))
@@ -82,7 +82,7 @@ setMethod("update_iso", "Intensity", function(obj, attribs) {
 #' 
 #' \code{weight(iso, weight)} adds a weight (can be thought of as mass or concentration) to an isotopic value
 #' which will be used to weigh the isotope value when adding together multiple isotope values. 
-#' \code{\link{as.weight}(iso)} returns the weight of an isotope value object.
+#' \code{\link{get_weight}(iso)} returns the weight of an isotope value object.
 #' 
 #' @param iso - object to get weight or add weight
 #' @param weight - vector of weight values, has to be a single value or the same length
@@ -92,7 +92,8 @@ setMethod("update_iso", "Intensity", function(obj, attribs) {
 #' @examples
 #' r <- ratio(0.2)
 #' r <- weight(r, 10)
-#' print(as.weight(r)) # returns 10
+#' print(get_weight(r)) # returns 10
+#' @family data type attributes
 #' @method weight
 #' @export
 setGeneric("weight", function(iso, weight) standardGeneric("weight"))
@@ -115,24 +116,25 @@ setMethod("weight", signature("Isoval", "numeric"), function(iso, weight) {
 #' primitive data value(s).  
 #' 
 #' @return In the case of a single isotope object (Isoval), returns the numeric
-#' vector of raw values stored in the object. In the case of an isotope system (Isosys),
+#' vector of raw values stored in the object (same as \code{\link{as.numeric}}). 
+#' In the case of an isotope system (Isosys),
 #' returns the data frame underlying the object with all its isotope value
 #' objects also replaced with their numeric raw values. To just get the data
 #' frame but keep the isotope values intact, use \code{\link{as.data.frame}} instead.
-#' @seealso \code{\link{as.data.frame}}, \code{\link[base]{as.data.frame}} (base method)
-#' @family data type conversions
-#' @method as.value
+#' @seealso \code{\link{as.numeric}}, \code{\link{as.data.frame}}, \code{\link[base]{as.data.frame}} (base method)
+#' @family data type attributes
+#' @method get_value
 #' @export
-setGeneric("as.value", function(iso) standardGeneric("as.value"))
+setGeneric("get_value", function(iso) standardGeneric("get_value"))
 
-#' @method as.value
+#' @method get_value
 #' @export
-setMethod("as.value", "ANY", function(iso) stop("as.value not defined for objects of class ", class(iso)))
-setMethod("as.value", "Isoval", function(iso) iso@.Data)
-setMethod("as.value", "Isosys", function(iso) {
+setMethod("get_value", "ANY", function(iso) stop("get_value not defined for objects of class ", class(iso)))
+setMethod("get_value", "Isoval", function(iso) as.numeric(iso))
+setMethod("get_value", "Isosys", function(iso) {
     data.frame(lapply(iso,
       function(col) {
-          if (is.isoval(col)) as.value(col)
+          if (is.isoval(col)) get_value(col)
           else col
       }), stringsAsFactors = F)
 })
@@ -146,19 +148,19 @@ setMethod("as.value", "Isosys", function(iso) {
 #' returns the data frame underlying the object with all its isotope value
 #' objects replaced with their weight values. 
 #' @seealso \code{\link{as.data.frame}}, \code{\link[base]{as.data.frame}} (base method)
-#' @family data type conversions
-#' @method as.weight
+#' @family data type attributes
+#' @method get_weight
 #' @export
-setGeneric("as.weight", function(iso) standardGeneric("as.weight"))
+setGeneric("get_weight", function(iso) standardGeneric("get_weight"))
 
-#' @method as.weight
+#' @method get_weight
 #' @export
-setMethod("as.weight", "ANY", function(iso) stop("as.weight not defined for objects of class ", class(iso)))
-setMethod("as.weight", "Isoval", function(iso) iso@weight)
-setMethod("as.weight", "Isosys", function(iso) {
+setMethod("get_weight", "ANY", function(iso) stop("get_weight not defined for objects of class ", class(iso)))
+setMethod("get_weight", "Isoval", function(iso) iso@weight)
+setMethod("get_weight", "Isosys", function(iso) {
     data.frame(lapply(iso,
       function(col) {
-          if (is.isoval(col)) as.weight(col)
+          if (is.isoval(col)) get_weight(col)
           else col
       }), stringsAsFactors = F)
 })
@@ -172,19 +174,19 @@ setMethod("as.weight", "Isosys", function(iso) {
 #' returns the data frame underlying the object with all its isotope value
 #' objects replaced with their weighted values. 
 #' @seealso \code{\link{as.data.frame}}, \code{\link[base]{as.data.frame}} (base method)
-#' @family data type conversions
-#' @method as.weighted_value
+#' @family data type attributes
+#' @method get_weighted_value
 #' @export
-setGeneric("as.weighted_value", function(iso) standardGeneric("as.weighted_value"))
+setGeneric("get_weighted_value", function(iso) standardGeneric("get_weighted_value"))
 
-#' @method as.weighted_value
+#' @method get_weighted_value
 #' @export
-setMethod("as.weighted_value", "ANY", function(iso) stop("as.weighted_value not defined for objects of class ", class(iso)))
-setMethod("as.weighted_value", "Isoval", function(iso) as.weight(iso) * as.value(iso))
-setMethod("as.weighted_value", "Isosys", function(iso) {
+setMethod("get_weighted_value", "ANY", function(iso) stop("get_weighted_value not defined for objects of class ", class(iso)))
+setMethod("get_weighted_value", "Isoval", function(iso) get_weight(iso) * get_value(iso))
+setMethod("get_weighted_value", "Isosys", function(iso) {
     data.frame(lapply(iso,
       function(col) {
-          if (is.isoval(col)) as.weighted_value(col)
+          if (is.isoval(col)) get_weighted_value(col)
           else col
       }), stringsAsFactors = F)
 })

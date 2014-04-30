@@ -12,7 +12,7 @@ setMethod("show", "Isoval", function(object) {
                 value = object@.Data, 
                 weight = object@weight))
     } else {
-        print(as.value(object))
+        print(get_value(object))
     }
 })
 

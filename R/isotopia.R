@@ -175,12 +175,12 @@ register_standard <- function(ratio) {
         stop("more than one reference already exists with these characteristics, they must be unique!")
     else if (length(index) == 1) {
         index <- index
-        if (as.value(ratio) != refs$ratio[index])
+        if (get_value(ratio) != refs$ratio[index])
             warning("overwriting an existing standard with ratio: ", refs$ratio[index])
     } else
         index <- nrow(refs) + 1
     
-    refs[index,] <- list(minor = ratio@isoname, major = ratio@major, name = ratio@compound, ratio = as.value(ratio))
+    refs[index,] <- list(minor = ratio@isoname, major = ratio@major, name = ratio@compound, ratio = get_value(ratio))
     options(isotope_standards = refs)
     invisible(get_standards())
 }

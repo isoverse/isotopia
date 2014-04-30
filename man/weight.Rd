@@ -14,7 +14,7 @@ as the data stored in the isotope value object.}
 \description{
 \code{weight(iso, weight)} adds a weight (can be thought of as mass or concentration) to an isotopic value
 which will be used to weigh the isotope value when adding together multiple isotope values.
-\code{\link{as.weight}(iso)} returns the weight of an isotope value object.
+\code{\link{get_weight}(iso)} returns the weight of an isotope value object.
 }
 \note{
 This can also be achieved when first initializing (or updating) an object
@@ -23,6 +23,11 @@ via calls to \code{\link{ratio}}, \code{\link{abundance}}, \code{\link{delta}}, 
 \examples{
 r <- ratio(0.2)
 r <- weight(r, 10)
-print(as.weight(r)) # returns 10
+print(get_weight(r)) # returns 10
+}
+\seealso{
+Other data type attributes: \code{\link{get_value}};
+  \code{\link{get_weighted_value}};
+  \code{\link{get_weight}}
 }
 

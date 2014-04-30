@@ -23,9 +23,9 @@ test_that("Testing that basic single data types' (ratio, abundance, delta, etc.)
     expect_error(weight(ratio(1:5), 2:3), "Not the same number of data values and weights") 
     expect_equal(ratio(1:5, weight = 1:5)@weight, 1.0:5) # check weight
     expect_identical(weight(ratio(1:5), 0.2), ratio(1:5, weight = 0.2))  # set weight
-    expect_equal(as.weight(ratio(1:5, weight = 0.2)), rep(0.2, 5)) # retrieve weight
-    expect_equal(as.weight(ratio(1:5)), rep(1, 5)) # retrieve weight
-    expect_equal(as.weighted_value(ratio(1:5, weight = 2)), 2*1:5) # retrieve weight
+    expect_equal(get_weight(ratio(1:5, weight = 0.2)), rep(0.2, 5)) # retrieve weight
+    expect_equal(get_weight(ratio(1:5)), rep(1, 5)) # retrieve weight
+    expect_equal(get_weighted_value(ratio(1:5, weight = 2)), 2*1:5) # retrieve weight
     
     # testing Abundance data type
     expect_error(abundance(-0.2), "cannot be negative")
@@ -86,7 +86,7 @@ test_that("Testing that basic single data types' (ratio, abundance, delta, etc.)
         r <- ratio(`13C` = 0.1*(1:5), weight = 1:5)
         r2 <- weight(r, 3:7)
     }, "changing the weight .* differences: '1, 2, 6, 7'")
-    expect_equal(as.weight(r2), 3:7)
+    expect_equal(get_weight(r2), 3:7)
     
     # change unit on intensity (with warning)
     expect_warning({
@@ -162,14 +162,14 @@ test_that("Testing that isotope systems' (ratios, abundances, etc.) validity con
     
     # testing weights in isotope system
     expect_error(ratio(ratio(1:5, weight = 1:5), ratio(1:5, weight = 6:10)), "the weights of all isotope value objects in an isotope system must be the same")
-    expect_equal(as.weight(ratio(1, 2, weight = 3)$iso), 3)
+    expect_equal(get_weight(ratio(1, 2, weight = 3)$iso), 3)
     expect_is(rs <- ratio(a = 1:5, b = 6:10, weight = 3:7), "Ratios")
-    expect_equal(as.weight(rs$a), 3:7) # single value
-    expect_equal(as.weighted_value(rs$a), 1:5*3:7) # convert single value
-    expect_equal(as.weight(rs$b), 3:7)
-    expect_equal(as.weighted_value(rs$b), 6:10*3:7)
-    expect_equal(as.weight(rs), data.frame(a=3:7, b=3:7)) # whole data frame
-    expect_equal(as.weighted_value(rs), data.frame(a=1:5*3:7, b=6:10*3:7)) # whole data frame
+    expect_equal(get_weight(rs$a), 3:7) # single value
+    expect_equal(get_weighted_value(rs$a), 1:5*3:7) # convert single value
+    expect_equal(get_weight(rs$b), 3:7)
+    expect_equal(get_weighted_value(rs$b), 6:10*3:7)
+    expect_equal(get_weight(rs), data.frame(a=3:7, b=3:7)) # whole data frame
+    expect_equal(get_weighted_value(rs), data.frame(a=1:5*3:7, b=6:10*3:7)) # whole data frame
     
     # specific test of different isotope systems
     expect_is(ratio(0.2, 0.5), "Ratios")
