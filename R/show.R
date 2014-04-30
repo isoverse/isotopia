@@ -41,6 +41,21 @@ ratio_name <- function(text1, text2, spacer = "", top = "", bottom = "") {
         text
 }
 
+# little helper function for isotope letters
+# --> to be expanded for proper formatting in the future
+get_iso_letter <- function(letter = c("alpha", "delta", "epsilon")) {
+    letter <- match.arg(letter)
+    # ideally these would be like this but this greek alphabet support doesn't really work
+    #switch(letter,
+    #   alpha = "α",
+    #   delta = "δ",
+    #   epsilon = "ε")
+    switch(letter,
+        alpha = "alpha",
+        delta = "d",
+        epsilon = "eps")
+}
+
 #' Get the name of an isotopic data object
 #' @export
 #' @method name
@@ -54,12 +69,12 @@ setMethod("name", "Isoval", function(object) object@isoname)
 setMethod("name", "Ratio", function(object) ratio_name("R", "", spacer = " ", object@isoname, object@major))
 setMethod("name", "Abundance", function(object) ratio_name("F", object@isoname))
 setMethod("name", "Alpha", function(object) {
-    ratio_name(object@isoname, "α", "_", object@compound, object@compound2)
+    ratio_name(object@isoname, get_iso_letter("alpha"), "_", object@compound, object@compound2)
 })
 setMethod("name", "Epsilon", function(object) {
-    ratio_name(object@isoname, "ε", "_", object@compound, object@compound2)
+    ratio_name(object@isoname, get_iso_letter("epsilon"), "_", object@compound, object@compound2)
 })
-setMethod("name", "Delta", function(object) paste("δ", object@isoname, sep = ""))
+setMethod("name", "Delta", function(object) paste(get_iso_letter("delta"), object@isoname, sep = ""))
 
 #' Get the units of an isotope data object
 setGeneric("unit", function(object) standardGeneric("unit"))

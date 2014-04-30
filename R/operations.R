@@ -115,4 +115,3 @@ setMethod("shift_reference", signature("Delta", "Delta"), function(iso, ref) {
     fractionate(a, ref) # "fractionte" new reference with this (will automatically make sure everything is correct)
 })
 
-

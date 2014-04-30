@@ -143,7 +143,7 @@ test_that("Testing proper response to math operators", {
         amix <- delta(`13C` = 200, weight = 2, compound = "a") + 
             delta(`13C` = 0.5, compound = "b") + 
             delta(`13C` = -300, weight = 3, compound = "c")}, "Delta")
-    expect_equal(label(amix), "a+b+c δ13C [‰]") # compound name propagation
+    expect_equal(label(amix), paste0("a+b+c ", get_iso_letter("delta"), "13C [‰]")) # compound name propagation
     expect_equal(as.value(amix), (200*2 + 0.5 + -300*3) / (2+1+3)) # formula test
     expect_equal(as.weight(amix), (2+1+3)) # formula test
     expect_equal(as.weighted_value(amix), (200*2 + 0.5 + -300*3)) # formula test
