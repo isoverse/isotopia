@@ -40,6 +40,28 @@ setMethod("mass_balance", signature("Deltas", "Deltas"), function(iso, iso2, ...
     stop("not implemented yet")
 })
 
+#' Fractionation factor
+#' 
+#' This function calculates the fractionation factor between two isotope data objects
+#' (for example two delta values, two epsilons, two ratios, or two alpha values)
+#' 
+#' @param iso the top compound in the fractionation factor
+#' @param iso2 the bottom compound in the fractionation factor
+#' @return an object of type \code{\link{alpha}} value
+#' @note This calculations is also implemented with an \code{\link{arithmetic}} shorthand. 
+#' All calculatinos are only permissible if the isotope values have matching
+#' attributes.
+#' @method frac_factor
+#' @export
+setGeneric("frac_factor", function(iso, iso2) standardGeneric("frac_factor"))
+
+#' @method frac_factor
+#' @export
+setMethod("frac_factor", "ANY", function(iso, iso2) stop("fractionation factor not defined between ", class(iso), " and ", class(iso2))) 
+setMethod("frac_factor", signature("Ratio", "Ratio"), function(iso, iso2) iso/iso2)
+setMethod("frac_factor", signature("Alpha","Alpha"), function(iso, iso2) iso/iso2)
+setMethod("frac_factor", signature("Epsilon", "Epsilon"), function(iso, iso2) iso/iso2)
+
 #' Fractionate an isotopic value
 #' 
 #' This function calculates the outcome of isotopic fractionation on an isotopic value and

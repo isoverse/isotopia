@@ -54,14 +54,16 @@ for details
 
 \code{intensity/intensity} allows the creation of an isotope \code{\link{ratio}} object
 
-\code{ratio/ratio} allows the creation of an isotope \code{\link{alpha}} object (a fractionation factor)
+\code{ratio/ratio} allows the creation of an isotope \code{\link{alpha}} object (a fractionation factor).
+This is a shorthand for the \link{frac_factor} function.
 
 \code{alpha/ alpha} allows the creation of another isotope \code{\link{alpha}} object but requires that
-either the denominator names or numerator names of the two alpha objects are identical (i.e. they "cancel")
+either the denominator names or numerator names of the two alpha objects are identical (i.e. they "cancel").
+ This is a shorthand for the \link{frac_factor} function.
 
-\code{delta/delta} creates a \code{\link{epsilon}} fractionation factor object that
+\code{delta/delta} creates an \code{\link{alpha}} fractionation factor object that
 describes the fractionation factor between the two compounds, requires the reference
-name of the two delta values to be identical. Returns epsilon value in units depending on globally
-defined \code{use_permil()}. Works identically for two epsilon values.
+name of the two delta values to be identical. This is a shorthand for the \link{frac_factor} function.
+Works identically for two epsilon values.
 }
 

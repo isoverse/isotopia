@@ -40,9 +40,11 @@ test_that("Testing proper response to math operators", {
     expect_equal(r@major, "12C")
     
     # converting ratios to alpha values
+    expect_error(frac_factor(0.2, 0.5), "fractionation factor not defined between .*")
     expect_error(ratio(a = 0.1) / ratio(b = 0.2), "cannot generate a fractionaton factor from two ratio objects that don't have matching attributes")
     expect_error(ratio(0.1, major = "12C") / ratio(0.2), "cannot generate a fractionaton factor from two ratio objects that don't have matching attributes")
     expect_equal(ratio(0.1) / ratio(0.2), alpha(0.5))
+    expect_equal(frac_factor(ratio(0.1), ratio(0.2)), alpha(0.5))
     expect_equal(a <- ratio(`13C` = 0.1, major = "12C", compound = "CO2") / ratio(`13C` = 0.2, major = "12C", compound = "Corg"), 
                  alpha(`13C` = 0.5, major = "12C", ctop = "CO2", cbot = "Corg"))
     
@@ -80,8 +82,10 @@ test_that("Testing proper response to math operators", {
     expect_equal(alpha(0.99) - 1, epsilon(-10)) # exception to allow the math of this
     expect_error(alpha(0.99) - 2, "Subtraction is not meaningful")
     
-    # convert deltas to epsilon (with delta/delta)
-    expect_equal(delta(200) / delta(-200), epsilon((1.2 / 0.8 - 1) * 1000))
+    # convert deltas to alpha (with delta/delta)
+    expect_equal(delta(200) / delta(-200), alpha(1.2 / 0.8))
+    expect_equal(delta(200) / delta(-200), frac_factor(delta(200), delta(-200)))
+    expect_equal(as.epsilon(delta(200) / delta(-200)), epsilon((1.2 / 0.8 - 1) * 1000))
     
     # shift refrence frame
     expect_equal(delta(200) * delta(-200), delta( (1.2 * 0.8 - 1) * 1000)) # formula test
@@ -122,6 +126,10 @@ test_that("Testing proper response to math operators", {
     expect_error(abundance(0.1) - abundance(0.1), "not a valid isotope")
     expect_error(abundance(0.9, weight = 2) - abundance(0.1), "abundances cannot be larger than 1")
     expect_equal(abundance(0.2) + abundance(0.4) + abundance(0.6), mass_balance(abundance(0.2), abundance(0.4), abundance(0.6))) 
+    
+    # inverting weight
+    expect_equal( (-abundance(0.2))@weight, -1)
+    expect_equal( (-abundance(0.2, weight=5))@weight, -5)
     
     # mixing ratios (currently not allowed, only abundances and delta values!)
     expect_error(ratio(a = 0.2) + ratio(b = 0.3), "not meaningful for these isotope objects")

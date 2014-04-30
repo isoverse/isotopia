@@ -107,6 +107,12 @@ setMethod("-", signature(e1 = "Isoval", e2 = "ANY"), function(e1, e2) operation_
 setMethod("-", signature(e1 = "ANY", e2 = "Isoval"), function(e1, e2) operation_error("Subtraction", e1, e2))
 setMethod("-", signature(e1 = "Isosys", e2 = "Isosys"), function(e1, e2) operation_error("Subtraction", e1, e2))
 
+# allow inversion of the weighting
+setMethod("-", signature(e1 = "Isoval", e2 = "missing"), function(e1, e2) {
+    e1@weight <- (-1) *e1@weight
+    e1
+})
+
 # linking back to the equivalent addition call
 setMethod("-", signature(e1 = "Intensity", e2 = "Intensity"), function(e1, e2) {
     e2@.Data <- (-1) * e2@.Data
@@ -214,7 +220,8 @@ setMethod("/", signature(e1 = "Intensity", e2 = "Intensity"), function(e1, e2) {
 
 #' @usage ratio / ratio
 #' @details
-#' \code{ratio/ratio} allows the creation of an isotope \code{\link{alpha}} object (a fractionation factor)
+#' \code{ratio/ratio} allows the creation of an isotope \code{\link{alpha}} object (a fractionation factor).
+#' This is a shorthand for the \link{frac_factor} function.
 #' @name arithmetic 
 #' @rdname arithmetic
 NULL
@@ -229,7 +236,8 @@ setMethod("/", signature(e1 = "Ratio", e2 = "Ratio"), function(e1, e2) {
 #' @usage alpha / alpha
 #' @details
 #' \code{alpha/ alpha} allows the creation of another isotope \code{\link{alpha}} object but requires that
-#' either the denominator names or numerator names of the two alpha objects are identical (i.e. they "cancel")
+#' either the denominator names or numerator names of the two alpha objects are identical (i.e. they "cancel").
+#'  This is a shorthand for the \link{frac_factor} function.
 #' @name arithmetic 
 #' @rdname arithmetic
 NULL
@@ -250,17 +258,16 @@ setMethod("/", signature(e1 = "Alpha", e2 = "Alpha"), function(e1, e2) {
 
 #' @usage delta / delta
 #' @details
-#' \code{delta/delta} creates a \code{\link{epsilon}} fractionation factor object that
+#' \code{delta/delta} creates an \code{\link{alpha}} fractionation factor object that
 #' describes the fractionation factor between the two compounds, requires the reference
-#' name of the two delta values to be identical. Returns epsilon value in units depending on globally
-#' defined \code{use_permil()}. Works identically for two epsilon values.
+#' name of the two delta values to be identical. This is a shorthand for the \link{frac_factor} function.
+#' Works identically for two epsilon values.
 #' @name arithmetic 
 #' @rdname arithmetic
 NULL
 
-# delta/delta = epsilon (weight of first delta is carried)
+# delta/delta = alpha (weight of first delta is carried)
 setMethod("/", signature(e1 = "Epsilon", e2 = "Epsilon"), function(e1, e2) {
-    a <- as.alpha(e1, e2)
-    as.epsilon(a)
+    as.alpha(e1, e2)
 })
 

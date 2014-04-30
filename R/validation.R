@@ -55,7 +55,7 @@ is.abundance <- function(obj) inherits(obj, "Abundance") || inherits(obj, "Abund
 #' FALSE otherwise.
 #' @rdname is.iso
 #' @export
-is.delta <- function(obj) inherits(obj, "Delta") || inherits(obj, "Deltas")
+is.delta <- function(obj) class(obj) %in% c("Delta", "Deltas") 
 
 #' @details
 #' \code{is.intensity} checks whether the object is an ion intensity object.
@@ -64,6 +64,22 @@ is.delta <- function(obj) inherits(obj, "Delta") || inherits(obj, "Deltas")
 #' @rdname is.iso
 #' @export
 is.intensity <- function(obj) inherits(obj, "Intensity") || inherits(obj, "Intensities")
+
+#' @details
+#' \code{is.alpha} checks whether the object is an alpha value object.
+#' Returns TRUE if it's a single alpha value object or an isotope system of alpha values,
+#' FALSE otherwise.
+#' @rdname is.iso
+#' @export
+is.alpha <- function(obj) inherits(obj, "Alpha") || inherits(obj, "Alphas")
+
+#' @details
+#' \code{is.epsilon} checks whether the object is an epsilon value object.
+#' Returns TRUE if it's a single epsilon value object or a system of epsilon values,
+#' FALSE otherwise.
+#' @rdname is.iso
+#' @export
+is.epsilon <- function(obj) class(obj) %in% c("Epsilon", "Epsilons") # because delta inherits from Epsilon, must be more precise!
 
 #' @details
 #' \code{is.weighted} checks if an isotope object is weighted. An object
