@@ -86,7 +86,7 @@ test_that("Testing that isotope data type conversations behave correctly", {
     expect_is(ex <- as.epsilon(epsilon(0.02, permil = F)), "Epsilon")
     expect_equal(ex@permil, TRUE)
     expect_equal(as.value(ex), 20)
-    expect_equal(label(ex), paste(get_iso_letter("epsilon"), "[‰]"))
+    expect_equal(label(ex), paste0(get_iso_letter("epsilon"), " [", get_iso_letter("permil"), "]"))
     expect_is(e <- as.epsilon(epsilon(20), permil = F), "Epsilon")
     expect_equal(e@permil, FALSE)
     expect_equal(as.value(e), 0.02)
@@ -102,7 +102,7 @@ test_that("Testing that isotope data type conversations behave correctly", {
     expect_is(dx <- as.delta(delta(0.02, permil = F)), "Delta")
     expect_equal(dx@permil, TRUE)
     expect_equal(as.value(dx), 20)
-    expect_equal(label(dx), paste(get_iso_letter("delta"), "[‰]"))
+    expect_equal(label(dx), paste0(get_iso_letter("delta"), " [", get_iso_letter("permil"), "]"))
     expect_is(d <- as.delta(delta(20), permil = F), "Delta")
     expect_equal(d@permil, FALSE)
     expect_equal(as.value(d), 0.02)
@@ -146,7 +146,7 @@ test_that("Testing that isotope data type conversations behave correctly", {
     expect_error(as.delta(ratio(`13C` = 0.18), ratio(`18O` = 0.2)), "cannot generate a fractionaton factor from two ratio objects that don't have matching attributes")
     expect_error(as.delta(ratio(0.18, major = "12C"), ratio(0.2, major = "13C")), "annot generate a fractionaton factor from two ratio objects that don't have matching attributes")
     expect_equal(label(d <- as.delta(ratio(`13C` = 0.18, major = "12C", compound = "CO2"), 
-                                     ratio(`13C`= 0.2, major = "12C", compound = "SMOW"))), paste0("CO2 ", get_iso_letter("delta"), "13C [‰] vs. SMOW"))
+                                     ratio(`13C`= 0.2, major = "12C", compound = "SMOW"))), paste0("CO2 ", get_iso_letter("delta"), "13C [", get_iso_letter("permil"), "] vs. SMOW"))
     expect_equal(d@major, "12C")
     
     # systems

@@ -43,17 +43,19 @@ ratio_name <- function(text1, text2, spacer = "", top = "", bottom = "") {
 
 # little helper function for isotope letters
 # --> to be expanded for proper formatting in the future
-get_iso_letter <- function(letter = c("alpha", "delta", "epsilon")) {
+get_iso_letter <- function(letter = c("alpha", "delta", "epsilon", "permil")) {
     letter <- match.arg(letter)
     # ideally these would be like this but this greek alphabet support doesn't really work
     #switch(letter,
     #   alpha = "α",
     #   delta = "δ",
-    #   epsilon = "ε")
+    #   epsilon = "ε",
+    #   permil = "‰")
     switch(letter,
         alpha = "alpha",
         delta = "d",
-        epsilon = "eps")
+        epsilon = "eps",
+        permil = "permil")
 }
 
 #' Get the name of an isotopic data object
@@ -79,7 +81,7 @@ setMethod("name", "Delta", function(object) paste(get_iso_letter("delta"), objec
 #' Get the units of an isotope data object
 setGeneric("unit", function(object) standardGeneric("unit"))
 setMethod("unit", "Isoval", function(object) "")
-setMethod("unit", "Epsilon", function(object) if(object@permil) "‰" else "")
+setMethod("unit", "Epsilon", function(object) if(object@permil) get_iso_letter("permil") else "")
 setMethod("unit", "Intensity", function(object) object@unit)
 
 #' Get the full label of an isotope data object

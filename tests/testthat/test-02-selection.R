@@ -7,7 +7,21 @@ test_that("Testing that isotope data types can be properly subselected", {
     expect_is(r <- ratio((1:5)*0.1, weight = 1:5)[c(1,2,5)], "Ratio")
     expect_equal(as.weight(r), c(1,2,5))
     
-    
+    # substitution of values in single Isoval
+    expect_is(d <- delta(1:5, weight = 2), "Delta")
+    expect_equal({
+        d[2] <- 10
+        as.numeric(d)
+    }, c(1, 10, 3, 4, 5))
+    expect_equal(as.weight(d)[2], 2)
+    expect_error(d[2] <- ratio(0.9), "cannot assign a Ratio value to a Delta value")
+    expect_warning(d[2] <- 10:11, "number of items to replace is not a multiple of replacement length") # maybe throw error instead?
+    expect_equal({
+        d[3:4] <- delta(20:21, weight = 5)
+        as.numeric(d)
+    }, c(1, 10, 20, 21, 5))
+    expect_equal(as.weight(d), c(2, 2, 5, 5, 2))
+     
     # subselection of data.frames (Isosys)
     expect_is(rs <- ratio(`33S` = c(0.1, 0.2), `34S` = c(0.2, 0.3), major = "32S"), "Ratios")
     

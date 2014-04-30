@@ -48,6 +48,7 @@ NULL
 #' @include initialization.R
 NULL
 
+
 #' @note
 #' \code{exact_mass_balance} is a function to enable/disable exact mass balance calculations.
 #' 

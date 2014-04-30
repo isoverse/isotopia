@@ -24,6 +24,16 @@ setMethod("[", "Isoval", function(x, i) {
     x 
 })
 
+setMethod("[<-", "Isoval", function(x, i, value) { 
+    if (is.isoval(value) && !identical(class(x), class(value)))
+        stop("cannot assign a ", class(value), " value to a ", class(x), " value")
+    x@.Data[i] <- as.numeric(value)
+    if (is.isoval(value))
+        x@weight[i] <- value@weight
+    x
+})
+
+
 # Abundance
 setClass("Abundance", contains="Isoval")
 
