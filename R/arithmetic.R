@@ -168,6 +168,10 @@ setMethod("*", signature(e1 = "Alpha", e2 = "Alpha"), function(e1, e2) fractiona
 setMethod("*", signature(e1 = "Alpha", e2 = "Delta"), function(e1, e2) fractionate(e1, e2))
 setMethod("*", signature(e1 = "Delta", e2 = "Alpha"), function(e1, e2) e2 * e1) # just reverse
 
+# same for epsilon 
+setMethod("*", signature(e1 = "Epsilon", e2 = "Delta"), function(e1, e2) fractionate(e1, e2))
+setMethod("*", signature(e1 = "Delta", e2 = "Epsilon"), function(e1, e2) e2 * e1) # just reverse
+
 #' @usage delta * delta
 #' @details
 #' \code{delta*delta}, is a shorthand for shifting the reference frame of the

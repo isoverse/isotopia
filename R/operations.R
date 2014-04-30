@@ -114,4 +114,3 @@ setMethod("shift_reference", signature("Delta", "Delta"), function(iso, ref) {
     a <- as.alpha(iso) # convert value to shift to an alpha value
     fractionate(a, ref) # "fractionte" new reference with this (will automatically make sure everything is correct)
 })
-
