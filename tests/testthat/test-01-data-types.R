@@ -242,6 +242,21 @@ test_that("Testing that object type check functions (is.x()) are working", {
     expect_true(is.intensity(intensity(100, 400)))
     expect_false(is.intensity(abundance(0.1)))
 
+    # is.delta
+    expect_true(is.delta(delta(100)))
+    expect_true(is.delta(delta(100, 400)))
+    expect_false(is.delta(abundance(0.1)))
+    
+    # is.alpha
+    expect_true(is.alpha(alpha(100)))
+    expect_true(is.alpha(alpha(100, 400)))
+    expect_false(is.alpha(abundance(0.1)))
+    
+    # is.epsilon
+    expect_true(is.epsilon(epsilon(100)))
+    expect_true(is.epsilon(epsilon(100, 400)))
+    expect_false(is.epsilon(abundance(0.1)))
+    
     # is.isosys vs is.isoval
     expect_true(is.isoval(ratio(0.1)))
     expect_false(is.isoval(ratio(0.1, 0.2)))
