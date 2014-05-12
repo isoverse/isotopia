@@ -71,7 +71,10 @@ NULL
 
 # adding abundances (i.e. isotope mixing/mass balance calculations)
 setMethod("+", signature(e1 = "Abundance", e2 = "Abundance"), function(e1, e2) {
-    iso_attribs_check(e1, e2, exclude = c("weight", "compound"), text = "trying to calculate the mass balance of two abundance objects")
+    iso_attribs_check(e1, e2, exclude = c("weight", "compound"), check_length = FALSE, 
+                      text = "trying to calculate the mass balance of two abundance objects")
+    # FIXME: currently allowing to add vectors of different lengths to support adding a fixed value to a vector
+    # but ideally checking here that only length(e1) == length(e2) or length(e1) == 1 or length(e2) ==1 is allowed
     weightsum <- get_weight(e1) + get_weight(e2)
     e1@.Data <- (get_weighted_value(e1) + get_weighted_value(e2))/weightsum
     e1@weight <- weightsum
