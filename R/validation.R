@@ -95,8 +95,7 @@ is.epsilon <- function(obj) class(obj) %in% c("Epsilon", "Epsilons") # because d
 #' is.weighted(ratio(c(0.1, 0.2), weight = c(1,2))) # returns TRUE
 #' @rdname is.iso
 #' @export
-setGeneric("is.weighted", function(iso) standardGeneric("is.weighted"))
-setMethod("is.weighted", signature("Isoval"), function(iso) (!is.null(attr(iso, "weight"))) && any(iso@weight != 1))
+is.weighted <- function(iso) !is.null(attr(iso, "weight")) && any(iso@weight != 1)
 
 # =====================================
 # Built-in object validity checks 

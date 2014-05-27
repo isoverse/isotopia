@@ -55,25 +55,25 @@ conversion_error <- function(from, to) {
 
 #' Convert to isotope ratio
 #' 
-#' \code{as.ratio} converts another isotopic data type to a ratio.
+#' \code{to_ratio} converts another isotopic data type to a ratio.
 #'
 #' @param iso isotopic data object (\code{\link{ratio}}, \code{\link{abundance}}, \code{\link{delta}}, etc.)
 #' @return isotope \code{\link{ratio}} object if iso can be converted to a \code{\link{ratio}}, an error otherwise
-#' @rdname as.ratio
+#' @rdname to_ratio
 #' @family data type conversions
-#' @method as.ratio
+#' @method to_ratio
 #' @export
-setGeneric("as.ratio", function(iso) standardGeneric("as.ratio"))
+setGeneric("to_ratio", function(iso) standardGeneric("to_ratio"))
 
-#' @method as.ratio
+#' @method to_ratio
 #' @export
-setMethod("as.ratio", "ANY", function(iso) conversion_error(iso, "isotope ratio"))
-setMethod("as.ratio", "Ratio", function(iso) iso)
-setMethod("as.ratio", "Ratios", function(iso) iso)
+setMethod("to_ratio", "ANY", function(iso) conversion_error(iso, "isotope ratio"))
+setMethod("to_ratio", "Ratio", function(iso) iso)
+setMethod("to_ratio", "Ratios", function(iso) iso)
 
 # abundance to ratio
-setMethod("as.ratio", "Abundance", function(iso) as.ratio(new("Abundances", data.frame(iso)))[1]) # converts to a system (slightly slower but tidier)
-setMethod("as.ratio", "Abundances", function(iso) {
+setMethod("to_ratio", "Abundance", function(iso) to_ratio(new("Abundances", data.frame(iso)))[1]) # converts to a system (slightly slower but tidier)
+setMethod("to_ratio", "Abundances", function(iso) {
     convert_isosys(iso, "Ratios", 
                    function(df) {
                        # convert abundance to ratio
@@ -86,7 +86,7 @@ setMethod("as.ratio", "Abundances", function(iso) {
 })
 
 # intensity to ratio ========
-setMethod("as.ratio", "Intensities", function(iso) {
+setMethod("to_ratio", "Intensities", function(iso) {
     fun <- function(df) {
         df <- as.data.frame(df) # will be manipulating the isotope objects inside
         
@@ -115,7 +115,7 @@ setMethod("as.ratio", "Intensities", function(iso) {
 })
 
 # delta to ratio ======
-setMethod("as.ratio", "Delta", function(iso) {
+setMethod("to_ratio", "Delta", function(iso) {
     if (length(iso@ref_ratio) == 0) {
         # no, reference, let's see if we can find one
         stds <- get_standards(minor = iso@isoname, major = iso@major, name = iso@compound2)
@@ -132,7 +132,7 @@ setMethod("as.ratio", "Delta", function(iso) {
     # continue as usual
     if (length(iso@ref_ratio) != 1)
         stop("cannot convert from a ratio to a delta value without the reference ratio set in the delta value object")
-    a <- as.alpha(iso)
+    a <- to_alpha(iso)
     iso@.Data <- a@.Data * iso@ref_ratio # could do it by multiplying alpha value by ratio but then have to generate appropriate ratio object first
     recast_isoval(iso, "Ratio", list(compound2 = NULL, permil = NULL, ref_ratio = NULL))
 })
@@ -141,25 +141,25 @@ setMethod("as.ratio", "Delta", function(iso) {
 
 #' Convert to isotope abundance
 #' 
-#' \code{as.abundance} converts another isotopic data type to an abundance.
+#' \code{to_abundance} converts another isotopic data type to an abundance.
 #'
 #' @param iso isotopic data object (\code{\link{ratio}}, \code{\link{abundance}}, \code{\link{delta}}, etc.)
 #' @return isotope \code{\link{abundance}} object if iso can be converted to a \code{\link{abundance}}, an error otherwise
-#' @rdname as.abundance
+#' @rdname to_abundance
 #' @family data type conversions
-#' @method as.abundance
+#' @method to_abundance
 #' @export
-setGeneric("as.abundance", function(iso) standardGeneric("as.abundance"))
+setGeneric("to_abundance", function(iso) standardGeneric("to_abundance"))
 
-#' @method as.abundance
+#' @method to_abundance
 #' @export
-setMethod("as.abundance", "ANY", function(iso) conversion_error(iso, "isotope abundance"))
-setMethod("as.abundance", "Abundance", function(iso) iso)
-setMethod("as.abundance", "Abundances", function(iso) iso)
+setMethod("to_abundance", "ANY", function(iso) conversion_error(iso, "isotope abundance"))
+setMethod("to_abundance", "Abundance", function(iso) iso)
+setMethod("to_abundance", "Abundances", function(iso) iso)
 
 # ratio to abundance
-setMethod("as.abundance", "Ratio", function(iso) as.abundance(new("Ratios", data.frame(iso)))[1]) # converts to a system (slightly slower but tidier)
-setMethod("as.abundance", "Ratios", function(iso) {
+setMethod("to_abundance", "Ratio", function(iso) to_abundance(new("Ratios", data.frame(iso)))[1]) # converts to a system (slightly slower but tidier)
+setMethod("to_abundance", "Ratios", function(iso) {
     convert_isosys(iso, "Abundances", 
                    function(df) {
                        # convert ratio to abundance
@@ -172,12 +172,12 @@ setMethod("as.abundance", "Ratios", function(iso) {
 })
 
 # intensity to abundance
-setMethod("as.abundance", "Intensities", function(iso) as.abundance(as.ratio(iso)))
+setMethod("to_abundance", "Intensities", function(iso) to_abundance(to_ratio(iso)))
 
 # delta to abundance
-setMethod("as.abundance", "Delta", function(iso) {
-    r <- as.ratio(iso)
-    as.abundance(r)
+setMethod("to_abundance", "Delta", function(iso) {
+    r <- to_ratio(iso)
+    to_abundance(r)
 })
 
 # to.alpha =============================================
@@ -187,12 +187,12 @@ setMethod("as.abundance", "Delta", function(iso) {
 #' @description
 #' Calculate/convert to isotope fractionation factors (\code{alpha} values).
 #' 
-#' @usage as.alpha(iso1, iso2)
+#' @usage to_alpha(iso1, iso2)
 #' @details
 #' The \code{frac_factor(...)} function calculates the fractionation factor between two isotope data objects
 #' (for example two delta values, two epsilons, two ratios, or two alpha values).
 #' 
-#' \code{as.alpha} is mostly synonymous with \code{frac_fractor} but can additionally be used to perform
+#' \code{to_alpha} is mostly synonymous with \code{frac_fractor} but can additionally be used to perform
 #' conversions such as \code{\link{epsilon}} to \code{\link{alpha}}.
 #'
 #' All calculatinos are only permissible if the isotope values have matching
@@ -204,61 +204,61 @@ setMethod("as.abundance", "Delta", function(iso) {
 #' @note 
 #' Some of the conversions are also implemented in arithmetic shorthand, for example to generate
 #' an alpha value from two ratios, \code{frac_factor(ratio(), ratio())} and 
-#' \code{as.alpha(ratio(), ratio())} are the same as \code{ratio() / ratio()}.
+#' \code{to_alpha(ratio(), ratio())} are the same as \code{ratio() / ratio()}.
 #' See \link{arithmetic} for details.
 #' @family data type conversions
-#' @method as.alpha
+#' @method to_alpha
 #' @export
-setGeneric("as.alpha", function(iso1, iso2) standardGeneric("as.alpha"))
+setGeneric("to_alpha", function(iso1, iso2) standardGeneric("to_alpha"))
 
-#' @method as.alpha
+#' @method to_alpha
 #' @export
-setMethod("as.alpha", "ANY", function(iso1, iso2) conversion_error(iso1, "alpha value (ratio of ratios)"))
+setMethod("to_alpha", "ANY", function(iso1, iso2) conversion_error(iso1, "alpha value (ratio of ratios)"))
 
 # two ratios to alpha (uses the arithmetic shorthand) 
-setMethod("as.alpha", signature("Ratio", "Ratio"), function(iso1, iso2) iso1/iso2)
+setMethod("to_alpha", signature("Ratio", "Ratio"), function(iso1, iso2) iso1/iso2)
 # Note: to allow this for entire isotope systems --> need to implement it properly with matching the right columns
 
 # delta/epsilon to alpha
-setMethod("as.alpha", signature("Epsilon", "missing"), function(iso1, iso2) {
-    iso1@.Data <- as.epsilon(iso1, permil = FALSE)@.Data + 1 # make sure converting from an epsilon/delta value stripped of it's 1000x factor!
+setMethod("to_alpha", signature("Epsilon", "missing"), function(iso1, iso2) {
+    iso1@.Data <- to_epsilon(iso1, permil = FALSE)@.Data + 1 # make sure converting from an epsilon/delta value stripped of it's 1000x factor!
     recast_isoval(iso1, "Alpha", list(permil = NULL, ref_ratio = NULL))
 })
 
 # two epsilon/deltas to alpha (fractionation factor between the two compounds)
-setMethod("as.alpha", signature("Epsilon", "Epsilon"), function(iso1, iso2) {
-    as.alpha(iso1) / as.alpha(iso2) # arithmetic operator is defined and takes care of the all the proper type checks
+setMethod("to_alpha", signature("Epsilon", "Epsilon"), function(iso1, iso2) {
+    to_alpha(iso1) / to_alpha(iso2) # arithmetic operator is defined and takes care of the all the proper type checks
 })
 
 # to.epsilon =============================================
 
 #' Convert to epsilon value
 #' 
-#' \code{as.delta} converts another isotopic data type to an epsilon values
+#' \code{to_delta} converts another isotopic data type to an epsilon values
 #'
 #' @param iso isotopic data object (e.g. \code{\link{alpha}})
 #' @param permil whether to generate epsilon object in permil values (x1000) or not
 #' @return isotope \code{\link{epsilon}} object if iso can be converted to an \code{\link{epsilon}}, an error otherwise
-#' @rdname as.epsilon
+#' @rdname to_epsilon
 #' @family data type conversions
-#' @method as.epsilon
+#' @method to_epsilon
 #' @export
-setGeneric("as.epsilon", function(iso, permil = use_permil()) standardGeneric("as.epsilon"))
+setGeneric("to_epsilon", function(iso, permil = use_permil()) standardGeneric("to_epsilon"))
 
-#' @method as.epsilon
+#' @method to_epsilon
 #' @export
-setMethod("as.epsilon", "ANY", function(iso, permil = use_permil()) conversion_error(iso, "epsilon value"))
-setMethod("as.epsilon", "Isosys", function(iso, permil = use_permil()) 
-    convert_isosys(iso, "Epsilons", function(df) lapply(as.data.frame(df), function(i) as.epsilon(i, permil = permil))))
+setMethod("to_epsilon", "ANY", function(iso, permil = use_permil()) conversion_error(iso, "epsilon value"))
+setMethod("to_epsilon", "Isosys", function(iso, permil = use_permil()) 
+    convert_isosys(iso, "Epsilons", function(df) lapply(as.data.frame(df), function(i) to_epsilon(i, permil = permil))))
 
 # alpha to epsilon
-setMethod("as.epsilon", signature(iso = "Alpha"), function(iso, permil = use_permil()) {
+setMethod("to_epsilon", signature(iso = "Alpha"), function(iso, permil = use_permil()) {
     iso@.Data <- iso@.Data - 1
-    as.epsilon(recast_isoval(iso, "Epsilon", list(permil = FALSE)), permil = permil)
+    to_epsilon(recast_isoval(iso, "Epsilon", list(permil = FALSE)), permil = permil)
 })
 
 # epsilon/delta to epsilon
-setMethod("as.epsilon", signature(iso = "Epsilon"), function(iso, permil = use_permil()) {
+setMethod("to_epsilon", signature(iso = "Epsilon"), function(iso, permil = use_permil()) {
     if (!permil && iso@permil) 
         iso@.Data <- iso@.Data/1000 # convert from permil to non-permil
     else if (permil && !iso@permil)
@@ -272,7 +272,7 @@ setMethod("as.epsilon", signature(iso = "Epsilon"), function(iso, permil = use_p
 
 #' Convert to delta value
 #' 
-#' \code{as.delta} converts another isotopic data type to a delta value
+#' \code{to_delta} converts another isotopic data type to a delta value
 #'
 #' @param iso isotopic data object (\code{\link{ratio}}, \code{\link{abundance}}, \code{\link{delta}}, etc.)
 #' @param ref_ratio the refernce ratio associated with the delta value. This is optional but required if planning
@@ -281,21 +281,21 @@ setMethod("as.epsilon", signature(iso = "Epsilon"), function(iso, permil = use_p
 #' reference).
 #' @param permil whether to generate epsilon object in permil values (x1000) or not
 #' @return isotope \code{\link{delta}} object if iso can be converted to a \code{\link{delta}}, an error otherwise
-#' @rdname as.delta
+#' @rdname to_delta
 #' @family data type conversions
-#' @method as.delta
+#' @method to_delta
 #' @export
-setGeneric("as.delta", function(iso, ref_ratio, permil = use_permil()) standardGeneric("as.delta"))
+setGeneric("to_delta", function(iso, ref_ratio, permil = use_permil()) standardGeneric("to_delta"))
 
-#' @method as.delta
+#' @method to_delta
 #' @export
-setMethod("as.delta", "ANY", function(iso, ref_ratio, permil = use_permil()) conversion_error(iso, "delta value"))
-setMethod("as.delta", signature(iso = "Isosys", ref_ratio = "missing"), function(iso, ref_ratio, permil = use_permil()) {
-    convert_isosys(iso, "Deltas", function(df) lapply(as.data.frame(df), function(i) as.delta(i, permil = permil)))
+setMethod("to_delta", "ANY", function(iso, ref_ratio, permil = use_permil()) conversion_error(iso, "delta value"))
+setMethod("to_delta", signature(iso = "Isosys", ref_ratio = "missing"), function(iso, ref_ratio, permil = use_permil()) {
+    convert_isosys(iso, "Deltas", function(df) lapply(as.data.frame(df), function(i) to_delta(i, permil = permil)))
 })
 
 # epsilon/delta to delta =========
-setMethod("as.delta", signature(iso = "Epsilon", ref_ratio = "Ratio"), function(iso, ref_ratio, permil = use_permil()) {
+setMethod("to_delta", signature(iso = "Epsilon", ref_ratio = "Ratio"), function(iso, ref_ratio, permil = use_permil()) {
     # make sure Ratio has the appropriate values
     if (length(ref_ratio) != 1)
         stop("reference ratio for a delta value object must be exactly one numeric value, supplied ", length(ref_ratio))
@@ -315,14 +315,14 @@ setMethod("as.delta", signature(iso = "Epsilon", ref_ratio = "Ratio"), function(
     iso <- recast_isoval(iso, "Delta", list(ref_ratio = get_value(ref_ratio)))
     if (nchar(ref_ratio@compound) > 0) # update compound name
         iso@compound2 <- ref_ratio@compound
-    as.delta(iso, permil = permil) # convert to correct permil notation
+    to_delta(iso, permil = permil) # convert to correct permil notation
 })
 
-setMethod("as.delta", signature(iso = "Epsilon", ref_ratio = "numeric"), function(iso, ref_ratio, permil = use_permil()) {
-    as.delta(iso, ratio(ref_ratio), permil = permil)
+setMethod("to_delta", signature(iso = "Epsilon", ref_ratio = "numeric"), function(iso, ref_ratio, permil = use_permil()) {
+    to_delta(iso, ratio(ref_ratio), permil = permil)
 })
 
-setMethod("as.delta", signature(iso = "Epsilon", ref_ratio = "missing"), function(iso, ref_ratio, permil = use_permil()) {
+setMethod("to_delta", signature(iso = "Epsilon", ref_ratio = "missing"), function(iso, ref_ratio, permil = use_permil()) {
     # convert to permil/nonpermil
     if (!permil && iso@permil) 
         iso@.Data <- iso@.Data/1000 # convert from permil to non-permil
@@ -335,43 +335,43 @@ setMethod("as.delta", signature(iso = "Epsilon", ref_ratio = "missing"), functio
 })
 
 # alpha to delta ====
-setMethod("as.delta", signature(iso = "Alpha", ref_ratio = "ANY"), function(iso, ref_ratio, permil = use_permil()) {
-    e <- as.epsilon(iso)
+setMethod("to_delta", signature(iso = "Alpha", ref_ratio = "ANY"), function(iso, ref_ratio, permil = use_permil()) {
+    e <- to_epsilon(iso)
     if (missing(ref_ratio) || length(ref_ratio) == 0)
-        as.delta(e, permil = permil)
+        to_delta(e, permil = permil)
     else
-        as.delta(e, ref_ratio, permil = permil)
+        to_delta(e, ref_ratio, permil = permil)
 })
 
 
 # ratio to delta =========
 
 # ratio to delta (with numeric ref ratio)
-setMethod("as.delta", signature("Ratio", "numeric"), function(iso, ref_ratio, permil = use_permil()) {
-    as.delta(iso, update_iso(ratio(ref_ratio), list(isoname = iso@isoname, major = iso@isoname)), permil = permil)
+setMethod("to_delta", signature("Ratio", "numeric"), function(iso, ref_ratio, permil = use_permil()) {
+    to_delta(iso, update_iso(ratio(ref_ratio), list(isoname = iso@isoname, major = iso@isoname)), permil = permil)
 })
 
 # ratio to delta (with Ratio object as ref ratio)
-setMethod("as.delta", signature("Ratio", "Ratio"), function(iso, ref_ratio, permil = use_permil()) {
+setMethod("to_delta", signature("Ratio", "Ratio"), function(iso, ref_ratio, permil = use_permil()) {
     if (length(ref_ratio) != 1)
         stop("reference ratio for a delta value object must be exactly one numeric value, supplied ", length(ref_ratio))
     
     # convert to alpha value
     iso2 <- ref_ratio
     iso2@.Data <- rep(get_value(ref_ratio), length(iso)) # get ref_ratio to the right length
-    a <- as.alpha(iso, iso2)
+    a <- to_alpha(iso, iso2)
     
     # to delta
-    as.delta(a, ref_ratio = ref_ratio, permil = permil)
+    to_delta(a, ref_ratio = ref_ratio, permil = permil)
 })
 
-setMethod("as.delta", signature(iso = "Ratios", ref_ratio = "Ratios"), function(iso, ref_ratio) {
+setMethod("to_delta", signature(iso = "Ratios", ref_ratio = "Ratios"), function(iso, ref_ratio) {
     stop("This is the proper way to convert from a system of ratios to Deltas",
          " but not implemented yet: have to match the ref_ratio Ratios apppropriately")
 })
 
 # abundance to delta =====
-setMethod("as.delta", signature("Abundance", "ANY"), function(iso, ref_ratio) {
+setMethod("to_delta", signature("Abundance", "ANY"), function(iso, ref_ratio) {
     stop("not currently implemented, probably won't permit because it's dangerous transforming to ratio without taking the",
          "whole isotope system into consideration --> implement on the Abundances/Ratios level instead")
 })

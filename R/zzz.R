@@ -11,21 +11,11 @@ setLoadActions(function(ns) {
     default_major_isotope("")
     
     #  register default standards
-    suppressWarnings({
-        register_standard(ratio(`2H` = as.ratio(abundance(0.00015574)), major = "1H", compound = "VSMOW")) # from IUPAC report
-        register_standard(ratio(`13C` = 0.011237, major = "12C", compound = "VPDB"))
-        register_standard(ratio(`15N` = 0.003677, major = "14N", compound = "Air"))
-        register_standard(ratio(`18O` = 0.0020052, major = "16O", compound = "VSMOW"))
-        register_standard(ratio(`34S` = 0.0045005, major = "32S", compound = "CDT"))
-    })
+#     suppressWarnings({
+#         register_standard(ratio(`2H` = as.ratio(abundance(0.00015574)), major = "1H", compound = "VSMOW")) # from IUPAC report
+#         register_standard(ratio(`13C` = 0.011237, major = "12C", compound = "VPDB"))
+#         register_standard(ratio(`15N` = 0.003677, major = "14N", compound = "Air"))
+#         register_standard(ratio(`18O` = 0.0020052, major = "16O", compound = "VSMOW"))
+#         register_standard(ratio(`34S` = 0.0045005, major = "32S", compound = "CDT"))
+#     })
 })
-
-# this is not executed automatically in autotesting (since autotesting only 
-# sources all code rather than loading a package)
-# instead run these lines to starte the autotest
-run_autotest <- function() {
-    library(testthat)
-    source("R/isotopia.r")
-    use_permil(TRUE)
-    auto_test("R", "tests/testthat")
-}

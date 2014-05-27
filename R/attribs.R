@@ -42,7 +42,7 @@ setMethod("update_iso", "Epsilon", function(obj, attribs) {
     if (!is.null(permil <- attribs$permil) && length(permil) > 0) {
         if (length(obj@permil) > 0 && obj@permil != permil)
             stop("changing the type of an already initialized ", tolower(class(obj)), 
-                 " value from permil to non-permil must be done using the appropriate as.", 
+                 " value from permil to non-permil must be done using the appropriate to_", 
                  tolower(class(obj)), "(..., permil = TRUE/FALSE) function")
         obj@permil <- permil
     }
@@ -54,7 +54,7 @@ setMethod("update_iso", "Delta", function(obj, attribs) {
     if (!is.null(ref_ratio <- attribs$ref_ratio) && length(ref_ratio) > 0) {
         if (is.isoval(ref_ratio)) {
             if (is.null(attribs$compound2) || nchar(attribs$compound2) == 0) attribs$compound2 <- ref_ratio@compound # take compound value
-            ref_ratio <- get_value(as.ratio(ref_ratio)) # convert to numeric
+            ref_ratio <- get_value(to_ratio(ref_ratio)) # convert to numeric
         }
         if (length(ref_ratio) != 1)
             stop("reference ratio for a delta value object must be exactly one numeric value, supplied", length(ref_ratio))
@@ -130,6 +130,7 @@ setGeneric("get_value", function(iso) standardGeneric("get_value"))
 #' @method get_value
 #' @export
 setMethod("get_value", "ANY", function(iso) stop("get_value not defined for objects of class ", class(iso)))
+#setMethod("get_value", "numeric", function(iso) iso) # just return the value itself - should I implmente this?
 setMethod("get_value", "Isoval", function(iso) as.numeric(iso))
 setMethod("get_value", "Isosys", function(iso) {
     data.frame(lapply(iso,

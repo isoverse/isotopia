@@ -85,7 +85,7 @@ test_that("Testing proper response to math operators", {
     # convert deltas to alpha (with delta/delta)
     expect_equal(delta(200) / delta(-200), alpha(1.2 / 0.8))
     expect_equal(delta(200) / delta(-200), frac_factor(delta(200), delta(-200)))
-    expect_equal(as.epsilon(delta(200) / delta(-200)), epsilon((1.2 / 0.8 - 1) * 1000))
+    expect_equal(to_epsilon(delta(200) / delta(-200)), epsilon((1.2 / 0.8 - 1) * 1000))
     
     # shift refrence frame
     expect_equal(delta(200) * delta(-200), delta( (1.2 * 0.8 - 1) * 1000)) # formula test
@@ -108,7 +108,6 @@ test_that("Testing proper response to math operators", {
     
     # mixing abundances
     expect_error(abundance(a = 0.2) + abundance(b = 0.3), "trying to calculate the mass balance of two abundance objects that don't have matching attributes")
-    expect_error(abundance(c(0.1, 0.2)) + abundance(0.3), "trying to calculate the mass balance of two abundance objects that don't have matching lengths")
     expect_is(amix <- abundance(0.2) + abundance(0.4), "Abundance")
     expect_equal(get_value(amix), 0.3)
     expect_equal(get_weight(amix), 2)
@@ -135,8 +134,8 @@ test_that("Testing proper response to math operators", {
     expect_error(ratio(a = 0.2) + ratio(b = 0.3), "not meaningful for these isotope objects")
     #     expect_error(ratio(a = 0.2) + ratio(b = 0.3), "trying to mix two isotope objects that don't have matching attributes")
     #     expect_error(ratio(c(0.1, 0.2)) + ratio(0.3), "trying to mix two isotope objects that don't have matching lengths")
-    #     expect_is(rmix <- as.ratio(abundance(0.2)) + as.ratio(abundance(0.4)), "Ratio")
-    #     expect_equal(get_value(rmix), get_value(as.ratio(abundance(0.3))))
+    #     expect_is(rmix <- to_ratio(abundance(0.2)) + to_ratio(abundance(0.4)), "Ratio")
+    #     expect_equal(get_value(rmix), get_value(to_ratio(abundance(0.3))))
     #     expect_equal(get_weight(rmix), 2)
     #     expect_error(ratio(0.2, 0.3) + ratio(0.3, 0.4), "this really needs to be implemented") # FIXME
     
@@ -164,10 +163,10 @@ test_that("Testing proper response to math operators", {
 
 test_that("Testing more complex computation", {
     expect_equal(alpha(0.8) * delta(500) + delta(100), 
-                 as.delta(delta( (0.8*1.5 - 1 + 0.1)/2, compound = "?+?", weight=2, permil = F)))
+                 to_delta(delta( (0.8*1.5 - 1 + 0.1)/2, compound = "?+?", weight=2, permil = F)))
     
     register_standard(ratio(`13C` = 0.011237, major = "12C", compound = "VPDB"))
-    expect_is(as.abundance(delta(`13C` = alpha(0.8) * delta(500) + delta(100) - alpha(0.9) * delta(300), major = "12C", ref = "VPDB")), "Abundance")
+    expect_is(to_abundance(delta(`13C` = alpha(0.8) * delta(500) + delta(100) - alpha(0.9) * delta(300), major = "12C", ref = "VPDB")), "Abundance")
     # FIXME continue
     
 })

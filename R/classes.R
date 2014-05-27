@@ -1,3 +1,6 @@
+#' @include utils.R
+NULL
+
 # Detailed documentation is in the functions that generate instances of these classes.
 
 # Isotope value as the basis for any ratio, abundance, delta value or ion count
@@ -6,7 +9,7 @@ setClass("Isoval", representation(isoname = "character", major = "character", co
 setMethod("initialize", "Isoval", function(.Object, ...){
     if (nargs() > 1 && is(..1, "Isoval"))
         stop("Cannot initialize an isotope value with another isotope value.\n",
-             " To convert between isotope data types, please use as.ratio(), as.abundance(), etc. instead")
+             " To convert between isotope data types, please use to_ratio(), to_abundance(), etc. instead")
     obj <- callNextMethod(.Object, ...)
     
     # initialize with weights = 1 if not specified

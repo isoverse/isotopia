@@ -48,6 +48,7 @@ test_that("Testing that isotope data types can be properly subselected", {
     expect_identical(rs[2,"34S"], rs[2,2]) 
     expect_false(identical(rs[,"34S"], rs[,"34S", drop = FALSE])) # dropping by defaul
     expect_true(identical(rs[,c("33S", "34S")], rs[,c("33S", "34S"), drop = FALSE])) # doesn't matter if more than one column
+
     
     # converting data types
     expect_false(is.iso(as.data.frame(rs)))

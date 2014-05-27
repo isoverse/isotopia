@@ -146,7 +146,7 @@ NULL
 # alpha - 1 = epsilon
 setMethod("-", signature(e1 = "Alpha", e2 = "numeric"), function(e1, e2) {
     if (e2 == 1L)
-        return(as.epsilon(e1))
+        return(to_epsilon(e1))
     callNextMethod(e1, NULL)
 })
 
@@ -271,6 +271,6 @@ NULL
 
 # delta/delta = alpha (weight of first delta is carried)
 setMethod("/", signature(e1 = "Epsilon", e2 = "Epsilon"), function(e1, e2) {
-    as.alpha(e1, e2)
+    to_alpha(e1, e2)
 })
 

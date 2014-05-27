@@ -1,6 +1,7 @@
 #' @include conversion.R
 NULL
 
+
 #' Calculate isotope mass balance
 #' 
 #' This function calculates the isotope mass balance from combining multiple weighted
@@ -40,10 +41,10 @@ setMethod("mass_balance", signature("Deltas", "Deltas"), function(iso, iso2, ...
     stop("not implemented yet")
 })
 
-# details in the documentiont on as.alpha
+# details in the documentiont on to_alpha
 #' @usage frac_factor(iso1, iso2)
 #' @method frac_factor
-#' @rdname as.alpha
+#' @rdname to_alpha
 #' @export
 setGeneric("frac_factor", function(iso1, iso2) standardGeneric("frac_factor"))
 
@@ -94,13 +95,13 @@ setMethod("fractionate", signature("Alpha", "Alpha"), function(frac, iso) {
 
 # weight of first alpha is carried
 setMethod("fractionate", signature("Alpha", "Delta"), function(frac, iso) {
-    a <- as.alpha(iso) # convert delta to alpha
+    a <- to_alpha(iso) # convert delta to alpha
     new <- fractionate(frac, a) # fractionate
-    as.delta(new, ref_ratio = iso@ref_ratio, permil = iso@permil) # convert back to delta with the proper ref_ratio and permil parameters
+    to_delta(new, ref_ratio = iso@ref_ratio, permil = iso@permil) # convert back to delta with the proper ref_ratio and permil parameters
 })
 
 # other options (use epsilon to fractionate something)
-setMethod("fractionate", signature("Epsilon", "ANY"), function(frac, iso) fractionate(as.alpha(frac), iso))
+setMethod("fractionate", signature("Epsilon", "ANY"), function(frac, iso) fractionate(to_alpha(frac), iso))
 
 #' Shift reference frame
 #' 
@@ -125,6 +126,6 @@ setGeneric("shift_reference", function(iso, ref) standardGeneric("shift_referenc
 setMethod("shift_reference", "ANY", function(iso, ref) stop("shift_reference not defined for objects of class ", class(iso), ", ", class(ref)))
 
 setMethod("shift_reference", signature("Delta", "Delta"), function(iso, ref) {
-    a <- as.alpha(iso) # convert value to shift to an alpha value
+    a <- to_alpha(iso) # convert value to shift to an alpha value
     fractionate(a, ref) # "fractionte" new reference with this (will automatically make sure everything is correct)
 })
