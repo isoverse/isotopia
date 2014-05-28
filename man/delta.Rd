@@ -35,8 +35,7 @@ another notation by using \code{\link{switch_notation}}.
 }
 \details{
 For mass balance calculations with delta values, simply add the appropriate weights (if different from
-the default) and use \code{delta(...) + delta(...)}. Use \code{\link{exact_mass_balance}(TRUE/FALSE)}
-to adjust how these are calculated.
+the default) and use \code{delta(...) + delta(...)}.
 }
 \examples{
 delta(50, notation = "permil") # enter as permil value

@@ -14,7 +14,7 @@ test_that("Testing that reference standards can be properly registered and retri
     expect_error(get_standard(name = "VSMOW"), "More than one")
     expect_error(get_standard(minor = "3H"), "No reference ratio registered")
     expect_equal(get_standard(minor = "2H", major = "1H", name = "VSMOW"), ratio(`2H` = 0.00015575, major = "1H", compound = "VSMOW"))
-    expect_message(to_ratio(delta(`2H` = -100, major = "1H", ref = "VSMOW")), "Successfully found a matching standard")
+    expect_message(to_ratio(delta(`2H` = -100, major = "1H", ref = "VSMOW")), "Successfully found a registered standard")
     expect_equal(to_ratio(delta(`2H` = 100, major = "1H", ref = "VSMOW")), ratio(`2H` = 1.1 * 0.00015575, major = "1H"))
     expect_is(get_iso_opts("standards"), "data.frame")
 })

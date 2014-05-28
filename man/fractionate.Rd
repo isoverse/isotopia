@@ -14,9 +14,9 @@ fractionate(frac, iso)
 an object of the same type as \code{iso}
 }
 \description{
-This function calculates the outcome of isotopic fractionation by a \code{\link{fractionation_fractor}}
+This function calculates the outcome of isotopic fractionation by a \code{\link{fractionation_factor}}
 and can be applied to \code{\link{ratio}} data, \code{\link{delta}} values or other
-\code{\link{fractionation_fractor}} objects.
+\code{\link{fractionation_factor}} objects.
 }
 \note{
 Several of these calculations are also

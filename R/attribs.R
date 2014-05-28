@@ -154,23 +154,23 @@ setMethod("weight", signature("Isoval", "numeric"), function(iso, weight) {
 #' primitive data value(s).  
 #' 
 #' @param notation specifiy which notation to return the value in (default is the notation
-#' that hte object is in)
+#' that the object is in)
 #' @return In the case of a single isotope object (Isoval), returns the numeric
-#' vector of raw values stored in the object (same as \code{\link{as.numeric}}). 
+#' vector of raw values stored in the object (same as \code{\link[base]{as.numeric}}). 
 #' In the case of an isotope system (Isosys),
 #' returns the data frame underlying the object with all its isotope value
 #' objects also replaced with their numeric raw values. To just get the data
 #' frame but keep the isotope values intact, use \code{\link{as.data.frame}} instead.
-#' @seealso \code{\link{as.numeric}}, \code{\link{as.data.frame}}, \code{\link[base]{as.data.frame}} (base method)
+#' @seealso \code{\link[base]{as.numeric}}, \code{\link{as.data.frame}}, \code{\link[base]{as.data.frame}} (base method)
 #' @family data type attributes
 #' @method get_value
 #' @export
-setGeneric("get_value", function(iso, notation = "raw") standardGeneric("get_value"))
+setGeneric("get_value", function(iso, notation = iso@notation) standardGeneric("get_value"))
 
 #' @method get_value
 #' @export
-setMethod("get_value", "ANY", function(iso, notation = "raw") stop("get_value not defined for objects of class ", class(iso)))
-setMethod("get_value", "numeric", function(iso, notation = "raw") iso) # allow this for simplicity so this is similiar to as_numeric
+setMethod("get_value", "ANY", function(iso, notation) stop("get_value not defined for objects of class ", class(iso)))
+setMethod("get_value", "numeric", function(iso, notation = NULL) iso) # allow this for simplicity so this is similiar to as_numeric
 setMethod("get_value", "Isoval", function(iso, notation = iso@notation) as.numeric(switch_notation(iso, notation)))
 setMethod("get_value", "Isosys", function(iso, notation = NULL) {
     data.frame(lapply(iso,

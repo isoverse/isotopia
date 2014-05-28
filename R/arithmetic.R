@@ -95,8 +95,7 @@ setMethod("+", signature(e1 = "Abundance", e2 = "Abundance"), function(e1, e2) {
 #' @usage delta +- delta
 #' @details
 #' \code{delta+-delta} is a shorthand for calculating the isotopic mass balance of
-#' two \code{\link{delta}} objects, see \code{\link{mass_balance}} for details,
-#' will use the global \code{\link{exact_mass_balance}} setting for the calculation
+#' two \code{\link{delta}} objects, see \code{\link{mass_balance}} for details
 #' @name arithmetic 
 #' @rdname arithmetic
 NULL
@@ -329,9 +328,9 @@ setMethod("/", signature(e1 = "FractionationFactor", e2 = "FractionationFactor")
 
 #' @usage delta / delta
 #' @details
-#' \code{delta/delta} creates an \code{\link{alpha}} fractionation factor object that
+#' \code{delta/delta} creates an \code{\link{fractionation_factor}} object that
 #' describes the fractionation factor between the two compounds, requires the reference
-#' name of the two delta values to be identical. This is a shorthand for the \link{frac_factor} function.
+#' name of the two delta values to be identical. This is a shorthand for the \link{to_ff} function.
 #' @name arithmetic 
 #' @rdname arithmetic
 NULL

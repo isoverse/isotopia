@@ -3,13 +3,13 @@
 \alias{mass_balance}
 \title{Calculate isotope mass balance}
 \usage{
-mass_balance(iso, iso2, ..., exact = exact_mass_balance())
+mass_balance(iso, iso2, ..., exact = get_iso_opts("exact_mass_balance"))
 }
 \arguments{
 \item{...}{- any number of weighted isotope value objects (have to be all either abundance or delta)}
 
-\item{exact}{- whether to calculate mass balance of delta values exactly (default FALSE),
-use exact_mass_balance to set this paramter globally}
+\item{exact}{- whether to calculate mass balance of delta values exactly (default FALSE), not
+fully implemented yet}
 }
 \value{
 weighted abundance or delta value object that represents the combination of the parameters

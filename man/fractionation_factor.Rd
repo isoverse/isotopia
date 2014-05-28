@@ -26,13 +26,13 @@ See \code{\link{switch_notation}} on details how to convert between notations.}
 \item{cbot}{- name of the compound representing the bottom isotope ratio [optional]}
 }
 \description{
-FIXME, change description
-Generate a fractionation factor (alpha value = ratio of two isotope ratios) object. See \link{isotopia} for general information on initializing
-and converting isotope data objects.
-Fractionation factors can be easily converted from values in one notation to values in
+Generate a fractionation factor object. Can be initialized in \code{alpha} and
+\code{epsilon} notation. Fractionation factors can be easily converted from values in one notation to values in
 another notation by using \code{\link{switch_notation}}.
 }
 \details{
+See \link{isotopia} for general information on initializing
+and converting to other isotope data objects.
 The \code{ff} function is a shorthand for \code{fractionation_factor} but otherwise identical.
 }
 \seealso{

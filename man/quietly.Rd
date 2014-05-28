@@ -8,7 +8,7 @@ quietly(expr)
 \description{
 This small utility function is just a convenient wrapper for running
 isotope calculations silently without outputting any of the warnings or
-messages (it uses \link{suppressMessages} and \link{suppressWarnings}
+messages (it uses \link[base]{suppressMessages} and \link[base]{suppressWarnings}
 internally) that might occur. Use with care to suppress warnings, you
 might end up hiding important information.
 }

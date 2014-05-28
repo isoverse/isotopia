@@ -54,12 +54,12 @@ ab <- abundance
 
 #' Fractionation factor
 #' 
-#' FIXME, change description
-#' Generate a fractionation factor (alpha value = ratio of two isotope ratios) object. See \link{isotopia} for general information on initializing
-#' and converting isotope data objects.
-#' Fractionation factors can be easily converted from values in one notation to values in 
+#' Generate a fractionation factor object. Can be initialized in \code{alpha} and
+#' \code{epsilon} notation. Fractionation factors can be easily converted from values in one notation to values in 
 #' another notation by using \code{\link{switch_notation}}.
 #' 
+#' See \link{isotopia} for general information on initializing
+#' and converting to other isotope data objects.
 #' The \code{ff} function is a shorthand for \code{fractionation_factor} but otherwise identical.
 #' 
 #' @param ... - numeric vectors (can be named) to turn into fractionation factors
@@ -90,8 +90,7 @@ ff <- fractionation_factor
 #' another notation by using \code{\link{switch_notation}}.
 #' 
 #' For mass balance calculations with delta values, simply add the appropriate weights (if different from
-#' the default) and use \code{delta(...) + delta(...)}. Use \code{\link{exact_mass_balance}(TRUE/FALSE)}
-#' to adjust how these are calculated.
+#' the default) and use \code{delta(...) + delta(...)}. 
 #' 
 #' @param ... - numeric vectors (can be named) to turn into delta values
 #' @param major - name of the major isotope in the isotope system [optional]

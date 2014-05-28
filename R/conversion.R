@@ -137,7 +137,7 @@ setMethod("to_ratio", "Delta", function(iso) {
         else if (length(stds) > 1)
             message("No reference ratio registered with the delta value, tried to find one from the registered standards but found multiple, delta: ", get_label(iso))
         else if (length(stds) == 1) {
-            message("Successfully found a matching standard to convert delta value without registered reference: ", get_label(stds[[1]]), ": ", get_value(stds[[1]]))
+            message("Successfully found a registered standard to convert delta value: ", get_label(stds[[1]]), ": ", signif(get_value(stds[[1]]), 4))
             iso@ref_ratio <- get_value(stds[[1]])
         }
     }
@@ -200,6 +200,7 @@ setMethod("to_abundance", "Intensities", function(iso) to_abundance(to_ratio(iso
 
 # delta to abundance
 setMethod("to_abundance", "Delta", function(iso) {
+    # FIXME: add warning for isotope systems with more than one ratio?
     r <- to_ratio(iso)
     to_abundance(r)
 })
@@ -213,7 +214,7 @@ setMethod("to_abundance", "Delta", function(iso) {
 #' 
 #' @usage to_ff(iso1, iso2)
 #' @details
-#' The \code{frac_factor(...)} function calculates the fractionation factor between two isotope data objects
+#' The \code{to_ff(...)} function calculates the fractionation factor between two isotope data objects
 #' (for example two \code{\link{delta}} values, two \code{\link{ratio}}, or two \code{\link{ff}}).
 #' All calculatinos are only permissible if the isotope values have matching
 #' attributes and fractionation factors will be returend in the default notation
@@ -323,6 +324,12 @@ setMethod("to_delta", signature(iso = "FractionationFactor", ref_ratio = "Ratio"
 
 
 # ratio to delta =========
+
+# ratio to delta (with numeric ref ratio)
+setMethod("to_delta", signature("Ratio", "missing"), function(iso, ref_ratio) {
+    stop("Can't convert from a ratio to a delta value without a reference ratio.")
+})
+
 
 # ratio to delta (with numeric ref ratio)
 setMethod("to_delta", signature("Ratio", "numeric"), function(iso, ref_ratio) {

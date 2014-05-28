@@ -17,7 +17,7 @@ isotope \code{\link{fraction_factor}} object if parameters can be converted, an 
 Calculate/convert to an isotope \code{\link{fractionation_factor}}
 }
 \details{
-The \code{frac_factor(...)} function calculates the fractionation factor between two isotope data objects
+The \code{to_ff(...)} function calculates the fractionation factor between two isotope data objects
 (for example two \code{\link{delta}} values, two \code{\link{ratio}}, or two \code{\link{ff}}).
 All calculatinos are only permissible if the isotope values have matching
 attributes and fractionation factors will be returend in the default notation

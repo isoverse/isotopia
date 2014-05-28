@@ -9,26 +9,26 @@ NULL
 #' is also implemented with an \code{\link{arithmetic}} shorthand.
 #'
 #' @param ... - any number of weighted isotope value objects (have to be all either abundance or delta)
-#' @param exact - whether to calculate mass balance of delta values exactly (default FALSE), 
-#' use exact_mass_balance to set this paramter globally 
+#' @param exact - whether to calculate mass balance of delta values exactly (default FALSE), not
+#' fully implemented yet
 #' @return weighted abundance or delta value object that represents the combination of the parameters
 #' @family operations
 #' @method mass_balance
 #' @export
-setGeneric("mass_balance", function(iso, iso2, ..., exact = exact_mass_balance()) standardGeneric("mass_balance"))
+setGeneric("mass_balance", function(iso, iso2, ..., exact = get_iso_opts("exact_mass_balance")) standardGeneric("mass_balance"))
 
 #' @method mass_balance
 #' @export
-setMethod("mass_balance", "ANY", function(iso, iso2, ..., exact = exact_mass_balance()) stop("mass_balance not defined for objects of class ", class(iso), ", ", class(iso2))) 
+setMethod("mass_balance", "ANY", function(iso, iso2, ..., exact = get_iso_opts("exact_mass_balance")) stop("mass_balance not defined for objects of class ", class(iso), ", ", class(iso2))) 
 
-setMethod("mass_balance", signature("Abundance", "Abundance"), function(iso, iso2, ..., exact = exact_mass_balance()) {
+setMethod("mass_balance", signature("Abundance", "Abundance"), function(iso, iso2, ..., exact = get_iso_opts("exact_mass_balance")) {
     # consider implementing a performance optimized version for many additions
     all <- c(list(iso2), list(...))
     for (i in all)
         iso = iso + i
     iso
 })
-setMethod("mass_balance", signature("Delta", "Delta"), function(iso, iso2, ..., exact = exact_mass_balance()) {
+setMethod("mass_balance", signature("Delta", "Delta"), function(iso, iso2, ..., exact = get_iso_opts("exact_mass_balance")) {
     if (exact)
         stop("not implemented yet!") # should be implemented here rather than in the operators
     
@@ -38,15 +38,15 @@ setMethod("mass_balance", signature("Delta", "Delta"), function(iso, iso2, ..., 
     iso
 })
 
-setMethod("mass_balance", signature("Deltas", "Deltas"), function(iso, iso2, ..., exact = exact_mass_balance()) {
+setMethod("mass_balance", signature("Deltas", "Deltas"), function(iso, iso2, ..., exact = get_iso_opts("exact_mass_balance")) {
     stop("not implemented yet")
 })
 
 #' Fractionate an isotopic value
 #' 
-#' This function calculates the outcome of isotopic fractionation by a \code{\link{fractionation_fractor}}
+#' This function calculates the outcome of isotopic fractionation by a \code{\link{fractionation_factor}}
 #' and can be applied to \code{\link{ratio}} data, \code{\link{delta}} values or other
-#' \code{\link{fractionation_fractor}} objects.
+#' \code{\link{fractionation_factor}} objects.
 #' @param frac the fractionation factor \code{\link{ff}} used to fractionate the isotope value
 #' @param iso the isotope object to fractionate
 #' @return an object of the same type as \code{iso}

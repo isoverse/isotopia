@@ -3,15 +3,15 @@
 \alias{get_value}
 \title{Retrieve isotope object's primitive values}
 \usage{
-get_value(iso, notation = "raw")
+get_value(iso, notation = iso@notation)
 }
 \arguments{
 \item{notation}{specifiy which notation to return the value in (default is the notation
-that hte object is in)}
+that the object is in)}
 }
 \value{
 In the case of a single isotope object (Isoval), returns the numeric
-vector of raw values stored in the object (same as \code{\link{as.numeric}}).
+vector of raw values stored in the object (same as \code{\link[base]{as.numeric}}).
 In the case of an isotope system (Isosys),
 returns the data frame underlying the object with all its isotope value
 objects also replaced with their numeric raw values. To just get the data
@@ -22,7 +22,7 @@ This function returns an isotope object's (single value or isotope system)
 primitive data value(s).
 }
 \seealso{
-\code{\link{as.numeric}}, \code{\link{as.data.frame}}, \code{\link[base]{as.data.frame}} (base method)
+\code{\link[base]{as.numeric}}, \code{\link{as.data.frame}}, \code{\link[base]{as.data.frame}} (base method)
 
 Other data type attributes: \code{\link{get_label}},
   \code{\link{get_name}}, \code{\link{get_units}};
