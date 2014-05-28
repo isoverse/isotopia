@@ -43,8 +43,8 @@ abundance <- function(..., major = default_major_isotope(), compound = "",
     iso("Abundances", ..., attribs = list(major = major, compound = compound, weight = weight), single_as_df = single_as_df)
 }
 
-#' Alpha value
-#'
+#' Fractionation factor
+#' FIXME, change description
 #' Generate a fractionation factor (alpha value = ratio of two isotope ratios) object. See \link{isotopia} for general information on initializing
 #' and converting isotope data objects.
 #' 
@@ -54,9 +54,9 @@ abundance <- function(..., major = default_major_isotope(), compound = "",
 #' @param cbot - name of the compound representing the bottom isotope ratio [optional]
 #' @family isotope data types
 #' @export
-alpha <- function(..., major = default_major_isotope(), 
+ff <- function(..., major = default_major_isotope(), 
                   ctop = "", cbot = "", single_as_df = FALSE) {
-    iso("Alphas", ..., attribs = list(major = major, compound = ctop, compound2 = cbot), single_as_df = single_as_df)
+    iso("FractionationFactors", ..., attribs = list(major = major, compound = ctop, compound2 = cbot), single_as_df = single_as_df)
 }
 
 #' Epsilon value

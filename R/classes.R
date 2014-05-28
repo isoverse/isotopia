@@ -43,11 +43,11 @@ setClass("Abundance", contains="Isoval")
 # Ratio
 setClass("Ratio", contains = "Isoval")
 
-# Alpha
-setClass("Alpha", representation(compound2 = "character"), contains = "Isoval",
+# FractionationFactor
+setClass("FractionationFactor", representation(compound2 = "character"), contains = "Isoval",
          prototype = prototype(new("Isoval"), compound2 = ""))
 
-# Epsilon (not derived from Alpha because of validation in alpha > 0 !)
+# Epsilon (not derived from FractionationFactor because of validation in FractionationFactor > 0 !)
 setClass("Epsilon", representation(compound2 = "character", permil = "logical"), contains = "Isoval",
          prototype = prototype(new("Isoval"), compound2 = "", permil = logical()))
 
@@ -109,8 +109,8 @@ setClass("Abundances", contains = "Isosys",
          prototype = prototype(new("Isosys"), isoval_class = "Abundance"))
 setClass("Ratios", contains = "Isosys",
          prototype = prototype(new("Isosys"), isoval_class = "Ratio"))
-setClass("Alphas", contains = "Isosys",
-         prototype = prototype(new("Isosys"), isoval_class = "Alpha"))
+setClass("FractionationFactors", contains = "Isosys",
+         prototype = prototype(new("Isosys"), isoval_class = "FractionationFactor"))
 setClass("Epsilons", contains = "Isosys",
          prototype = prototype(new("Isosys"), isoval_class = "Epsilon"))
 setClass("Deltas", contains = "Isosys",

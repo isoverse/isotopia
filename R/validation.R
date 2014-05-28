@@ -66,12 +66,12 @@ is.delta <- function(obj) class(obj) %in% c("Delta", "Deltas")
 is.intensity <- function(obj) inherits(obj, "Intensity") || inherits(obj, "Intensities")
 
 #' @details
-#' \code{is.alpha} checks whether the object is an alpha value object.
-#' Returns TRUE if it's a single alpha value object or an isotope system of alpha values,
+#' \code{is.ff} checks whether the object is an fractionation factor value object.
+#' Returns TRUE if it's a single fractionation factor value object or an isotope system of fractionation factor values,
 #' FALSE otherwise.
 #' @rdname is.iso
 #' @export
-is.alpha <- function(obj) inherits(obj, "Alpha") || inherits(obj, "Alphas")
+is.ff <- function(obj) inherits(obj, "FractionationFactor") || inherits(obj, "FractionationFactors")
 
 #' @details
 #' \code{is.epsilon} checks whether the object is an epsilon value object.
@@ -131,10 +131,12 @@ setValidity(
         return(TRUE)
     })
 
+# FIXME, valid values for fractionation factors depend on the notation!
+
 setValidity(
-    "Alpha",
+    "FractionationFactor",
     function(object) {
-        if (any(object < 0)) return('alpha values cannot be negative')
+        #if (any(object < 0)) return('alpha values cannot be negative')
         return(TRUE)
     })
 

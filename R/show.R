@@ -3,11 +3,11 @@ NULL
 
 setMethod("show", "Isoval", function(object) {
     validObject(object)
-    text <- if(is.weighted(object) && !is.alpha(object) && !is.epsilon(object)) 
+    text <- if(is.weighted(object) && !is.ff(object) && !is.epsilon(object)) 
         "A weighted isotope" else "An isotope"
     cat(text, " value object of type '", class(object), " value': ", label(object), "\n", sep="")
-    # only print weighting if it's an intensity, ratio, abundance or delta value (alpha and eps)
-    if (is.weighted(object) && !is.alpha(object) && !is.epsilon(object)) {
+    # only print weighting if it's an intensity, ratio, abundance or delta value (not for fractionation factors!)
+    if (is.weighted(object) && !is.ff(object) && !is.epsilon(object)) {
         print(data.frame(
                 value = object@.Data, 
                 weight = object@weight))
@@ -24,7 +24,7 @@ setMethod("show", "Isosys", function(object) {
 
 # Helper methods ====================== 
 
-# put together ratio names (ratio, alpha and epsilon) names
+# put together ratio and fraction factor names
 # [text1 text2][spacer[top/?]/[bottom/?]]
 ratio_name <- function(text1, text2, spacer = "", top = "", bottom = "") {
     text <- paste(c(
@@ -72,7 +72,10 @@ setMethod("name", "ANY", function(object) stop("the name() function is not defin
 setMethod("name", "Isoval", function(object) object@isoname)
 setMethod("name", "Ratio", function(object) ratio_name("R", "", spacer = " ", object@isoname, object@major))
 setMethod("name", "Abundance", function(object) ratio_name("F", object@isoname))
-setMethod("name", "Alpha", function(object) {
+
+# FIXME: show proper naming of fractionation factors (consider alpha, eps, permil, ppm, etc.)
+
+setMethod("name", "FractionationFactor", function(object) {
     ratio_name(object@isoname, get_iso_letter("alpha"), "_", object@compound, object@compound2)
 })
 setMethod("name", "Epsilon", function(object) {
@@ -112,7 +115,7 @@ iso_label <- function(object, show_compound = TRUE) {
 
 setMethod("label", "Isoval", function(object) iso_label(object))
 
-setMethod("label", "Alpha", function(object) iso_label(object, show_compound = FALSE))
+setMethod("label", "FractionationFactor", function(object) iso_label(object, show_compound = FALSE))
 
 setMethod("label", "Epsilon", function(object) iso_label(object, show_compound = FALSE))
 

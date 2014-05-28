@@ -134,17 +134,22 @@ setMethod("-", signature(e1 = "Delta", e2 = "Delta"), function(e1, e2) {
     e1 + e2
 })
 
-#' @usage alpha - 1
+#' @usage ff - 1
 #' @details
-#' \code{alpha - 1} is a shorthand for converting an alpha value into an epsilon value. 
-#' Returns epsilon value in units depending on globally
-#' defined \code{use_permil()}.
+#' \code{ff - 1} is a shorthand for converting a fractionation factor from 
+#' alpha to epsilon notation. The ff object has to be in alpha notation,
+#' otherwise this is just interpreted as a regular arithmetic operation 
+#' and the result will no longer be an isotope object.
 #' @name arithmetic 
 #' @rdname arithmetic
 NULL
 
+#### FIXME ##### 
+# also implement the reverse, ff (epsilon) + 1 = alpha
+
 # alpha - 1 = epsilon
-setMethod("-", signature(e1 = "Alpha", e2 = "numeric"), function(e1, e2) {
+setMethod("-", signature(e1 = "FractionationFactor", e2 = "numeric"), function(e1, e2) {
+    # FIXME
     if (e2 == 1L)
         return(to_epsilon(e1))
     callNextMethod(e1, NULL)

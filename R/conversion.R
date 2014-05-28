@@ -117,7 +117,7 @@ setMethod("to_ratio", "Intensities", function(iso) {
 # delta to ratio ======
 setMethod("to_ratio", "Delta", function(iso) {
     if (length(iso@ref_ratio) == 0) {
-        # no, reference, let's see if we can find one
+        # no reference, let's see if we can find one
         stds <- get_standards(minor = iso@isoname, major = iso@major, name = iso@compound2)
         if (length(stds) == 0)
             message("No reference ratio registered with the delta value, tried to find one from the registered standards but none were found, delta: ", label(iso))
@@ -132,7 +132,7 @@ setMethod("to_ratio", "Delta", function(iso) {
     # continue as usual
     if (length(iso@ref_ratio) != 1)
         stop("cannot convert from a ratio to a delta value without the reference ratio set in the delta value object")
-    a <- to_alpha(iso)
+    a <- to_ff(iso)
     iso@.Data <- a@.Data * iso@ref_ratio # could do it by multiplying alpha value by ratio but then have to generate appropriate ratio object first
     recast_isoval(iso, "Ratio", list(compound2 = NULL, permil = NULL, ref_ratio = NULL))
 })
@@ -180,19 +180,22 @@ setMethod("to_abundance", "Delta", function(iso) {
     to_abundance(r)
 })
 
-# to.alpha =============================================
+# to.ff =============================================
+
+# FIXME!!
 
 #' Fractionation factor
 #' 
 #' @description
-#' Calculate/convert to isotope fractionation factors (\code{alpha} values).
+#' Calculate/convert to isotope fractionation factors (\code{ff} values).
 #' 
-#' @usage to_alpha(iso1, iso2)
+#' @usage to_ff(iso1, iso2, notation = "alpha")
 #' @details
+#' FIXME
 #' The \code{frac_factor(...)} function calculates the fractionation factor between two isotope data objects
 #' (for example two delta values, two epsilons, two ratios, or two alpha values).
 #' 
-#' \code{to_alpha} is mostly synonymous with \code{frac_fractor} but can additionally be used to perform
+#' \code{to_ff} is mostly synonymous with \code{frac_fractor} but can additionally be used to perform
 #' conversions such as \code{\link{epsilon}} to \code{\link{alpha}}.
 #'
 #' All calculatinos are only permissible if the isotope values have matching
@@ -200,37 +203,41 @@ setMethod("to_abundance", "Delta", function(iso) {
 #'
 #' @param iso1 the top compound in the fractionation factor
 #' @param iso2 the bottom compound in the fractionation factor
-#' @return isotope \code{\link{alpha}} object if parameters can be converted to a \code{\link{alpha}}, an error otherwise 
+#' @return isotope \code{\link{fraction_factor}} object if parameters can be converted, an error otherwise 
 #' @note 
 #' Some of the conversions are also implemented in arithmetic shorthand, for example to generate
-#' an alpha value from two ratios, \code{frac_factor(ratio(), ratio())} and 
-#' \code{to_alpha(ratio(), ratio())} are the same as \code{ratio() / ratio()}.
+#' an fractionation factor in alpha notation from two ratios 
+#' \code{to_ff(ratio(), ratio())} is the same as \code{ratio() / ratio()}.
 #' See \link{arithmetic} for details.
 #' @family data type conversions
-#' @method to_alpha
+#' @method to_ff
 #' @export
-setGeneric("to_alpha", function(iso1, iso2) standardGeneric("to_alpha"))
+setGeneric("to_ff", function(iso1, iso2) standardGeneric("to_ff"))
 
-#' @method to_alpha
+#' @method to_ff
 #' @export
-setMethod("to_alpha", "ANY", function(iso1, iso2) conversion_error(iso1, "alpha value (ratio of ratios)"))
+setMethod("to_ff", "ANY", function(iso1, iso2) conversion_error(iso1, "fractionation factor value (ratio of ratios)"))
 
-# two ratios to alpha (uses the arithmetic shorthand) 
-setMethod("to_alpha", signature("Ratio", "Ratio"), function(iso1, iso2) iso1/iso2)
+# two ratios to fractionation factor in alpha notation (uses the arithmetic shorthand) 
+setMethod("to_ff", signature("Ratio", "Ratio"), function(iso1, iso2) iso1/iso2)
 # Note: to allow this for entire isotope systems --> need to implement it properly with matching the right columns
 
+# FIXME, this will become switch_notation!
+
 # delta/epsilon to alpha
-setMethod("to_alpha", signature("Epsilon", "missing"), function(iso1, iso2) {
+setMethod("to_ff", signature("Epsilon", "missing"), function(iso1, iso2) {
     iso1@.Data <- to_epsilon(iso1, permil = FALSE)@.Data + 1 # make sure converting from an epsilon/delta value stripped of it's 1000x factor!
-    recast_isoval(iso1, "Alpha", list(permil = NULL, ref_ratio = NULL))
+    recast_isoval(iso1, "FractionationFactor", list(permil = NULL, ref_ratio = NULL))
 })
 
-# two epsilon/deltas to alpha (fractionation factor between the two compounds)
-setMethod("to_alpha", signature("Epsilon", "Epsilon"), function(iso1, iso2) {
-    to_alpha(iso1) / to_alpha(iso2) # arithmetic operator is defined and takes care of the all the proper type checks
+# two delta to fractionation factor (ff between the two compounds)
+setMethod("to_ff", signature("Delta", "Delta"), function(iso1, iso2) {
+    to_ff(iso1) / to_ff(iso2) # arithmetic operator is defined and takes care of the all the proper type checks
 })
 
 # to.epsilon =============================================
+
+### FIXME to_epsilon should become switch_notation
 
 #' Convert to epsilon value
 #' 
@@ -252,7 +259,7 @@ setMethod("to_epsilon", "Isosys", function(iso, permil = use_permil())
     convert_isosys(iso, "Epsilons", function(df) lapply(as.data.frame(df), function(i) to_epsilon(i, permil = permil))))
 
 # alpha to epsilon
-setMethod("to_epsilon", signature(iso = "Alpha"), function(iso, permil = use_permil()) {
+setMethod("to_epsilon", signature(iso = "FractionationFactor"), function(iso, permil = use_permil()) {
     iso@.Data <- iso@.Data - 1
     to_epsilon(recast_isoval(iso, "Epsilon", list(permil = FALSE)), permil = permil)
 })
@@ -334,8 +341,8 @@ setMethod("to_delta", signature(iso = "Epsilon", ref_ratio = "missing"), functio
            ref_ratio = if (is.null(attr(iso, "ref_ratio"))) numeric() else iso@ref_ratio))
 })
 
-# alpha to delta ====
-setMethod("to_delta", signature(iso = "Alpha", ref_ratio = "ANY"), function(iso, ref_ratio, permil = use_permil()) {
+# fractionation factor to delta ====
+setMethod("to_delta", signature(iso = "FractionationFactor", ref_ratio = "ANY"), function(iso, ref_ratio, permil = use_permil()) {
     e <- to_epsilon(iso)
     if (missing(ref_ratio) || length(ref_ratio) == 0)
         to_delta(e, permil = permil)
@@ -351,15 +358,18 @@ setMethod("to_delta", signature("Ratio", "numeric"), function(iso, ref_ratio, pe
     to_delta(iso, update_iso(ratio(ref_ratio), list(isoname = iso@isoname, major = iso@isoname)), permil = permil)
 })
 
+
+#FIXME: should allow multiple values for a ref_ratio!
+
 # ratio to delta (with Ratio object as ref ratio)
 setMethod("to_delta", signature("Ratio", "Ratio"), function(iso, ref_ratio, permil = use_permil()) {
     if (length(ref_ratio) != 1)
         stop("reference ratio for a delta value object must be exactly one numeric value, supplied ", length(ref_ratio))
     
-    # convert to alpha value
+    # convert to fractionation factor
     iso2 <- ref_ratio
     iso2@.Data <- rep(get_value(ref_ratio), length(iso)) # get ref_ratio to the right length
-    a <- to_alpha(iso, iso2)
+    a <- to_ff(iso, iso2) # FIXME, notation = "alpha"
     
     # to delta
     to_delta(a, ref_ratio = ref_ratio, permil = permil)
