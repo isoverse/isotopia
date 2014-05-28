@@ -27,7 +27,8 @@ The weight of an isotope value obejct can be retrieved and (re)set with the \cod
 }
 \description{
 Generate an isotope delta value object. See \link{isotopia} for general information on initializing
-and converting isotope data objects.
+and converting isotope data objects. Delta values can be easily converted from values in one notation to values in
+another notation by using \code{\link{switch_notation}}.
 }
 \details{
 For mass balance calculations with delta values, simply add the appropriate weights (if different from
@@ -35,8 +36,8 @@ the default) and use \code{delta(...) + delta(...)}. Use \code{\link{exact_mass_
 to adjust how these are calculated.
 }
 \examples{
-delta(50, permil = TRUE) # enter as permil value
-delta(0.05, permil = FALSE) # enter as non-permil value
+delta(50, notation = "permil") # enter as permil value
+delta(0.05, notation = "raw") # enter as non-permil value
 }
 \seealso{
 Other isotope data types: \code{\link{ab}},

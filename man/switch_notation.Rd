@@ -20,6 +20,7 @@ Fractionation factor: alpha, eps, permil, ppm (note: alpha is considered the 'ra
 \seealso{
 Other data type attributes: \code{\link{get_value}};
   \code{\link{get_weighted_value}};
-  \code{\link{get_weight}}; \code{\link{weight}}
+  \code{\link{get_weight}}; \code{\link{set_attrib}};
+  \code{\link{weight}}
 }
 

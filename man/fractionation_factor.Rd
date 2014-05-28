@@ -2,10 +2,7 @@
 \name{fractionation_factor}
 \alias{ff}
 \alias{fractionation_factor}
-\title{Fractionation factor
-FIXME, change description
-Generate a fractionation factor (alpha value = ratio of two isotope ratios) object. See \link{isotopia} for general information on initializing
-and converting isotope data objects.}
+\title{Fractionation factor}
 \usage{
 fractionation_factor(..., major = get_iso_opts("default_major"), ctop = "",
   cbot = "", single_as_df = FALSE)
@@ -14,7 +11,7 @@ ff(..., major = get_iso_opts("default_major"), ctop = "", cbot = "",
   single_as_df = FALSE)
 }
 \arguments{
-\item{...}{- numeric vectors (can be named) to turn into alpha values}
+\item{...}{- numeric vectors (can be named) to turn into fractionation factors}
 
 \item{major}{- name of the major isotope in the isotope system [optional]}
 
@@ -23,6 +20,13 @@ ff(..., major = get_iso_opts("default_major"), ctop = "", cbot = "",
 \item{cbot}{- name of the compound representing the bottom isotope ratio [optional]}
 }
 \description{
+FIXME, change description
+Generate a fractionation factor (alpha value = ratio of two isotope ratios) object. See \link{isotopia} for general information on initializing
+and converting isotope data objects.
+Fractionation factors can be easily converted from values in one notation to values in
+another notation by using \code{\link{switch_notation}}.
+}
+\details{
 The \code{ff} function is a shorthand for \code{fractionation_factor} but otherwise identical.
 }
 \seealso{

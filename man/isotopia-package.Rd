@@ -14,9 +14,7 @@ by calling the respective \code{\link{ratio}}, \code{\link{abundance}},
 has additional attributes (such as name of the major isotope for all data
 types, reference ratio for \code{\link{delta}} values, unit for \code{\link{intensity}})
 and these are described in detail in the help for each function. The attributes of any
-existing isotope data object can be modified easily by calling the initialization
-function (\code{\link{ratio}}, \code{\link{abundance}}, etc.) again and passing the object as
-well as any of the attributes (such as \code{major}) to modify.
+existing isotope data object can be modified easily by calling \code{\link{set_attrib}}
 
 Each data type can be initialized as a single vector of isotopic data or an entire system
 of isotope values for the same element (e.g. all oxygen or all sulfur isotopes). To
@@ -35,6 +33,9 @@ an isotope system that are not named generate columns named \code{iso, iso.1, is
 Isotope data objects (both single vectors and isotope systems) can then be converted
 to different data types using the respective \code{\link{to_ratio}}, \code{\link{to_abundance}},
 \code{\link{to_delta}} functions.
+
+Global options for isotopia can be set using \code{\link{set_iso_opts}} and
+standard reference ratios can be registered using \code{\link{register_standard}}
 }
 \examples{
 # these examples are for initializing isotope ratio objects but apply equally to other data types

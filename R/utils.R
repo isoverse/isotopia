@@ -36,5 +36,9 @@ run_autotest <- function() {
     source("R/isotopia.r")
     use_permil(TRUE)
     auto_test("R", "tests/testthat")
+    auto_test("/Users/sk/Dropbox/Tools/software/r/isotopia/R", "/Users/sk/Dropbox/Tools/software/r/isotopia/tests/testthat")
 }
+
+
+
 

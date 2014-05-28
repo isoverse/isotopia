@@ -28,6 +28,7 @@ print(get_weight(r)) # returns 10
 \seealso{
 Other data type attributes: \code{\link{get_value}};
   \code{\link{get_weighted_value}};
-  \code{\link{get_weight}}; \code{\link{switch_notation}}
+  \code{\link{get_weight}}; \code{\link{set_attrib}};
+  \code{\link{switch_notation}}
 }
 

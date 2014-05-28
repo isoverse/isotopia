@@ -24,8 +24,6 @@ FIXME
 The \code{frac_factor(...)} function calculates the fractionation factor between two isotope data objects
 (for example two delta values, two epsilons, two ratios, or two alpha values).
 
-\code{to_ff} is mostly synonymous with \code{frac_fractor} but can additionally be used to perform
-conversions such as \code{\link{epsilon}} to \code{\link{alpha}}.
 
 All calculatinos are only permissible if the isotope values have matching
 attributes.
@@ -37,8 +35,9 @@ an fractionation factor in alpha notation from two ratios
 See \link{arithmetic} for details.
 }
 \seealso{
-Other data type conversions: \code{\link{to_abundance}};
+Other data type conversions: \code{\link{to_ab}},
+  \code{\link{to_abundance}}; \code{\link{to_d}},
   \code{\link{to_delta}}; \code{\link{to_epsilon}};
-  \code{\link{to_ratio}}
+  \code{\link{to_r}}, \code{\link{to_ratio}}
 }
 

@@ -55,7 +55,8 @@ conversion_error <- function(from, to) {
 
 #' Convert to isotope ratio
 #' 
-#' \code{to_ratio} converts another isotopic data type to a ratio.
+#' \code{to_ratio} converts another isotopic data type to a ratio. 
+#' The \code{to_r} function is a shorthand for \code{to_ratio} but otherwise identical.
 #'
 #' @param iso isotopic data object (\code{\link{ratio}}, \code{\link{abundance}}, \code{\link{delta}}, etc.)
 #' @return isotope \code{\link{ratio}} object if iso can be converted to a \code{\link{ratio}}, an error otherwise
@@ -68,6 +69,11 @@ setGeneric("to_ratio", function(iso) standardGeneric("to_ratio"))
 #' @method to_ratio
 #' @export
 setMethod("to_ratio", "ANY", function(iso) conversion_error(iso, "isotope ratio"))
+
+#' @rdname to_ratio
+#' @export
+to_r <- function(iso) to_ratio(iso)
+
 setMethod("to_ratio", "Ratio", function(iso) iso)
 setMethod("to_ratio", "Ratios", function(iso) iso)
 
@@ -147,6 +153,7 @@ setMethod("to_ratio", "Delta", function(iso) {
 #' Convert to isotope abundance
 #' 
 #' \code{to_abundance} converts another isotopic data type to an abundance.
+#' The \code{to_ab} function is a shorthand for \code{to_abundance} but otherwise identical.
 #'
 #' @param iso isotopic data object (\code{\link{ratio}}, \code{\link{abundance}}, \code{\link{delta}}, etc.)
 #' @return isotope \code{\link{abundance}} object if iso can be converted to a \code{\link{abundance}}, an error otherwise
@@ -161,6 +168,10 @@ setGeneric("to_abundance", function(iso) standardGeneric("to_abundance"))
 setMethod("to_abundance", "ANY", function(iso) conversion_error(iso, "isotope abundance"))
 setMethod("to_abundance", "Abundance", function(iso) iso)
 setMethod("to_abundance", "Abundances", function(iso) iso)
+
+#' @rdname to_abundance
+#' @export
+to_ab <- function(iso) to_abundance(iso)
 
 # ratio to abundance
 setMethod("to_abundance", "Ratio", function(iso)  {
@@ -204,8 +215,6 @@ setMethod("to_abundance", "Delta", function(iso) {
 #' The \code{frac_factor(...)} function calculates the fractionation factor between two isotope data objects
 #' (for example two delta values, two epsilons, two ratios, or two alpha values).
 #' 
-#' \code{to_ff} is mostly synonymous with \code{frac_fractor} but can additionally be used to perform
-#' conversions such as \code{\link{epsilon}} to \code{\link{alpha}}.
 #'
 #' All calculatinos are only permissible if the isotope values have matching
 #' attributes.
@@ -226,6 +235,8 @@ setGeneric("to_ff", function(iso1, iso2) standardGeneric("to_ff"))
 #' @method to_ff
 #' @export
 setMethod("to_ff", "ANY", function(iso1, iso2) conversion_error(iso1, "fractionation factor value (ratio of ratios)"))
+setMethod("to_ff", signature("FractionationFactor", "missing"), function(iso1, iso2) iso)
+setMethod("to_ff", signature("FractionationFactors", "missing"), function(iso1, iso2) iso)
 
 # two ratios to fractionation factor in alpha notation (uses the arithmetic shorthand) 
 setMethod("to_ff", signature("Ratio", "Ratio"), function(iso1, iso2) iso1/iso2)
@@ -243,6 +254,8 @@ setMethod("to_ff", signature("Epsilon", "missing"), function(iso1, iso2) {
 setMethod("to_ff", signature("Delta", "Delta"), function(iso1, iso2) {
     to_ff(iso1) / to_ff(iso2) # arithmetic operator is defined and takes care of the all the proper type checks
 })
+
+
 
 # to.epsilon =============================================
 
@@ -288,7 +301,8 @@ setMethod("to_epsilon", signature(iso = "Epsilon"), function(iso, permil = use_p
 
 #' Convert to delta value
 #' 
-#' \code{to_delta} converts another isotopic data type to a delta value
+#' \code{to_delta} converts another isotopic data type to a delta value.
+#' The \code{to_d} function is a shorthand for \code{to_delta} but otherwise identical.
 #'
 #' @param iso isotopic data object (\code{\link{ratio}}, \code{\link{abundance}}, \code{\link{delta}}, etc.)
 #' @param ref_ratio the refernce ratio associated with the delta value. This is optional but required if planning
@@ -302,6 +316,10 @@ setMethod("to_epsilon", signature(iso = "Epsilon"), function(iso, permil = use_p
 #' @method to_delta
 #' @export
 setGeneric("to_delta", function(iso, ref_ratio, permil = use_permil()) standardGeneric("to_delta"))
+
+#' @rdname to_delta
+#' @export
+to_d <- function(iso, ref_ratio, permil = use_permil()) to_delta(iso, ref_ratio, permil)
 
 #' @method to_delta
 #' @export

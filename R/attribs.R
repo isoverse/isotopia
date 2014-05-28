@@ -3,18 +3,46 @@ NULL
 
 # update attributes =================================
 
-# helper function for updating text attributes
-update_text_attrib <- function(obj, attribs, slot_name, msg) {
-    if (!is.null(value <- attribs[[slot_name]]) && nchar(value) > 0){
-        if (nchar(slot(obj, slot_name)) > 0 && slot(obj, slot_name) != value) 
-            warning(msg, " ('", class(obj), " value' object) from '", slot(obj, slot_name), "' to '", value, "'")
-        slot(obj, slot_name) <- value
-    }
-    obj
+#' Set attributes of isotope objects
+#' 
+#' Set an attribute of an existing isotope value object.
+#' 
+#' @param iso the isotope value object to update
+#' @param minor the name of the minor isotope
+#' @param major the name of the major isotope
+#' @param compound name of the compound the isotopic values belong to [optional]
+#' @param ref name of the reference material (\code{\link{delta}} values only)
+#' @param ref_ratio - value of the reference material (\code{\link{delta}} values only)
+#' @param ctop name of the compound representing the top isotope ratio in 
+#' a \code{\link{fractionation_factor}}
+#' @param cbot name of the compound representing the bottom isotope ratio in
+#' a \code{\link{fractionation_factor}}
+#' @param unit unit for \code{\link{intensity}} value objects
+#' @family data type attributes
+#' @export
+set_attrib <- function(iso, minor = NULL, major = NULL, 
+                       compound = NULL, compound2 = NULL, 
+                       ref = NULL, ref_ratio = NULL,
+                       ctop = NULL, cbot = NULL,
+                       unit = NULL) {
+    if (!is.isoval(iso))
+        stop("cannot set attributes of non-isotope value objects: ", class(iso))
+    
+    # new attribs
+    attribs <- as.list(match.call())[-1]
+    
+    # special cases (convert names to what their update equivalents are)
+    if (!missing(minor)) attribs$isoname <- minor
+    if (!missing(ctop)) attribs$compound <- ctop
+    if (!missing(cbot)) attribs$compound2 <- cbot
+    if (!missing(ref)) attribs$compound2 <- ref
+    
+    update_iso(iso, attribs)
 }
 
 #' update_iso the attributes of an isotope value object
 setGeneric("update_iso", function(obj, attribs) standardGeneric("update_iso"))
+
 setMethod("update_iso", "Isoval", function(obj, attribs) {
     obj <- update_text_attrib(obj, attribs, "isoname", "changing the isotope name")
     obj <- update_text_attrib(obj, attribs, "major", "changing the major isotope")
@@ -78,6 +106,17 @@ setMethod("update_iso", "Intensity", function(obj, attribs) {
     obj
 })
 
+# helper function for updating text attributes
+update_text_attrib <- function(obj, attribs, slot_name, msg) {
+    if (!is.null(value <- attribs[[slot_name]]) && nchar(value) > 0){
+        if (nchar(slot(obj, slot_name)) > 0 && slot(obj, slot_name) != value) 
+            warning(msg, " ('", class(obj), " value' object) from '", slot(obj, slot_name), "' to '", value, "'")
+        slot(obj, slot_name) <- value
+    }
+    obj
+}
+
+
 #' Weight an isotope value object
 #' 
 #' \code{weight(iso, weight)} adds a weight (can be thought of as mass or concentration) to an isotopic value
@@ -130,7 +169,7 @@ setGeneric("get_value", function(iso) standardGeneric("get_value"))
 #' @method get_value
 #' @export
 setMethod("get_value", "ANY", function(iso) stop("get_value not defined for objects of class ", class(iso)))
-#setMethod("get_value", "numeric", function(iso) iso) # just return the value itself - should I implmente this?
+setMethod("get_value", "numeric", function(iso) iso) # allow this for simplicity so this is similiar to as_numeric
 setMethod("get_value", "Isoval", function(iso) as.numeric(iso))
 setMethod("get_value", "Isosys", function(iso) {
     data.frame(lapply(iso,
@@ -140,7 +179,7 @@ setMethod("get_value", "Isosys", function(iso) {
       }), stringsAsFactors = F)
 })
 
-#' Retrieve isotope object's weight values
+#' Retrieve isotope object's weights
 #' 
 #' This function returns an isotope object's weight values.
 #' 

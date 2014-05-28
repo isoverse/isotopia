@@ -38,63 +38,7 @@ test_that("Testing that basic single data types' (ratio, abundance, delta, etc.)
     expect_error(intensity(-1), "ion intensities cannot be negative")
     expect_equal(label(intensity(`13C` = 1:5, compound = "CO2", major = "12C", unit = "mV")), "CO2 13C [mV]")
     
-    # testing standard attribute updates and reinitialization
-    expect_error(ratio(abundance(0.1)), "Cannot initialize an isotope value with another isotope value")
-    expect_is(ratio(ratio(0.1)), "Ratio")
-
-    # update name, major and compound
-    expect_equal({
-        r <- ratio(0.1)
-        r2 <- ratio(`13C` = r, major = "12C", compound = "CO2")
-        r2@isoname
-        }, "13C")
-    expect_equal(r2@major, "12C")
-    expect_equal(r2@compound, "CO2")
-    
-    # keep name, major and compound
-    expect_equal({
-        r <- ratio(`13C` = 0.1, major = "12C", compound = "CO2")
-        r2 <- ratio(r)
-        r2@isoname
-        }, "13C")
-    expect_equal(r2@major, "12C")
-    expect_equal(r2@compound, "CO2")
-    
-    # overwrite name (with warning)
-    expect_warning({
-        r <- ratio(`13C` = 0.1, major = "12C")
-        r2 <- ratio(`14C` = r)
-    }, "changing the isotope name")
-    expect_equal(r2@isoname, "14C")
-    
-    # overwrite major (with warning)
-    expect_warning({
-        r <- ratio(`13C` = 0.1, major = "12C")
-        r2 <- ratio(r, major = "11C")
-    }, "changing the major isotope")
-    expect_equal(r2@major, "11C")
-    
-    # overwrite compound (with warning)
-    expect_warning({
-        r <- ratio(`13C` = 0.1, major = "12C", compound = "CO2")
-        r2 <- ratio(r, compound = "DIC")
-    }, "changing the compound name")
-    expect_equal(r2@compound, "DIC")
-    
-    # overwrite weight (wight warning)
-    expect_warning({
-        r <- ratio(`13C` = 0.1*(1:5), weight = 1:5)
-        r2 <- weight(r, 3:7)
-    }, "changing the weight .* differences: '1, 2, 6, 7'")
-    expect_equal(get_weight(r2), 3:7)
-    
-    # change unit on intensity (with warning)
-    expect_warning({
-        i <- intensity(`13C` = 0.1, major = "12C", unit = "mV")
-        i2 <- intensity(i, unit = "V")
-    }, "changing the unit")
-    expect_equal(i2@unit, "V")
-    
+   
     # testing alpha data type
     #FIXME
 #     expect_error(alpha(-0.2), "cannot be negative")
@@ -149,6 +93,69 @@ test_that("Testing that basic single data types' (ratio, abundance, delta, etc.)
     expect_equal(d@ref_ratio, 0.25)
 })
 
+
+test_that("Testing that isoval attributes can be updated correctly", {
+    expect_error(set_attrib(numeric(), minor = '2H'), "cannot set attributes of non-isotope value objects")
+    
+    # FIXME: these should be eventually phased out, only set_attrib allowed!
+    # testing standard attribute updates and reinitialization
+    expect_error(ratio(abundance(0.1)), "Cannot initialize an isotope value with another isotope value")
+    expect_is(ratio(ratio(0.1)), "Ratio")
+    
+    # update name, major and compound
+    expect_equal({
+        r <- ratio(0.1)
+        r2 <- set_attrib(r, minor = "13C", major = "12C", compound = "CO2")
+        r2@isoname
+    }, "13C")
+    expect_equal(r2@major, "12C")
+    expect_equal(r2@compound, "CO2")
+    
+    # keep name, major and compound
+    expect_equal({
+        r <- ratio(`13C` = 0.1, major = "12C", compound = "CO2")
+        r2 <- ratio(r)
+        r2@isoname
+    }, "13C")
+    expect_equal(r2@major, "12C")
+    expect_equal(r2@compound, "CO2")
+    
+    # overwrite name (with warning)
+    expect_warning({
+        r <- ratio(`13C` = 0.1, major = "12C")
+        r2 <- set_attrib(r, minor = "14C")
+    }, "changing the isotope name")
+    expect_equal(r2@isoname, "14C")
+    
+    # overwrite major (with warning)
+    expect_warning({
+        r <- ratio(`13C` = 0.1, major = "12C")
+        r2 <- set_attrib(r, major = "11C")
+    }, "changing the major isotope")
+    expect_equal(r2@major, "11C")
+    
+    # overwrite compound (with warning)
+    expect_warning({
+        r <- ratio(`13C` = 0.1, major = "12C", compound = "CO2")
+        r2 <- set_attrib(r, compound = "DIC")
+    }, "changing the compound name")
+    expect_equal(r2@compound, "DIC")
+    
+    # overwrite weight (wight warning)
+    expect_warning({
+        r <- ratio(`13C` = 0.1*(1:5), weight = 1:5)
+        r2 <- weight(r, 3:7)
+    }, "changing the weight .* differences: '1, 2, 6, 7'")
+    expect_equal(get_weight(r2), 3:7)
+    
+    # change unit on intensity (with warning)
+    expect_warning({
+        i <- intensity(`13C` = 0.1, major = "12C", unit = "mV")
+        i2 <- set_attrib(i, unit = "V")
+    }, "changing the unit")
+    expect_equal(i2@unit, "V")
+    
+})
 
 test_that("Testing that isotope systems' (ratios, abundances, etc.) validity controls are working", {
     

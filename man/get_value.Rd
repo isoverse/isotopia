@@ -21,7 +21,7 @@ primitive data value(s).
 \code{\link{as.numeric}}, \code{\link{as.data.frame}}, \code{\link[base]{as.data.frame}} (base method)
 
 Other data type attributes: \code{\link{get_weighted_value}};
-  \code{\link{get_weight}}; \code{\link{switch_notation}};
-  \code{\link{weight}}
+  \code{\link{get_weight}}; \code{\link{set_attrib}};
+  \code{\link{switch_notation}}; \code{\link{weight}}
 }
 

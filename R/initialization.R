@@ -118,8 +118,8 @@ epsilon <- function(..., major = get_iso_opts("default_major"),
 #' The weight of an isotope value obejct can be retrieved and (re)set with the \code{\link{weight}} function.
 #' @family isotope data types
 #' @examples
-#' delta(50, permil = TRUE) # enter as permil value
-#' delta(0.05, permil = FALSE) # enter as non-permil value
+#' delta(50, notation = "permil") # enter as permil value
+#' delta(0.05, notation = "raw") # enter as non-permil value
 #' @export
 delta <- function(..., major = get_iso_opts("default_major"), compound = "", 
                   ref = "", ref_ratio = numeric(), permil = use_permil(), 
