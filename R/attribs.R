@@ -30,7 +30,7 @@ setMethod("update_iso", "Isoval", function(obj, attribs) {
     obj
 })
 
-setMethod("update_iso", "Alpha", function(obj, attribs) {
+setMethod("update_iso", "FractionationFactor", function(obj, attribs) {
     obj <- callNextMethod(obj, attribs)
     obj <- update_text_attrib (obj, attribs, "compound2", "changing the bottom compound name of a fractionation factor")    
     obj

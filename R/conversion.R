@@ -72,17 +72,22 @@ setMethod("to_ratio", "Ratio", function(iso) iso)
 setMethod("to_ratio", "Ratios", function(iso) iso)
 
 # abundance to ratio
-setMethod("to_ratio", "Abundance", function(iso) to_ratio(new("Abundances", data.frame(iso)))[1]) # converts to a system (slightly slower but tidier)
+setMethod("to_ratio", "Abundance", function(iso) {
+    # could convert to an Abundances system but that's slightly slower and you introduce a lot of overhead with the data frame initialization
+    iso@.Data <- iso@.Data / (1 - iso@.Data) # abundance to ratio
+    recast_isoval(iso, "Ratio")
+}) 
+
 setMethod("to_ratio", "Abundances", function(iso) {
     convert_isosys(iso, "Ratios", 
-                   function(df) {
-                       # convert abundance to ratio
-                       abs <- rowSums(get_value(df))
-                       lapply(df, function(ab) {
-                           ab@.Data <- ab@.Data / (1 - abs) # abundance to ratio
-                           recast_isoval(ab, "Ratio")
-                       })
-                   })
+       function(df) {
+           # convert abundance to ratio
+           abs <- rowSums(get_value(df))
+           lapply(df, function(ab) {
+               ab@.Data <- ab@.Data / (1 - abs) # abundance to ratio
+               recast_isoval(ab, "Ratio")
+           })
+       })
 })
 
 # intensity to ratio ========
@@ -158,7 +163,11 @@ setMethod("to_abundance", "Abundance", function(iso) iso)
 setMethod("to_abundance", "Abundances", function(iso) iso)
 
 # ratio to abundance
-setMethod("to_abundance", "Ratio", function(iso) to_abundance(new("Ratios", data.frame(iso)))[1]) # converts to a system (slightly slower but tidier)
+setMethod("to_abundance", "Ratio", function(iso)  {
+    iso@.Data <- iso@.Data / (1 + iso@.Data) # ratio to abundance
+    recast_isoval(iso, "Abundance")
+}) 
+
 setMethod("to_abundance", "Ratios", function(iso) {
     convert_isosys(iso, "Abundances", 
                    function(df) {

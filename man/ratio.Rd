@@ -3,7 +3,7 @@
 \alias{ratio}
 \title{Isotope ratio}
 \usage{
-ratio(..., major = default_major_isotope(), compound = "",
+ratio(..., major = get_iso_opts("default_major"), compound = "",
   weight = numeric(), single_as_df = FALSE)
 }
 \arguments{
@@ -29,9 +29,10 @@ ratio(`13C` = c(0.1, 0.2, 0.3)) # named ratio
 ratio(`33S` = c(0.1, 0.2, 0.3), `34S` = c(0.2, 0.4, 0.6), major = "32S") # isotope system
 }
 \seealso{
-Other isotope data types: \code{\link{abundance}};
-  \code{\link{alpha}}; \code{\link{delta}},
-  \code{\link{use_permil}}; \code{\link{epsilon}},
-  \code{\link{use_permil}}; \code{\link{intensity}}
+Other isotope data types: \code{\link{ab}},
+  \code{\link{abundance}}; \code{\link{delta}};
+  \code{\link{epsilon}}, \code{\link{use_permil}};
+  \code{\link{ff}}, \code{\link{fractionation_factor}};
+  \code{\link{intensity}}
 }
 

@@ -17,6 +17,7 @@ Suggests:
     testthat,
     knitr
 Collate:
+    'utils.R'
     'classes.R'
     'validation.R'
     'conversion.R'
@@ -25,5 +26,7 @@ Collate:
     'attribs.R'
     'show.R'
     'initialization.R'
+    'options.R'
     'isotopia.R'
+    'notation.R'
     'zzz.R'

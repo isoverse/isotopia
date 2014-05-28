@@ -47,6 +47,6 @@ ratio(`33S` = c(0.1, 0.2, 0.3), `34S` = c(0.2, 0.4, 0.6), major = "32S") # isoto
 Sebastian Kopf
 }
 \seealso{
-\code{\link{ratio}}, \code{\link{is.ratio}}, \code{\link{as.ratio}}, etc.
+\code{\link{ratio}}, \code{\link{is.ratio}}, \code{\link{to_ratio}}, etc.
 }
 

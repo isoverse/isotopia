@@ -21,7 +21,7 @@ NULL
 #' ratio(c(0.1, 0.2, 0.3)) # multiple values
 #' ratio(`13C` = c(0.1, 0.2, 0.3)) # named ratio
 #' ratio(`33S` = c(0.1, 0.2, 0.3), `34S` = c(0.2, 0.4, 0.6), major = "32S") # isotope system
-ratio <- function(..., major = default_major_isotope(), compound = "", 
+ratio <- function(..., major = get_iso_opts("default_major"), compound = "", 
                   weight = numeric(), single_as_df = FALSE) {
     iso("Ratios", ..., attribs = list(major = major, compound = compound, weight = weight), single_as_df = single_as_df)
 }
@@ -31,6 +31,8 @@ ratio <- function(..., major = default_major_isotope(), compound = "",
 #' Generate an isotope abundance object. See \link{isotopia} for general information on initializing
 #' and converting isotope data objects.
 #' 
+#' The \code{ab} function is a shorthand for \code{abundance} but otherwise identical.
+#' 
 #' @param ... - numeric vectors (can be named) to turn into isotope abundance objects
 #' @param major - name of the major isotope in the isotope system [optional], 
 #' only of importance if converting from abundance to ratio or delta value, 
@@ -38,26 +40,40 @@ ratio <- function(..., major = default_major_isotope(), compound = "",
 #' @param compound - name of the compound the isotopic values belong to [optional]
 #' @family isotope data types
 #' @export
-abundance <- function(..., major = default_major_isotope(), compound = "", 
+abundance <- function(..., major = get_iso_opts("default_major"), compound = "", 
                       weight = numeric(), single_as_df = FALSE) {
     iso("Abundances", ..., attribs = list(major = major, compound = compound, weight = weight), single_as_df = single_as_df)
 }
 
+#' @rdname abundance
+#' @export
+ab <- abundance
+
 #' Fractionation factor
+#' 
 #' FIXME, change description
 #' Generate a fractionation factor (alpha value = ratio of two isotope ratios) object. See \link{isotopia} for general information on initializing
 #' and converting isotope data objects.
+#' Fractionation factors can be easily converted from values in one notation to values in 
+#' another notation by using \code{\link{switch_notation}}.
 #' 
-#' @param ... - numeric vectors (can be named) to turn into alpha values
+#' The \code{ff} function is a shorthand for \code{fractionation_factor} but otherwise identical.
+#' 
+#' @param ... - numeric vectors (can be named) to turn into fractionation factors
 #' @param major - name of the major isotope in the isotope system [optional]
 #' @param ctop - name of the compound representing the top isotope ratio [optional]
 #' @param cbot - name of the compound representing the bottom isotope ratio [optional]
 #' @family isotope data types
 #' @export
-ff <- function(..., major = default_major_isotope(), 
+fractionation_factor <- function(..., major = get_iso_opts("default_major"), 
                   ctop = "", cbot = "", single_as_df = FALSE) {
     iso("FractionationFactors", ..., attribs = list(major = major, compound = ctop, compound2 = cbot), single_as_df = single_as_df)
 }
+
+#' @rdname fractionation_factor
+#' @export
+ff <- fractionation_factor
+
 
 #' Epsilon value
 #'
@@ -74,7 +90,7 @@ ff <- function(..., major = default_major_isotope(),
 #' epsilon(50, permil = TRUE) # enter as permil value
 #' epsilon(0.05, permil = FALSE) # enter as non-permil value
 #' @export
-epsilon <- function(..., major = default_major_isotope(), 
+epsilon <- function(..., major = get_iso_opts("default_major"), 
                     ctop = "", cbot = "", permil = use_permil(), single_as_df = FALSE) {
     iso("Epsilons", ..., attribs = list(major = major, compound = ctop, compound2 = cbot, permil = permil), single_as_df = single_as_df)
 }
@@ -82,11 +98,13 @@ epsilon <- function(..., major = default_major_isotope(),
 #' Delta value
 #'
 #' Generate an isotope delta value object. See \link{isotopia} for general information on initializing
-#' and converting isotope data objects.
+#' and converting isotope data objects. Delta values can be easily converted from values in one notation to values in 
+#' another notation by using \code{\link{switch_notation}}.
 #' 
 #' For mass balance calculations with delta values, simply add the appropriate weights (if different from
 #' the default) and use \code{delta(...) + delta(...)}. Use \code{\link{exact_mass_balance}(TRUE/FALSE)}
 #' to adjust how these are calculated.
+#' 
 #' 
 #' @param ... - numeric vectors (can be named) to turn into delta values
 #' @param major - name of the major isotope in the isotope system [optional]
@@ -103,7 +121,7 @@ epsilon <- function(..., major = default_major_isotope(),
 #' delta(50, permil = TRUE) # enter as permil value
 #' delta(0.05, permil = FALSE) # enter as non-permil value
 #' @export
-delta <- function(..., major = default_major_isotope(), compound = "", 
+delta <- function(..., major = get_iso_opts("default_major"), compound = "", 
                   ref = "", ref_ratio = numeric(), permil = use_permil(), 
                   weight = numeric(), single_as_df = FALSE) {
     iso("Deltas", ..., attribs = list(major = major, compound = compound, compound2 = ref, ref_ratio = ref_ratio, permil = permil, weight = weight), single_as_df = single_as_df)
@@ -120,7 +138,7 @@ delta <- function(..., major = default_major_isotope(), compound = "",
 #' @param unit - units of the measurement (e.g. #, V, mV)
 #' @family isotope data types
 #' @export
-intensity <- function(..., major = default_major_isotope(), compound = "", 
+intensity <- function(..., major = get_iso_opts("default_major"), compound = "", 
                       unit = "", single_as_df = FALSE) {
     iso("Intensities", ..., 
         attribs = list(major = major, compound = compound, unit = unit), single_as_df = single_as_df)
@@ -147,7 +165,7 @@ iso <- function(class_isosys, ..., attribs = list(), single_as_df = FALSE) {
         if (!is (data, class_isoval))
             data <- new(class_isoval, data) # initialize new if not already the right object
         if (length(isoname) == 0 || nchar(isoname) == 0) 
-            isoname <- default_minor_isotope()
+            isoname <- get_iso_opts("default_minor")
         obj <- update_iso(data, attribs = c(list(isoname = isoname), attribs)) # update attributes
         validObject(obj) # test validity
         return(obj)

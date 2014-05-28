@@ -3,8 +3,8 @@
 \alias{intensity}
 \title{Ion intensity}
 \usage{
-intensity(..., major = default_major_isotope(), compound = "", unit = "",
-  single_as_df = FALSE)
+intensity(..., major = get_iso_opts("default_major"), compound = "",
+  unit = "", single_as_df = FALSE)
 }
 \arguments{
 \item{...}{- numeric vectors (can be named) to turn into ion intensity objects}
@@ -20,9 +20,10 @@ Generate an ion intensity object (e.g. ion counts or signal intensity).
 See \link{isotopia} for general information on initializing and converting isotope data objects.
 }
 \seealso{
-Other isotope data types: \code{\link{abundance}};
-  \code{\link{alpha}}; \code{\link{delta}},
-  \code{\link{use_permil}}; \code{\link{epsilon}},
-  \code{\link{use_permil}}; \code{\link{ratio}}
+Other isotope data types: \code{\link{ab}},
+  \code{\link{abundance}}; \code{\link{delta}};
+  \code{\link{epsilon}}, \code{\link{use_permil}};
+  \code{\link{ff}}, \code{\link{fractionation_factor}};
+  \code{\link{ratio}}
 }
 

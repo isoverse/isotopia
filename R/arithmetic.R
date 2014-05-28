@@ -162,25 +162,25 @@ setMethod("*", signature(e1 = "Isoval", e2 = "ANY"), function(e1, e2) operation_
 setMethod("*", signature(e1 = "ANY", e2 = "Isoval"), function(e1, e2) operation_error("Multiplication", e1, e2))
 setMethod("*", signature(e1 = "Isosys", e2 = "Isosys"), function(e1, e2) operation_error("Multiplication", e1, e2))
 
-#' @usage alpha * ratio
+#' @usage ff * ratio
 #' @details
-#' \code{alpha*ratio}, \code{alpha*alpha}, \code{alpha*delta} are a shorthand for 
-#' fractionating an isotope object with an alpha fractionation factor,
+#' \code{ff*ratio}, \code{ff*ff}, \code{ff*delta} are a shorthand for 
+#' fractionating an isotope object with a factionation factor,
 #' see \code{\link{fractionate}} for details
 #' @name arithmetic 
 #' @rdname arithmetic
 NULL
 
-# alpha * ratio and ratio * alpha (always the weight of the ratio is carried over, alpha is considered a modifier)
-setMethod("*", signature(e1 = "Alpha", e2 = "Ratio"), function(e1, e2) fractionate(e1, e2))
-setMethod("*", signature(e1 = "Ratio", e2 = "Alpha"), function(e1, e2) e2 * e1) # just reverse
+# ff * ratio and ratio * ff (always the weight of the ratio is carried over, ff is considered a modifier)
+setMethod("*", signature(e1 = "FractionationFactor", e2 = "Ratio"), function(e1, e2) fractionate(e1, e2))
+setMethod("*", signature(e1 = "Ratio", e2 = "FractionationFactor"), function(e1, e2) e2 * e1) # just reverse
 
-# alpha * alpha (weight of first alpha is carried)
-setMethod("*", signature(e1 = "Alpha", e2 = "Alpha"), function(e1, e2) fractionate(e1, e2))
+# ff * ff (weight of first ff is carried)
+setMethod("*", signature(e1 = "FractionationFactor", e2 = "FractionationFactor"), function(e1, e2) fractionate(e1, e2))
 
-# alpha * delta(x) and delta(x) * alpha (always the weight of the delta value is carried over, alpha considered a modifier)
-setMethod("*", signature(e1 = "Alpha", e2 = "Delta"), function(e1, e2) fractionate(e1, e2))
-setMethod("*", signature(e1 = "Delta", e2 = "Alpha"), function(e1, e2) e2 * e1) # just reverse
+# ff * delta(x) and delta(x) * ff (always the weight of the delta value is carried over, ff considered a modifier)
+setMethod("*", signature(e1 = "FractionationFactor", e2 = "Delta"), function(e1, e2) fractionate(e1, e2))
+setMethod("*", signature(e1 = "Delta", e2 = "FractionationFactor"), function(e1, e2) e2 * e1) # just reverse
 
 # same for epsilon 
 setMethod("*", signature(e1 = "Epsilon", e2 = "Delta"), function(e1, e2) fractionate(e1, e2))
@@ -200,7 +200,7 @@ NULL
 setMethod("*", signature(e1 = "Delta", e2 = "Delta"), function(e1, e2) shift_reference(e1, e2))
 
 # FIXME: isotope systems?
-setMethod("*", signature(e1 = "Alphas", e2 = "Ratios"), function(e1, e2) stop("theoretically permissible but might not be worth implementing"))
+setMethod("*", signature(e1 = "FractionationFactors", e2 = "Ratios"), function(e1, e2) stop("theoretically permissible but might not be worth implementing"))
 # + other Isosys expansion of this stuff
 
 
@@ -238,7 +238,7 @@ NULL
 setMethod("/", signature(e1 = "Ratio", e2 = "Ratio"), function(e1, e2) {
     iso_attribs_check(e1, e2, include = c("isoname", "major"), text = "cannot generate a fractionaton factor from two ratio objects")
     e1@.Data <- e1@.Data / e2@.Data 
-    recast_isoval(e1, "Alpha", list(compound2 = e2@compound))
+    recast_isoval(e1, "FractionationFactor", list(compound2 = e2@compound))
 })
 
 #' @usage alpha / alpha
@@ -251,7 +251,7 @@ setMethod("/", signature(e1 = "Ratio", e2 = "Ratio"), function(e1, e2) {
 NULL
 
 # alpha / alpha (weight of first alpha is carried)
-setMethod("/", signature(e1 = "Alpha", e2 = "Alpha"), function(e1, e2) {
+setMethod("/", signature(e1 = "FractionationFactor", e2 = "FractionationFactor"), function(e1, e2) {
     iso_attribs_check(e1, e2, include = c("isoname", "major"), text = "cannot generate a fractionation factor from two fractionation factors")
     if (e1@compound2 == e2@compound2) 
         e1@compound2 <- e2@compound # denominators cancel
@@ -261,7 +261,7 @@ setMethod("/", signature(e1 = "Alpha", e2 = "Alpha"), function(e1, e2) {
         stop(sprintf("cannot combine two fractionation factors if neither their denominators (%s and %s) nor their numerators (%s and %s) cancel", 
                      e1@compound2, e2@compound2, e1@compound, e2@compound))
     e1@.Data <- e1@.Data / e2@.Data
-    recast_isoval(e1, "Alpha")
+    recast_isoval(e1, "FractionationFactor")
 })
 
 #' @usage delta / delta

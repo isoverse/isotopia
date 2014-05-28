@@ -4,7 +4,7 @@
 \alias{use_permil}
 \title{Epsilon value}
 \usage{
-epsilon(..., major = default_major_isotope(), ctop = "", cbot = "",
+epsilon(..., major = get_iso_opts("default_major"), ctop = "", cbot = "",
   permil = use_permil(), single_as_df = FALSE)
 
 use_permil(permil)
@@ -34,9 +34,9 @@ epsilon(50, permil = TRUE) # enter as permil value
 epsilon(0.05, permil = FALSE) # enter as non-permil value
 }
 \seealso{
-Other isotope data types: \code{\link{abundance}};
-  \code{\link{alpha}}; \code{\link{delta}},
-  \code{\link{use_permil}}; \code{\link{intensity}};
-  \code{\link{ratio}}
+Other isotope data types: \code{\link{ab}},
+  \code{\link{abundance}}; \code{\link{delta}};
+  \code{\link{ff}}, \code{\link{fractionation_factor}};
+  \code{\link{intensity}}; \code{\link{ratio}}
 }
 

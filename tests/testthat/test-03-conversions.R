@@ -166,6 +166,18 @@ test_that("Testing that isotope data type conversations behave correctly", {
 })
  
 
+test_that("Notation conversions are working currectly", {
+#     expect_error(switch_notation(5), "don't know how to convert")
+#     expect_error(switch_notation(ratio(0.5)), "not a recognized notation")
+#     expect_error(switch_notation(ratio(0.5), 5), "not a recognized notation")
+#     expect_error(switch_notation(ratio(0.5), "bla"), "not a recognized type of unit")
+#     expect_error(switch_notation(ratio(0.5), "percent"), "not permitted to convert .* 'Ratio' to unit 'percent'")
+#     expect_equal(switch_notation(ratio(0.5), "raw"), ratio(0.5))
+#     expect_equal(get_value(ab <- switch_notation(abundance(0.1), "percent")), 10)
+#     expect_equal(get_value(switch_notation(ab, "raw")), 0.1) # continue here, after unit is implemented properly, testand implement the reverse transformation 
+#     
+})
+
 test_that("Testing that additional data in Isosys data frames doesn't get lost during conversions", {
     expect_is({
         is <- intensity(`32S` = 9502, `33S` = 75, `34S` = 421, `36S` = 2, major = "32S", unit = "#")

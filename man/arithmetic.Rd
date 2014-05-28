@@ -9,9 +9,9 @@ abundance +- abundance
 
 delta +- delta
 
-alpha - 1
+ff - 1
 
-alpha * ratio
+ff * ratio
 
 delta * delta
 
@@ -39,12 +39,13 @@ two \code{\link{abundance}} objects, see \code{\link{mass_balance}} for details
 two \code{\link{delta}} objects, see \code{\link{mass_balance}} for details,
 will use the global \code{\link{exact_mass_balance}} setting for the calculation
 
-\code{alpha - 1} is a shorthand for converting an alpha value into an epsilon value.
-Returns epsilon value in units depending on globally
-defined \code{use_permil()}.
+\code{ff - 1} is a shorthand for converting a fractionation factor from
+alpha to epsilon notation. The ff object has to be in alpha notation,
+otherwise this is just interpreted as a regular arithmetic operation
+and the result will no longer be an isotope object.
 
-\code{alpha*ratio}, \code{alpha*alpha}, \code{alpha*delta} are a shorthand for
-fractionating an isotope object with an alpha fractionation factor,
+\code{ff*ratio}, \code{ff*ff}, \code{ff*delta} are a shorthand for
+fractionating an isotope object with a factionation factor,
 see \code{\link{fractionate}} for details
 
 \code{delta*delta}, is a shorthand for shifting the reference frame of the

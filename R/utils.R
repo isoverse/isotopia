@@ -8,6 +8,14 @@
     if (!is.null(a)) a else b
 }
 
+# convenience function for dropping a list
+# down one dimension if it's only length 1
+# (loosing the naming in the process!)
+drop_list <- function(l) {
+    if (length(l) == 1L) l[[1]]
+    else l
+}
+
 #' Run a calculation quietly.
 #' 
 #' This small utility function is just a convenient wrapper for running
