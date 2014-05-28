@@ -206,22 +206,18 @@ setMethod("to_abundance", "Delta", function(iso) {
 
 # to.ff =============================================
 
-# FIXME!!
-
 #' Fractionation factor
 #' 
 #' @description
-#' Calculate/convert to isotope fractionation factors (\code{ff} values).
+#' Calculate/convert to an isotope \code{\link{fractionation_factor}}
 #' 
-#' @usage to_ff(iso1, iso2, notation = "alpha")
+#' @usage to_ff(iso1, iso2)
 #' @details
-#' FIXME
 #' The \code{frac_factor(...)} function calculates the fractionation factor between two isotope data objects
-#' (for example two delta values, two epsilons, two ratios, or two alpha values).
-#' 
-#'
+#' (for example two \code{\link{delta}} values, two \code{\link{ratio}}, or two \code{\link{ff}}).
 #' All calculatinos are only permissible if the isotope values have matching
-#' attributes.
+#' attributes and fractionation factors will be returend in the default notation
+#' (see \code{\link{set_iso_opts}} for details)
 #'
 #' @param iso1 the top compound in the fractionation factor
 #' @param iso2 the bottom compound in the fractionation factor

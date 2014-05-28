@@ -72,18 +72,20 @@ NULL
 
 # adding abundances (i.e. isotope mixing/mass balance calculations)
 setMethod("+", signature(e1 = "Abundance", e2 = "Abundance"), function(e1, e2) {
+    e1 <- switch_notation(e1, "raw") # convert to raw for mass balance with the same units
+    e2 <- switch_notation(e2, "raw") # convert to raw for mass balance with the same units
+    
     iso_attribs_check(e1, e2, exclude = c("weight", "compound"), check_length = FALSE, 
                       text = "trying to calculate the mass balance of two abundance objects")
     # FIXME: currently allowing to add vectors of different lengths to support adding a fixed value to a vector
     # but ideally checking here that only length(e1) == length(e2) or length(e1) == 1 or length(e2) ==1 is allowed
     
-    e1 <- switch_notation(e1, "raw") # convert to raw for mass balance with the same units
-    e2 <- switch_notation(e2, "raw") # convert to raw for mass balance with the same units
-    
     weightsum <- get_weight(e1) + get_weight(e2)
     e1@.Data <- (get_weighted_value(e1) + get_weighted_value(e2))/weightsum
     e1@weight <- weightsum
     e1@compound <- paste(sub("^$", "?", c(e1@compound, e2@compound)), collapse = "+")
+    # don't propagate ?+?
+    if (e1@compound == "?+?") e1@compound <- ""
     validObject(e1)
     
     # FIXME: using default notation but should use the same notation the objects have if they are both the same and different from default
@@ -101,15 +103,15 @@ NULL
 
 # adding deltas (i.e. isotope mixing/mass balance calculations)
 setMethod("+", signature(e1 = "Delta", e2 = "Delta"), function(e1, e2) {
-    iso_attribs_check(e1, e2, exclude = c("weight", "compound"), text = "trying to calculate the mass balance of two delta values")
-    
     e1 <- switch_notation(e1, "raw") # convert to raw for mass balance with the same units
     e2 <- switch_notation(e2, "raw") # convert to raw for mass balance with the same units
-    
+    iso_attribs_check(e1, e2, exclude = c("weight", "compound"), text = "trying to calculate the mass balance of two delta values")    
     weightsum <- get_weight(e1) + get_weight(e2)
     e1@.Data <- (get_weighted_value(e1) + get_weighted_value(e2))/weightsum
     e1@weight <- weightsum
     e1@compound <- paste(sub("^$", "?", c(e1@compound, e2@compound)), collapse = "+")
+    # don't propagate ?+?
+    if (e1@compound == "?+?") e1@compound <- ""
     validObject(e1)
     
     # FIXME: using default notation but should use the same notation the objects have if they are both the same and different from default
@@ -148,7 +150,6 @@ setMethod("-", signature(e1 = "Delta", e2 = "Delta"), function(e1, e2) {
 })
 
 #' @usage alpha - 1
-#' @usage eps + 1
 #' @details
 #' \code{alpha - 1} is a shorthand for converting a fractionation factor from 
 #' alpha to epsilon notation. The ff object has to be in alpha notation,
@@ -181,43 +182,44 @@ setMethod("*", signature(e1 = "Isoval", e2 = "ANY"), function(e1, e2) operation_
 setMethod("*", signature(e1 = "ANY", e2 = "Isoval"), function(e1, e2) operation_error("Multiplication", e1, e2))
 setMethod("*", signature(e1 = "Isosys", e2 = "Isosys"), function(e1, e2) operation_error("Multiplication", e1, e2))
 
-#' @usage eps[raw] * 1000 
-#' @usage eps[permil] / 1000
-#' @usage delta[raw] * 1000 
-#' @usage delta[permil] / 1000
+#' @usage delta * 1000 
+#' @usage delta / 1000
 #' @details
 #' \code{delta * 1000} is a shorthand for converting a raw delta
-#' value to permil notation. The same works for fractionation factors
+#' value to permil notation or permil to ppm. The same works for fractionation factors
 #' in epsilon notation. \code{delta / 1000} is the reverse
 #' @name arithmetic 
 #' @rdname arithmetic
 NULL
 
-# 1000*alpha - FIXME: not unit tested!
 setMethod("*", signature(e1 = "FractionationFactor", e2 = "numeric"), function(e1, e2) {
-    if (e2 == 1000L && is(e1@notation, "Notation_eps"))
-        return(switch_notation(e1, "permil"))
-    callNextMethod(e1, NULL)
+    if (e2 == 1000 && is(e1@notation, "Notation_eps"))
+        return(switch_notation(e1, "permil")) # raw to permil
+    else if (e2 == 0.001 && is(e1@notation, "Notation_permil"))
+        return(switch_notation(e1, "eps")) # permil to raw
+    else if (e2 == 1000 && is(e1@notation, "Notation_permil"))
+        return(switch_notation(e1, "ppm")) # permil to ppm
+    else if (e2 == 0.001 && is(e1@notation, "Notation_ppm"))
+        return(switch_notation(e1, "permil")) # ppm to permil
+    callNextMethod(e1, e2)
 })
 setMethod("*", signature(e1 = "numeric", e2 = "FractionationFactor"), function(e1, e2) e2*e1)
-setMethod("/", signature(e1 = "FractionationFactor", e2 = "numeric"), function(e1, e2) {
-    if (e2 == 1000L && is(e1@notation, "Notation_permil"))
-        return(switch_notation(e1, "eps"))
-    callNextMethod(e1, NULL)
-})
+setMethod("/", signature(e1 = "FractionationFactor", e2 = "numeric"), function(e1, e2) e1 * (1/e2))
 
-# 1000*delta - FIXME: also not unit tested!
+# 1000*delta - this is actually tested
 setMethod("*", signature(e1 = "Delta", e2 = "numeric"), function(e1, e2) {
-    if (e2 == 1000L && is(e1@notation, "Notation_raw"))
-        return(switch_notation(e1, "permil"))
-    callNextMethod(e1, NULL)
+    if (e2 == 1000 && is(e1@notation, "Notation_raw"))
+        return(switch_notation(e1, "permil")) # raw to permil
+    else if (e2 == 0.001 && is(e1@notation, "Notation_permil"))
+        return(switch_notation(e1, "raw")) # permil to raw
+    else if (e2 == 1000 && is(e1@notation, "Notation_permil"))
+        return(switch_notation(e1, "ppm")) # permil to ppm
+    else if (e2 == 0.001 && is(e1@notation, "Notation_ppm"))
+        return(switch_notation(e1, "permil")) # ppm to permil
+    callNextMethod(e1, e2)
 })
 setMethod("*", signature(e1 = "numeric", e2 = "Delta"), function(e1, e2) e2*e1)
-setMethod("/", signature(e1 = "Delta", e2 = "numeric"), function(e1, e2) {
-    if (e2 == 1000L && is(e1@notation, "Notation_permil"))
-        return(switch_notation(e1, "raw"))
-    callNextMethod(e1, NULL)
-})
+setMethod("/", signature(e1 = "Delta", e2 = "numeric"), function(e1, e2) e1 * (1/e2))
 
 
 
@@ -299,8 +301,8 @@ setMethod("/", signature(e1 = "Ratio", e2 = "Ratio"), function(e1, e2) {
 
 #' @usage ff / ff
 #' @details
-#' \code{alpha/ alpha} allows the creation of another isotope \code{\link{alpha}} object but requires that
-#' either the denominator names or numerator names of the two alpha objects are identical (i.e. they "cancel").
+#' \code{ff/ff} allows the creation of another isotope \code{\link{fractionation_factor}} object but requires that
+#' either the denominator names or numerator names of the two objects are identical (i.e. they "cancel").
 #' This is a shorthand for the \link{to_ff} function.
 #' @name arithmetic 
 #' @rdname arithmetic

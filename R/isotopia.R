@@ -2,9 +2,11 @@
 #' 
 #' This package provides several isotopic data types that can be initialized 
 #' by calling the respective \code{\link{ratio}}, \code{\link{abundance}},
-#' \code{\link{delta}} and \code{\link{intensity}} functions. Each data type
+#' \code{\link{delta}}, \code{\link{fractionation_factor}} and \code{\link{intensity}} functions. 
+#' Each data type
 #' has additional attributes (such as name of the major isotope for all data
-#' types, reference ratio for \code{\link{delta}} values, unit for \code{\link{intensity}})
+#' types, reference ratio for \code{\link{delta}} values, notation for \code{\link{delta}}
+#' and \code{\link{fractionation_factor}}, unit for \code{\link{intensity}})
 #' and these are described in detail in the help for each function. The attributes of any
 #' existing isotope data object can be modified easily by calling \code{\link{set_attrib}}
 #' 
@@ -24,7 +26,7 @@
 #' 
 #' Isotope data objects (both single vectors and isotope systems) can then be converted 
 #' to different data types using the respective \code{\link{to_ratio}}, \code{\link{to_abundance}},
-#' \code{\link{to_delta}} functions. 
+#' \code{\link{to_delta}} functions. Notations can also be changed using \code{\link{switch_notation}}
 #' 
 #' Global options for isotopia can be set using \code{\link{set_iso_opts}} and 
 #' standard reference ratios can be registered using \code{\link{register_standard}}

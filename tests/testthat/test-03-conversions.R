@@ -139,12 +139,27 @@ test_that("Notation conversions are working currectly", {
     expect_is(d <- switch_notation(delta(20), "raw"), "Delta")
     expect_equal(get_value(d), 0.02)
     expect_equal(get_label(d), get_iso_letter("delta"))
+    
+    # arithmetic shorthands
+    expect_equal( get_value(d <- delta(10) * 1000), 10000)
+    expect_is(d@notation, "Notation_ppm")
+    expect_equal( get_value(d <- d/1000), 10)
+    expect_is(d@notation, "Notation_permil")
+    expect_equal( get_value(d <- d/1000), 0.01)
+    expect_is(d@notation, "Notation_raw")
+    
+    expect_equal( get_value(e <- ff(10, notation = "permil") * 1000), 10000)
+    expect_is(e@notation, "Notation_ppm")
+    expect_equal( get_value(e <- e/1000), 10)
+    expect_is(e@notation, "Notation_permil")
+    expect_equal( get_value(e <- e/1000), 0.01)
+    expect_is(e@notation, "Notation_eps")
+    
 #    expect_is(dx <- switch_notation(delta(a = 0.02, b = 0.01, notation = "raw"), "permil"), "Deltas") # test isotope system FIXME
 #     expect_equal(get_value(dx$a), 20)
 #     expect_equal(get_value(dx$b), 10)
 #     expect_equal(get_value((d <- switch_notation(dx, "raw"))$a), 0.02)
 #     expect_equal(get_value(d$b), 0.01)
-    
 })
 
 test_that("Testing that additional data in Isosys data frames doesn't get lost during conversions", {

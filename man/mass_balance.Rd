@@ -19,4 +19,8 @@ This function calculates the isotope mass balance from combining multiple weight
 isotope \code{\link{abundance}} or \code{\link{delta}} value objects. This calculation
 is also implemented with an \code{\link{arithmetic}} shorthand.
 }
+\seealso{
+Other operations: \code{\link{fractionate}};
+  \code{\link{shift_reference}}
+}
 

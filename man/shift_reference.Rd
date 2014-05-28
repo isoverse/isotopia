@@ -24,4 +24,8 @@ also implemented with an \code{\link{arithmetic}} shorthand. All calculatinos ar
 only permissible if the fractionation factors and isotope values have matching
 attributes.
 }
+\seealso{
+Other operations: \code{\link{fractionate}};
+  \code{\link{mass_balance}}
+}
 

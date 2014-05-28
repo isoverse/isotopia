@@ -3,7 +3,7 @@
 \alias{to_ff}
 \title{Fractionation factor}
 \usage{
-to_ff(iso1, iso2, notation = "alpha")
+to_ff(iso1, iso2)
 }
 \arguments{
 \item{iso1}{the top compound in the fractionation factor}
@@ -14,16 +14,14 @@ to_ff(iso1, iso2, notation = "alpha")
 isotope \code{\link{fraction_factor}} object if parameters can be converted, an error otherwise
 }
 \description{
-Calculate/convert to isotope fractionation factors (\code{ff} values).
+Calculate/convert to an isotope \code{\link{fractionation_factor}}
 }
 \details{
-FIXME
 The \code{frac_factor(...)} function calculates the fractionation factor between two isotope data objects
-(for example two delta values, two epsilons, two ratios, or two alpha values).
-
-
+(for example two \code{\link{delta}} values, two \code{\link{ratio}}, or two \code{\link{ff}}).
 All calculatinos are only permissible if the isotope values have matching
-attributes.
+attributes and fractionation factors will be returend in the default notation
+(see \code{\link{set_iso_opts}} for details)
 }
 \note{
 Some of the conversions are also implemented in arithmetic shorthand, for example to generate

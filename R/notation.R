@@ -11,7 +11,6 @@ NULL
 #'  \item{\code{\link{delta}}: }{'raw', 'permil', 'ppm'}
 #'  \item{\code{\link{fractionation_factor}}: }{'alpha', 'eps', 'permil', 'ppm'}
 #' }
-#' Note: eps, the 'epsilon' value is considered the 'raw' unit of a fractionation factor 
 #' 
 #' @usage switch_notation(iso, to)
 #' @param iso isotopic data object (\code{\link{ff}}, \code{\link{abundance}}, \code{\link{delta}})

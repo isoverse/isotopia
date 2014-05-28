@@ -1,5 +1,6 @@
 context("Data Operations")
 
+# FIXME: merge with 03-conversions for more consistent testing
 
 test_that("Testing proper response to math operators", {
     # operations that are not meaningful ===========
@@ -115,7 +116,9 @@ test_that("Testing proper response to math operators", {
     expect_equal(get_value(amix), 0.3)
     expect_equal(get_weight(amix), 2)
     expect_equal(get_weighted_value(amix), 0.6)
-    expect_equal(amix@compound, "?+?")
+    expect_equal(amix@compound, "")
+    expect_is(amix <- abundance(0.2) + abundance(0.4, compound = "b"), "Abundance")
+    expect_equal(amix@compound, "?+b")
     expect_is({
         amix <- abundance(`13C` = 0.2, weight = 2, compound = "a") + 
             abundance(`13C` = 0.5, compound = "b") + 
@@ -149,7 +152,9 @@ test_that("Testing proper response to math operators", {
     expect_equal(get_value(amix), -50)
     expect_equal(get_weight(amix), 2)
     expect_equal(get_weighted_value(amix), -100)
-    expect_equal(amix@compound, "?+?")
+    expect_equal(amix@compound, "")
+    expect_is(amix <- delta(200) + delta(-300, compound = "b"), "Delta")
+    expect_equal(amix@compound, "?+b")
     expect_is({
         amix <- delta(`13C` = 200, weight = 2, compound = "a") + 
             delta(`13C` = 0.5, compound = "b") + 
@@ -163,6 +168,8 @@ test_that("Testing proper response to math operators", {
     expect_error(mass_balance(delta(100), delta(200), exact = TRUE), "not implemented yet")
     expect_error(mass_balance(delta(100, 200), delta(200, 200), exact = TRUE), "not implemented yet")
 })
+
+# INFO: test-03-conversions holds the arithmetic notation tests
 
 test_that("Testing more complex computation", {
     #FIXME

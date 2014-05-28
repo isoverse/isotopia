@@ -12,6 +12,7 @@ NULL
 #' @param exact - whether to calculate mass balance of delta values exactly (default FALSE), 
 #' use exact_mass_balance to set this paramter globally 
 #' @return weighted abundance or delta value object that represents the combination of the parameters
+#' @family operations
 #' @method mass_balance
 #' @export
 setGeneric("mass_balance", function(iso, iso2, ..., exact = exact_mass_balance()) standardGeneric("mass_balance"))
@@ -42,18 +43,18 @@ setMethod("mass_balance", signature("Deltas", "Deltas"), function(iso, iso2, ...
 })
 
 #' Fractionate an isotopic value
-#' FIXME: this documentation is confused, go fix it
-#' This function calculates the outcome of isotopic fractionation on an isotopic value and
-#' is defined for a number of different combinations (how an \code{\link{alpha}} fractionation
-#' factor fractionates a single \code{\link{ratio}} or a \code{\link{delta}} value, how it fractionates another
-#' \code{\link{alpha}} value; how a \code{\link{epsilon}} value does the same, etc.)
-#' @param frac the isotope object used to fractionate the isotope value
+#' 
+#' This function calculates the outcome of isotopic fractionation by a \code{\link{fractionation_fractor}}
+#' and can be applied to \code{\link{ratio}} data, \code{\link{delta}} values or other
+#' \code{\link{fractionation_fractor}} objects.
+#' @param frac the fractionation factor \code{\link{ff}} used to fractionate the isotope value
 #' @param iso the isotope object to fractionate
 #' @return an object of the same type as \code{iso}
 #' @note Several of these calculations are also
 #' implemented with an \code{\link{arithmetic}} shorthand. All calculatinos are
 #' only permissible if the fractionation factors and isotope values have matching
 #' attributes.
+#' @family operations
 #' @method fractionate
 #' @export
 setGeneric("fractionate", function(frac, iso) standardGeneric("fractionate"))
@@ -103,6 +104,7 @@ setMethod("fractionate", signature("FractionationFactor", "Delta"), function(fra
 #' also implemented with an \code{\link{arithmetic}} shorthand. All calculatinos are
 #' only permissible if the fractionation factors and isotope values have matching
 #' attributes.
+#' @family operations
 #' @method shift_reference
 #' @export
 setGeneric("shift_reference", function(iso, ref) standardGeneric("shift_reference"))

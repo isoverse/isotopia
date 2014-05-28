@@ -23,7 +23,6 @@ Valid notations depend on the data type:
  \item{\code{\link{delta}}: }{'raw', 'permil', 'ppm'}
  \item{\code{\link{fractionation_factor}}: }{'alpha', 'eps', 'permil', 'ppm'}
 }
-Note: eps, the 'epsilon' value is considered the 'raw' unit of a fractionation factor
 }
 \seealso{
 Other data type attributes: \code{\link{get_label}},

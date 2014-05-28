@@ -11,7 +11,7 @@ delta +- delta
 
 alpha - 1
 
-eps[raw] * 1000
+delta * 1000
 
 ff * ratio
 
@@ -48,7 +48,7 @@ and the result will no longer be an isotope object.
 \code{eps  + 1} is the reverse operation.
 
 \code{delta * 1000} is a shorthand for converting a raw delta
-value to permil notation. The same works for fractionation factors
+value to permil notation or permil to ppm. The same works for fractionation factors
 in epsilon notation. \code{delta / 1000} is the reverse
 
 \code{ff*ratio}, \code{ff*ff}, \code{ff*delta} are a shorthand for
@@ -65,8 +65,8 @@ for details
 \code{ratio/ratio} allows the creation of an isotope \code{\link{fractionation_factor}}
 This is a shorthand for the \link{to_ff} function.
 
-\code{alpha/ alpha} allows the creation of another isotope \code{\link{alpha}} object but requires that
-either the denominator names or numerator names of the two alpha objects are identical (i.e. they "cancel").
+\code{ff/ff} allows the creation of another isotope \code{\link{fractionation_factor}} object but requires that
+either the denominator names or numerator names of the two objects are identical (i.e. they "cancel").
 This is a shorthand for the \link{to_ff} function.
 
 \code{delta/delta} creates an \code{\link{alpha}} fractionation factor object that
