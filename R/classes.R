@@ -1,11 +1,31 @@
 #' @include utils.R
 NULL
 
+# Notation classes
+setClass("Notation", representation(unit = "character"))
+# alpha fractionation factor
+setClass("Notation_alpha", contains = "Notation", prototype = prototype(unit = ""))
+# alpha fractionation factor in log normal notation (NOT IMPLEMENTED YET!)
+#setClass("Notation_ln", contains = "Notation", prototype = prototype(unit = ""))
+# epsilon factionation factor (raw value, no multiplication)
+setClass("Notation_eps", contains = "Notation", prototype = prototype(unit = ""))
+# plain delta or plan fractional abundance
+setClass("Notation_raw", contains = "Notation", prototype = prototype(unit = ""))
+# permil delta or permil fractionation factor
+setClass("Notation_permil", contains = "Notation", prototype = prototype(unit = get_iso_letter("permil")))
+# ppm delta or ppm fractionation factor
+setClass("Notation_ppm", contains = "Notation", prototype = prototype(unit = "ppm"))
+# percent fractional abundance
+setClass("Notation_percent", contains = "Notation", prototype = prototype(unit = "%"))
+
+
 # Detailed documentation is in the functions that generate instances of these classes.
 
 # Isotope value as the basis for any ratio, abundance, delta value or ion count
-setClass("Isoval", representation(isoname = "character", major = "character", compound = "character", weight = "numeric"), contains = "numeric", 
-         prototype = prototype(numeric(), isoname = "", major = "", compound = "", weight = numeric()))
+setClass("Isoval", 
+         representation(isoname = "character", major = "character", compound = "character", notation = "Notation", 
+                        weight = "numeric"), contains = "numeric", 
+         prototype = prototype(numeric(), isoname = "", major = "", compound = "", notation = new("Notation_raw"), weight = numeric()))
 setMethod("initialize", "Isoval", function(.Object, ...){
     if (nargs() > 1 && is(..1, "Isoval"))
         stop("Cannot initialize an isotope value with another isotope value.\n",
@@ -52,8 +72,8 @@ setClass("Epsilon", representation(compound2 = "character", permil = "logical"),
          prototype = prototype(new("Isoval"), compound2 = "", permil = logical()))
 
 # Delta
-setClass("Delta", representation(ref_ratio = "numeric"), contains = "Epsilon",
-         prototype = prototype(new("Epsilon"), ref_ratio = numeric()))
+setClass("Delta", representation(compound2 = "character", ref_ratio = "numeric"), contains = "Isoval",
+         prototype = prototype(new("Isoval"), compound2 = "", ref_ratio = numeric()))
 
 # Ion intensity
 setClass("Intensity", representation(unit = "character"), contains = "Isoval",

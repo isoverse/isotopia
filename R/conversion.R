@@ -48,7 +48,7 @@ recast_isoval <- function(iso, to_class, mods = list(), validate = TRUE){
 # small function that informs about conversion errors
 conversion_error <- function(from, to) {
     stop(sprintf("Don't know how to convert object of class %s to %s. ", class(from)[1], to),
-         if (is(to, "numeric")) "Please us the appropriate functions - ratio(), abundance(), delta(), etc. - to initialize new isotope objects.")
+         if (is(from, "numeric")) "Please us the appropriate functions - ratio(), abundance(), delta(), etc. - to initialize new isotope objects.")
 }
 
 # to.ratio =============================================
@@ -80,6 +80,7 @@ setMethod("to_ratio", "Ratios", function(iso) iso)
 # abundance to ratio
 setMethod("to_ratio", "Abundance", function(iso) {
     # could convert to an Abundances system but that's slightly slower and you introduce a lot of overhead with the data frame initialization
+    iso <- switch_notation(iso, "raw") # first convert to raw before doing any math
     iso@.Data <- iso@.Data / (1 - iso@.Data) # abundance to ratio
     recast_isoval(iso, "Ratio")
 }) 
@@ -88,8 +89,9 @@ setMethod("to_ratio", "Abundances", function(iso) {
     convert_isosys(iso, "Ratios", 
        function(df) {
            # convert abundance to ratio
-           abs <- rowSums(get_value(df))
+           abs <- rowSums(get_value(df)) # FIXME this requires a switch_notation!!
            lapply(df, function(ab) {
+               ab <- switch_notation(ab, "raw") # first convert to raw before doing any math
                ab@.Data <- ab@.Data / (1 - abs) # abundance to ratio
                recast_isoval(ab, "Ratio")
            })
@@ -131,11 +133,11 @@ setMethod("to_ratio", "Delta", function(iso) {
         # no reference, let's see if we can find one
         stds <- get_standards(minor = iso@isoname, major = iso@major, name = iso@compound2)
         if (length(stds) == 0)
-            message("No reference ratio registered with the delta value, tried to find one from the registered standards but none were found, delta: ", label(iso))
+            message("No reference ratio registered with the delta value, tried to find one from the registered standards but none were found, delta: ", get_label(iso))
         else if (length(stds) > 1)
-            message("No reference ratio registered with the delta value, tried to find one from the registered standards but found multiple, delta: ", label(iso))
+            message("No reference ratio registered with the delta value, tried to find one from the registered standards but found multiple, delta: ", get_label(iso))
         else if (length(stds) == 1) {
-            message("Successfully found a matching standard to convert delta value without registered reference: ", label(stds[[1]]), ": ", get_value(stds[[1]]))
+            message("Successfully found a matching standard to convert delta value without registered reference: ", get_label(stds[[1]]), ": ", get_value(stds[[1]]))
             iso@ref_ratio <- get_value(stds[[1]])
         }
     }
@@ -143,8 +145,9 @@ setMethod("to_ratio", "Delta", function(iso) {
     # continue as usual
     if (length(iso@ref_ratio) != 1)
         stop("cannot convert from a ratio to a delta value without the reference ratio set in the delta value object")
-    a <- to_ff(iso)
-    iso@.Data <- a@.Data * iso@ref_ratio # could do it by multiplying alpha value by ratio but then have to generate appropriate ratio object first
+    iso <- switch_notation(iso, "raw") # convert delta value to raw (more for final object to be of type 'raw')
+    a <- to_ff(iso) # switch delta to alpha value
+    iso@.Data <- get_value(a, "alpha") * iso@ref_ratio # could do it by multiplying alpha value by ratio but then have to generate appropriate ratio object first
     recast_isoval(iso, "Ratio", list(compound2 = NULL, permil = NULL, ref_ratio = NULL))
 })
 
@@ -175,8 +178,9 @@ to_ab <- function(iso) to_abundance(iso)
 
 # ratio to abundance
 setMethod("to_abundance", "Ratio", function(iso)  {
+    iso <- switch_notation(iso, "raw") # first convert to raw before doing any math
     iso@.Data <- iso@.Data / (1 + iso@.Data) # ratio to abundance
-    recast_isoval(iso, "Abundance")
+    switch_notation(recast_isoval(iso, "Abundance"), get_iso_opts("default_ab_notation"))
 }) 
 
 setMethod("to_abundance", "Ratios", function(iso) {
@@ -186,7 +190,7 @@ setMethod("to_abundance", "Ratios", function(iso) {
                        rs <- rowSums(get_value(df))
                        lapply(df, function(r) {
                            r@.Data <- r@.Data / (1 + rs) # ratio to abundance
-                           recast_isoval(r, "Abundance")
+                           switch_notation(recast_isoval(r, "Abundance"), get_iso_opts("default_ab_notation"))
                        })
                    })
 })
@@ -242,12 +246,18 @@ setMethod("to_ff", signature("FractionationFactors", "missing"), function(iso1, 
 setMethod("to_ff", signature("Ratio", "Ratio"), function(iso1, iso2) iso1/iso2)
 # Note: to allow this for entire isotope systems --> need to implement it properly with matching the right columns
 
-# FIXME, this will become switch_notation!
-
+# FIXME, this will be obsolete thank to the function below
 # delta/epsilon to alpha
 setMethod("to_ff", signature("Epsilon", "missing"), function(iso1, iso2) {
     iso1@.Data <- to_epsilon(iso1, permil = FALSE)@.Data + 1 # make sure converting from an epsilon/delta value stripped of it's 1000x factor!
     recast_isoval(iso1, "FractionationFactor", list(permil = NULL, ref_ratio = NULL))
+})
+
+# delta/epsilon to alpha
+setMethod("to_ff", signature("Delta", "missing"), function(iso1, iso2) {
+    iso1 <- switch_notation(iso1, "permil") # deltas and ffs are the same when in permil notation
+    iso1 <- recast_isoval(iso1, "FractionationFactor", list(ref_ratio = NULL))
+    switch_notation(iso1, get_iso_opts("default_ff_notation"))
 })
 
 # two delta to fractionation factor (ff between the two compounds)
@@ -327,6 +337,10 @@ setMethod("to_delta", "ANY", function(iso, ref_ratio, permil = use_permil()) con
 setMethod("to_delta", signature(iso = "Isosys", ref_ratio = "missing"), function(iso, ref_ratio, permil = use_permil()) {
     convert_isosys(iso, "Deltas", function(df) lapply(as.data.frame(df), function(i) to_delta(i, permil = permil)))
 })
+setMethod("to_delta", signature(iso = "Delta", ref_ratio = "missing"), function(iso, ref_ratio, permil = use_permil()) {
+    iso
+})
+
 
 # epsilon/delta to delta =========
 setMethod("to_delta", signature(iso = "Epsilon", ref_ratio = "Ratio"), function(iso, ref_ratio, permil = use_permil()) {
@@ -369,12 +383,34 @@ setMethod("to_delta", signature(iso = "Epsilon", ref_ratio = "missing"), functio
 })
 
 # fractionation factor to delta ====
-setMethod("to_delta", signature(iso = "FractionationFactor", ref_ratio = "ANY"), function(iso, ref_ratio, permil = use_permil()) {
-    e <- to_epsilon(iso)
-    if (missing(ref_ratio) || length(ref_ratio) == 0)
-        to_delta(e, permil = permil)
-    else
-        to_delta(e, ref_ratio, permil = permil)
+setMethod("to_delta", signature(iso = "FractionationFactor", ref_ratio = "missing"), function(iso, ref_ratio, permil = use_permil()) {
+    to_delta(iso, numeric())
+})
+
+setMethod("to_delta", signature(iso = "FractionationFactor", ref_ratio = "numeric"), function(iso, ref_ratio, permil = use_permil()) {
+    to_delta(iso, ratio(ref_ratio))
+})
+
+# epsilon/delta to delta =========
+setMethod("to_delta", signature(iso = "FractionationFactor", ref_ratio = "Ratio"), function(iso, ref_ratio, permil = use_permil()) {
+    # make sure Ratio has the appropriate values
+    if (length(ref_ratio) > 1 && length(ref_ratio) != length(iso))
+        stop("a vector of reference ratios for a delta value must have the same number of entries as the value, found ",
+             length(iso), " vs ", length(ref_ratio))
+    if (nchar(ref_ratio@isoname) > 0 && nchar(iso@isoname) > 0 && iso@isoname != ref_ratio@isoname)
+        stop(sprintf("reference ratio for a delta value cannot be for a different isotope, found '%s' vs '%s'", iso@isoname, ref_ratio@isoname))
+    if (nchar(ref_ratio@major) > 0 && nchar(iso@major) > 0 && iso@major != ref_ratio@major)
+        stop(sprintf("reference ratio for a delta value cannot have a different major isotope, found '%s' vs '%s'", iso@major, ref_ratio@major))
+    if (nchar(ref_ratio@compound) > 0 && nchar(iso@compound2) > 0 && iso@compound2 != ref_ratio@compound)
+        stop(sprintf("reference ratio for a delta value cannot be a different compound than already specified, found '%s' vs '%s'", 
+                     iso@compound2, ref_ratio@compound))
+    
+    # cast as delta value
+    iso <- switch_notation(iso, "permil") # switch fractionation factor to permil (same as a delta value but without ref_ratio)
+    iso <- recast_isoval(iso, "Delta", list(ref_ratio = get_value(ref_ratio), permil = FALSE))
+    if (nchar(ref_ratio@compound) > 0) # update compound name
+        iso@compound2 <- ref_ratio@compound
+    switch_notation(iso, get_iso_opts("default_delta_notation"))
 })
 
 
@@ -394,9 +430,9 @@ setMethod("to_delta", signature("Ratio", "Ratio"), function(iso, ref_ratio, perm
         stop("reference ratio for a delta value object must be exactly one numeric value, supplied ", length(ref_ratio))
     
     # convert to fractionation factor
-    iso2 <- ref_ratio
+    iso2 <- switch_notation(ref_ratio, "raw") # first convert to raw before doing any math
     iso2@.Data <- rep(get_value(ref_ratio), length(iso)) # get ref_ratio to the right length
-    a <- to_ff(iso, iso2) # FIXME, notation = "alpha"
+    a <- to_ff(iso, iso2) 
     
     # to delta
     to_delta(a, ref_ratio = ref_ratio, permil = permil)

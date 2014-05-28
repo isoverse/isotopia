@@ -4,7 +4,8 @@
 \title{Delta value}
 \usage{
 delta(..., major = get_iso_opts("default_major"), compound = "", ref = "",
-  ref_ratio = numeric(), permil = use_permil(), weight = numeric(),
+  ref_ratio = numeric(), permil = use_permil(),
+  notation = get_iso_opts("default_delta_notation"), weight = numeric(),
   single_as_df = FALSE)
 }
 \arguments{
@@ -17,6 +18,11 @@ delta(..., major = get_iso_opts("default_major"), compound = "", ref = "",
 \item{ref}{- name of the reference material}
 
 \item{ref_ratio}{- value of the reference material}
+
+\item{notation}{- which notation the value is in, \code{"permil"} (1000x multiplicaiton),
+\code{"raw"} (raw value, i.e. no multiplication) and \code{"ppm"} (10^6 multiplicaiton)
+are currently implemented for \code{delta} values. See \code{\link{switch_notation}} on
+details how to convert between notations.}
 
 \item{permil}{- whether the values passed in are in permil or raw values (i.e. no 1000x multiplication)}
 

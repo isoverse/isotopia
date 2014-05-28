@@ -5,7 +5,7 @@
 \usage{
 set_attrib(iso, minor = NULL, major = NULL, compound = NULL,
   compound2 = NULL, ref = NULL, ref_ratio = NULL, ctop = NULL,
-  cbot = NULL)
+  cbot = NULL, unit = NULL)
 }
 \arguments{
 \item{iso}{the isotope value object to update}
@@ -14,23 +14,27 @@ set_attrib(iso, minor = NULL, major = NULL, compound = NULL,
 
 \item{major}{the name of the major isotope}
 
-\item{compound}{- name of the compound the isotopic values belong to [optional]}
+\item{compound}{name of the compound the isotopic values belong to [optional]}
 
-\item{ref}{- name of the reference material (\link{delta} values only)}
+\item{ref}{name of the reference material (\code{\link{delta}} values only)}
 
-\item{ref_ratio}{- value of the reference material (\link{delta} values only)}
+\item{ref_ratio}{- value of the reference material (\code{\link{delta}} values only)}
 
-\item{ctop}{- name of the compound representing the top isotope ratio in
-a \link{fractionation_factor}}
+\item{ctop}{name of the compound representing the top isotope ratio in
+a \code{\link{fractionation_factor}}}
 
-\item{cbot}{- name of the compound representing the bottom isotope ratio in
-a \link{fractionation_factor}}
+\item{cbot}{name of the compound representing the bottom isotope ratio in
+a \code{\link{fractionation_factor}}}
+
+\item{unit}{unit for \code{\link{intensity}} value objects}
 }
 \description{
 Set an attribute of an existing isotope value object.
 }
 \seealso{
-Other data type attributes: \code{\link{get_value}};
+Other data type attributes: \code{\link{get_label}},
+  \code{\link{get_name}}, \code{\link{get_units}};
+  \code{\link{get_value}};
   \code{\link{get_weighted_value}};
   \code{\link{get_weight}}; \code{\link{switch_notation}};
   \code{\link{weight}}

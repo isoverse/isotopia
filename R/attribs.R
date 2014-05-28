@@ -29,7 +29,9 @@ set_attrib <- function(iso, minor = NULL, major = NULL,
         stop("cannot set attributes of non-isotope value objects: ", class(iso))
     
     # new attribs
-    attribs <- as.list(match.call())[-1]
+    attribs <- list(minor = minor, major = major, compound = compound, 
+                    compound2 = compound2, ref_ratio = ref_ratio, unit = unit)
+    attribs[sapply(attribs, is.null)] <- NULL
     
     # special cases (convert names to what their update equivalents are)
     if (!missing(minor)) attribs$isoname <- minor
@@ -41,12 +43,21 @@ set_attrib <- function(iso, minor = NULL, major = NULL,
 }
 
 #' update_iso the attributes of an isotope value object
+#' internal function that is called by set_attrib wrapper
 setGeneric("update_iso", function(obj, attribs) standardGeneric("update_iso"))
 
 setMethod("update_iso", "Isoval", function(obj, attribs) {
     obj <- update_text_attrib(obj, attribs, "isoname", "changing the isotope name")
     obj <- update_text_attrib(obj, attribs, "major", "changing the major isotope")
     obj <- update_text_attrib(obj, attribs, "compound", "changing the compound name")
+    # notation
+    if (!is.null(notation <- attribs$notation) && paste0(notation) != "raw" ) {
+        # tests whether notation switch is permissible (but not actually doing the conversion since this is just 
+        # updating the notation class)
+        convertible <- switch_notation(obj, notation) # throws an error if there is trouble
+        obj@notation <- convertible@notation
+    }
+    
     # weight
     if (!is.null(weight <- attribs$weight) && length(weight) > 0) {
         if (length(weight) == 1L) weight <- rep(weight, length(obj@.Data))
@@ -85,7 +96,7 @@ setMethod("update_iso", "Delta", function(obj, attribs) {
             ref_ratio <- get_value(to_ratio(ref_ratio)) # convert to numeric
         }
         if (length(ref_ratio) != 1)
-            stop("reference ratio for a delta value object must be exactly one numeric value, supplied", length(ref_ratio))
+            stop("reference ratio for a delta value object must be exactly one numeric value, supplied ", length(ref_ratio))
         if (length(obj@ref_ratio) > 0 && obj@ref_ratio != ref_ratio)
             warning(sprintf("changing the reference ratio of a delta value object from %s to %s", obj@ref_ratio, ref_ratio))
         obj@ref_ratio <- ref_ratio
@@ -154,6 +165,8 @@ setMethod("weight", signature("Isoval", "numeric"), function(iso, weight) {
 #' This function returns an isotope object's (single value or isotope system)  
 #' primitive data value(s).  
 #' 
+#' @param notation specifiy which notation to return the value in (default is the notation
+#' that hte object is in)
 #' @return In the case of a single isotope object (Isoval), returns the numeric
 #' vector of raw values stored in the object (same as \code{\link{as.numeric}}). 
 #' In the case of an isotope system (Isosys),
@@ -164,17 +177,18 @@ setMethod("weight", signature("Isoval", "numeric"), function(iso, weight) {
 #' @family data type attributes
 #' @method get_value
 #' @export
-setGeneric("get_value", function(iso) standardGeneric("get_value"))
+setGeneric("get_value", function(iso, notation = "raw") standardGeneric("get_value"))
 
 #' @method get_value
 #' @export
-setMethod("get_value", "ANY", function(iso) stop("get_value not defined for objects of class ", class(iso)))
-setMethod("get_value", "numeric", function(iso) iso) # allow this for simplicity so this is similiar to as_numeric
-setMethod("get_value", "Isoval", function(iso) as.numeric(iso))
-setMethod("get_value", "Isosys", function(iso) {
+setMethod("get_value", "ANY", function(iso, notation = "raw") stop("get_value not defined for objects of class ", class(iso)))
+setMethod("get_value", "numeric", function(iso, notation = "raw") iso) # allow this for simplicity so this is similiar to as_numeric
+setMethod("get_value", "Isoval", function(iso, notation = iso@notation) as.numeric(switch_notation(iso, notation)))
+setMethod("get_value", "Isosys", function(iso, notation = NULL) {
     data.frame(lapply(iso,
       function(col) {
-          if (is.isoval(col)) get_value(col)
+          if (is.isoval(col) & !is.null(notation)) get_value(col, notation)
+          else if (is.isoval(col) & is.null(notation)) get_value(col)
           else col
       }), stringsAsFactors = F)
 })

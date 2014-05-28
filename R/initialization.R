@@ -38,11 +38,14 @@ ratio <- function(..., major = get_iso_opts("default_major"), compound = "",
 #' only of importance if converting from abundance to ratio or delta value, 
 #' and want automatic name propagation
 #' @param compound - name of the compound the isotopic values belong to [optional]
+#' @param notation - what notation the abundance is in ('raw' values or 'percent'),
+#' see \code{\link{switch_notation}} for details
 #' @family isotope data types
 #' @export
 abundance <- function(..., major = get_iso_opts("default_major"), compound = "", 
+                      notation = get_iso_opts("default_ab_notation"),
                       weight = numeric(), single_as_df = FALSE) {
-    iso("Abundances", ..., attribs = list(major = major, compound = compound, weight = weight), single_as_df = single_as_df)
+    iso("Abundances", ..., attribs = list(major = major, compound = compound, notation = notation, weight = weight), single_as_df = single_as_df)
 }
 
 #' @rdname abundance
@@ -61,13 +64,18 @@ ab <- abundance
 #' 
 #' @param ... - numeric vectors (can be named) to turn into fractionation factors
 #' @param major - name of the major isotope in the isotope system [optional]
+#' @param notation - which notation the value is in, \code{"alpha"} (alpha value), \code{"eps"} (epsilon value),
+#' \code{"permil"} (epsilon * 1000) are currently implemented for \code{fractionation_factor} values. 
+#' See \code{\link{switch_notation}} on details how to convert between notations.
 #' @param ctop - name of the compound representing the top isotope ratio [optional]
 #' @param cbot - name of the compound representing the bottom isotope ratio [optional]
 #' @family isotope data types
 #' @export
 fractionation_factor <- function(..., major = get_iso_opts("default_major"), 
+                  notation = get_iso_opts("default_ff_notation"),
                   ctop = "", cbot = "", single_as_df = FALSE) {
-    iso("FractionationFactors", ..., attribs = list(major = major, compound = ctop, compound2 = cbot), single_as_df = single_as_df)
+    iso("FractionationFactors", ..., attribs = list(major = major, notation = notation, 
+                        compound = ctop, compound2 = cbot), single_as_df = single_as_df)
 }
 
 #' @rdname fractionation_factor
@@ -111,6 +119,10 @@ epsilon <- function(..., major = get_iso_opts("default_major"),
 #' @param compound - name of the compound the isotopic values belong to [optional]
 #' @param ref - name of the reference material
 #' @param ref_ratio - value of the reference material
+#' @param notation - which notation the value is in, \code{"permil"} (1000x multiplicaiton),  
+#' \code{"raw"} (raw value, i.e. no multiplication) and \code{"ppm"} (10^6 multiplicaiton)
+#' are currently implemented for \code{delta} values. See \code{\link{switch_notation}} on
+#' details how to convert between notations.
 #' @param permil - whether the values passed in are in permil or raw values (i.e. no 1000x multiplication)
 #' @param weight - weight the isotope value (with a mass, concentration, etc.) for easy mass balance calculations.
 #' The default value is 1, i.e. an unweighted isotope value.
@@ -122,9 +134,9 @@ epsilon <- function(..., major = get_iso_opts("default_major"),
 #' delta(0.05, notation = "raw") # enter as non-permil value
 #' @export
 delta <- function(..., major = get_iso_opts("default_major"), compound = "", 
-                  ref = "", ref_ratio = numeric(), permil = use_permil(), 
+                  ref = "", ref_ratio = numeric(), permil = use_permil(), notation = get_iso_opts("default_delta_notation"),
                   weight = numeric(), single_as_df = FALSE) {
-    iso("Deltas", ..., attribs = list(major = major, compound = compound, compound2 = ref, ref_ratio = ref_ratio, permil = permil, weight = weight), single_as_df = single_as_df)
+    iso("Deltas", ..., attribs = list(major = major, compound = compound, compound2 = ref, ref_ratio = ref_ratio, notation = notation, permil = permil, weight = weight), single_as_df = single_as_df)
 }
 
 #' Ion intensity

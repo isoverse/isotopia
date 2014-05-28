@@ -61,74 +61,14 @@ test_that("Testing that isotope data type conversations behave correctly", {
     expect_equal(ab, abundance(`33S` = 0.0075, `34S` = 0.0421, `36S` = 0.0002, major = "32S")) # value check
     expect_equal(to_abundance(intensity(x = x, y = y, major = "x")), abundance(y = y/(y + x), major = "x", single_as_df = T)) # formula check
 
-    # FIXME
-    # ratios to alpha 
-    #expect_equal(to_alpha(ratio(0.1), ratio(0.2)), alpha(0.5)) # more test details in the arithmetic tests
-     
-#     # alpha to epsilon
-#     expect_true(use_permil()) # check the default is set to use permil
-#     expect_equal(ex <- to_epsilon(alpha(0.99)), epsilon(-10, permil = T))
-#     expect_equal(e <- to_epsilon(alpha(0.99), permil = F), epsilon(-0.01, permil = F))
-#     expect_is(es <- to_epsilon(alpha(a = 0.99, b = 1.02)), "Epsilons")
-#     expect_equal(es$a, epsilon(a = -10))
-#     expect_equal(es$b, epsilon(b = +20))
-#     
-#     # epsilon/delta to alpha
-#     expect_equal(to_alpha(epsilon(10)), alpha(1.01))
-#     expect_equal(to_alpha(epsilon(-0.02, permil = F)), alpha(0.98))
-#     expect_equal(to_alpha(delta(-0.02, permil = F)), alpha(0.98))
-#     
-#     # epsilons/deltas to fractionation factor (alpha) and to epsilons
-#     expect_equal(to_alpha(delta(200), delta(-200)), alpha(1.2 / 0.8))
-#     expect_equal(to_epsilon(to_alpha(delta(200), delta(-200)), permil = F), epsilon(1.2 / 0.8 - 1, permil = F))
-                 
-    # epsilon conversions (permil testing)
-    expect_true(use_permil()) # check the default is set to use permil
-    expect_is(ex <- to_epsilon(epsilon(0.02, permil = F)), "Epsilon")
-    expect_equal(ex@permil, TRUE)
-    expect_equal(get_value(ex), 20)
-    expect_equal(label(ex), paste0(get_iso_letter("epsilon"), " [", get_iso_letter("permil"), "]"))
-    expect_is(e <- to_epsilon(epsilon(20), permil = F), "Epsilon")
-    expect_equal(e@permil, FALSE)
-    expect_equal(get_value(e), 0.02)
-    expect_equal(label(e), get_iso_letter("epsilon"))
-    expect_is(ex <- to_epsilon(epsilon(a = 0.02, b = 0.01, permil = F)), "Epsilons") # test isotope system
-    expect_equal(get_value(ex$a), 20)
-    expect_equal(get_value(ex$b), 10)
-    expect_equal(get_value((e <- to_epsilon(ex, permil = F))$a), 0.02)
-    expect_equal(get_value(e$b), 0.01)
-    
-    # delta conversions (permil conversion)
-    expect_true(use_permil()) # check the default is set to use permil
-    expect_is(dx <- to_delta(delta(0.02, permil = F)), "Delta")
-    expect_equal(dx@permil, TRUE)
-    expect_equal(get_value(dx), 20)
-    expect_equal(label(dx), paste0(get_iso_letter("delta"), " [", get_iso_letter("permil"), "]"))
-    expect_is(d <- to_delta(delta(20), permil = F), "Delta")
-    expect_equal(d@permil, FALSE)
-    expect_equal(get_value(d), 0.02)
-    expect_equal(label(d), get_iso_letter("delta"))
-    expect_is(dx <- to_delta(delta(a = 0.02, b = 0.01, permil = F)), "Deltas") # test isotope system
-    expect_equal(get_value(dx$a), 20)
-    expect_equal(get_value(dx$b), 10)
-    expect_equal(get_value((d <- to_delta(dx, permil = F))$a), 0.02)
-    expect_equal(get_value(d$b), 0.01)
-    
-    # epsilon to delta
-    expect_false(use_permil(FALSE)) # mixing it up a bit
-    expect_is(dx <- to_delta(epsilon(0.02), permil = T), "Delta")
-    expect_true(dx@permil)
-    expect_equal(get_value(dx), 20)
-    expect_true(use_permil(TRUE)) # return it back to normal
     
     # with ratio specified
-    expect_error(to_delta(epsilon(20), ref_ratio = c(0.1, 0.2)), "reference ratio .* must be exactly one numeric value")
-    expect_error(to_delta(epsilon(`13C` = 20), ref_ratio = ratio(`12C` = 0.1)), "reference ratio .* cannot be for a different isotope")
-    expect_error(to_delta(epsilon(20, major = "14N"), ref_ratio = ratio(0.1, major = "12C")), "reference ratio .* cannot have a different major isotope")
-    expect_error(to_delta(delta(20, ref = "SMOW"), ref_ratio = ratio(0.1, compound = "air")), "reference ratio .* cannot be a different compound than already specifie")
-    expect_error(to_delta(delta(20, ref_ratio = 0.1), ref_ratio = 0.2), "reference ratio .* cannot be different than previous specification")
-    expect_is(d <- to_delta(delta(20), ref_ratio = ratio(0.1, compound = "SMOW"), permil = F), "Delta")
-    expect_equal(get_value(d), 0.02)
+    expect_error(to_delta(ff(c(0.9, 0.92, 0.93)), ref_ratio = c(0.1, 0.2)), "must have the same number of entries as the value")
+    expect_error(to_delta(ff(`13C` = 0.9), ref_ratio = ratio(`12C` = 0.1)), "reference ratio .* cannot be for a different isotope")
+    expect_error(to_delta(ff(0.9, major = "14N"), ref_ratio = ratio(0.1, major = "12C")), "reference ratio .* cannot have a different major isotope")
+    expect_warning(set_attrib(delta(20, ref = "SMOW"), ref_ratio = ratio(0.1, compound = "air")), "changing the reference name")    
+    expect_is(d <- set_attrib(delta(20), ref_ratio = ratio(0.1, compound = "SMOW")), "Delta")
+    expect_equal(get_value(d, "raw"), 0.02)
     expect_equal(d@compound2, "SMOW")
     expect_equal(d@ref_ratio, 0.1)
     
@@ -146,7 +86,7 @@ test_that("Testing that isotope data type conversations behave correctly", {
 #     expect_equal(to_delta(ratio(0.18), 0.2, permil = F), delta(-0.1, ref_ratio = 0.2, permil = F))
 #     expect_error(to_delta(ratio(`13C` = 0.18), ratio(`18O` = 0.2)), "cannot generate a fractionaton factor from two ratio objects that don't have matching attributes")
 #     expect_error(to_delta(ratio(0.18, major = "12C"), ratio(0.2, major = "13C")), "annot generate a fractionaton factor from two ratio objects that don't have matching attributes")
-#     expect_equal(label(d <- to_delta(ratio(`13C` = 0.18, major = "12C", compound = "CO2"), 
+#     expect_equal(get_label(d <- to_delta(ratio(`13C` = 0.18, major = "12C", compound = "CO2"), 
 #                                      ratio(`13C`= 0.2, major = "12C", compound = "SMOW"))), paste0("CO2 ", get_iso_letter("delta"), "13C [", get_iso_letter("permil"), "] vs. SMOW"))
 #     expect_equal(d@major, "12C")
     
@@ -167,15 +107,44 @@ test_that("Testing that isotope data type conversations behave correctly", {
  
 
 test_that("Notation conversions are working currectly", {
-#     expect_error(switch_notation(5), "don't know how to convert")
-#     expect_error(switch_notation(ratio(0.5)), "not a recognized notation")
-#     expect_error(switch_notation(ratio(0.5), 5), "not a recognized notation")
-#     expect_error(switch_notation(ratio(0.5), "bla"), "not a recognized type of unit")
-#     expect_error(switch_notation(ratio(0.5), "percent"), "not permitted to convert .* 'Ratio' to unit 'percent'")
-#     expect_equal(switch_notation(ratio(0.5), "raw"), ratio(0.5))
-#     expect_equal(get_value(ab <- switch_notation(abundance(0.1), "percent")), 10)
-#     expect_equal(get_value(switch_notation(ab, "raw")), 0.1) # continue here, after unit is implemented properly, testand implement the reverse transformation 
-#     
+    
+    # general conversions
+    expect_error(switch_notation(5), "don't know how to convert")
+    expect_error(switch_notation(ratio(0.5)), "not a recognized notation")
+    expect_error(switch_notation(ratio(0.5), 5), "not a recognized notation")
+    expect_error(switch_notation(ratio(0.5), "bla"), "not a recognized notation")
+    expect_error(switch_notation(ratio(0.5), "percent"), "not permitted to convert .* 'Ratio' to unit 'percent'")
+    expect_equal(switch_notation(ratio(0.5), "raw"), ratio(0.5))
+    expect_equal(get_value(ab <- switch_notation(abundance(0.1), "percent")), 10)
+    expect_equal(get_value(switch_notation(ab, "raw")), 0.1)
+    
+    # ffactor conversions
+    expect_equal(switch_notation(ff(0.99), "permil"), ff(-10, notation = "permil"))
+    expect_is(es <- ff(a = ff(0.99), b = ff(20, notation = "permil")), "FractionationFactors")
+    expect_equal(switch_notation(es$a, "permil"), ff(a = -10, notation = "permil"))
+    expect_equal(es$b, ff(b = +20))
+    
+    # ff actors and delta values
+    expect_equal(to_ff(delta(10)), ff(1.01))
+    expect_equal(to_ff(delta(-0.02, notation = "raw")), ff(0.98))
+    
+    # eltas to fractionation factor (alpha) 
+    expect_equal(to_ff(delta(200), delta(-200)), ff(1.2 / 0.8))
+    expect_equal(get_value(to_delta(to_ff(delta(200), delta(-200))), "raw"), 1.2 / 0.8 - 1)   
+    
+    # delta conversions (permil conversion)
+    expect_true(use_permil()) # check the default is set to use permil
+    expect_is(dx <- to_delta(delta(0.02, notation="raw")), "Delta")
+    expect_equal(get_label(switch_notation(dx, "permil")), paste0(get_iso_letter("delta"), " [", get_iso_letter("permil"), "]"))
+    expect_is(d <- switch_notation(delta(20), "raw"), "Delta")
+    expect_equal(get_value(d), 0.02)
+    expect_equal(get_label(d), get_iso_letter("delta"))
+#    expect_is(dx <- switch_notation(delta(a = 0.02, b = 0.01, notation = "raw"), "permil"), "Deltas") # test isotope system FIXME
+#     expect_equal(get_value(dx$a), 20)
+#     expect_equal(get_value(dx$b), 10)
+#     expect_equal(get_value((d <- switch_notation(dx, "raw"))$a), 0.02)
+#     expect_equal(get_value(d$b), 0.01)
+    
 })
 
 test_that("Testing that additional data in Isosys data frames doesn't get lost during conversions", {

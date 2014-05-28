@@ -39,6 +39,20 @@ run_autotest <- function() {
     auto_test("/Users/sk/Dropbox/Tools/software/r/isotopia/R", "/Users/sk/Dropbox/Tools/software/r/isotopia/tests/testthat")
 }
 
-
-
+# little helper function for isotope letters
+# --> to be expanded for proper formatting in the future
+get_iso_letter <- function(letter = c("alpha", "delta", "epsilon", "permil")) {
+    letter <- match.arg(letter)
+    # ideally these would be like this but this greek alphabet support doesn't really work
+    #switch(letter,
+    #   alpha = "α",
+    #   delta = "δ",
+    #   epsilon = "ε",
+    #   permil = "‰")
+    switch(letter,
+           alpha = "alpha",
+           delta = "d",
+           epsilon = "eps",
+           permil = "permil")
+}
 

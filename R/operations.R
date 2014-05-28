@@ -41,22 +41,6 @@ setMethod("mass_balance", signature("Deltas", "Deltas"), function(iso, iso2, ...
     stop("not implemented yet")
 })
 
-# FIXME, this function is obsolete, remove frac_factor!
-
-# details in the documentiont on to_ff
-#' @usage frac_factor(iso1, iso2)
-#' @method frac_factor
-#' @rdname to_ff
-#' @export
-setGeneric("frac_factor", function(iso1, iso2) standardGeneric("frac_factor"))
-
-#' @method frac_factor
-#' @export
-setMethod("frac_factor", "ANY", function(iso1, iso2) stop("fractionation factor not defined between ", class(iso1), " and ", class(iso2))) 
-setMethod("frac_factor", signature("Ratio", "Ratio"), function(iso1, iso2) iso1/iso2)
-setMethod("frac_factor", signature("FractionationFactor","FractionationFactor"), function(iso1, iso2) iso1/iso2)
-setMethod("frac_factor", signature("Epsilon", "Epsilon"), function(iso1, iso2) iso1/iso2)
-
 #' Fractionate an isotopic value
 #' FIXME: this documentation is confused, go fix it
 #' This function calculates the outcome of isotopic fractionation on an isotopic value and
@@ -82,7 +66,7 @@ setMethod("fractionate", signature("FractionationFactor", "Ratio"), function(fra
     iso_attribs_check(frac, iso, include = c("isoname", "major"), text = "cannot generate a ratio from a fractionation factor and a ratio")
     if (frac@compound2 != iso@compound)
         stop(sprintf("cannot generate a ratio if the fractionation factor's denominator (%s) does not match the ratio compound (%s)", frac@compound2, iso@compound))
-    iso@.Data <- frac@.Data * iso@.Data # weight carried in second value
+    iso@.Data <- get_value(frac, notation = "raw") * iso@.Data # weight carried in second value
     recast_isoval(iso, "Ratio", list(compound = frac@compound))
 })
 
@@ -91,15 +75,18 @@ setMethod("fractionate", signature("FractionationFactor", "FractionationFactor")
     iso_attribs_check(frac, iso, include = c("isoname", "major"), text = "cannot generate a fractionation factor from two fractionation factors")
     if (frac@compound2 != iso@compound)
         stop(sprintf("cannot combine two fractionation factors if their denominator (%s) and numerator (%s) don't cancel", frac@compound2, iso@compound))
-    frac@.Data <- frac@.Data * iso@.Data
-    recast_isoval(frac, "FractionationFactor", list(compound2 = iso@compound2))
+    notation <- frac@notation # original notation
+    frac <- switch_notation(frac, "alpha") # convert to alphas for calculaton
+    frac@.Data <- frac@.Data * get_value(iso@.Data, "alpha")
+    switch_notation(recast_isoval(frac, "FractionationFactor", list(compound2 = iso@compound2)), notation)
 })
 
 # weight of first fractionation factor is carried
 setMethod("fractionate", signature("FractionationFactor", "Delta"), function(frac, iso) {
+    notation <- iso@notation
     a <- to_ff(iso) # convert delta to alpha
     new <- fractionate(frac, a) # fractionate
-    to_delta(new, ref_ratio = iso@ref_ratio, permil = iso@permil) # convert back to delta with the proper ref_ratio and permil parameters
+    switch_notation(to_delta(new, ref_ratio = iso@ref_ratio), notation)# convert back to delta with the proper ref_ratio and notation
 })
 
 # other options (use epsilon to fractionate something)

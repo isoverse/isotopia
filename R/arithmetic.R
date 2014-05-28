@@ -12,6 +12,7 @@ NULL
 #' @rdname arithmetic
 NULL
 
+
 # helper function that informs about operation error
 operation_error <- function(operation, e1, e2) {
     stop(sprintf("%s is not meaningful for these isotope objects (trying to combine '%s' and '%s'). ", operation, class(e1), class(e2)))
@@ -32,7 +33,7 @@ iso_attribs_check <- function(e1, e2, include = names(attributes(e1)), exclude =
     if (failed || !identical(e1.attribs, e2.attribs)) {
         attr_names <- paste0("'", names(e1.attribs)[names(e1.attribs)!="class"], "'")
         stop(sprintf("%s that don't have matching attributes (%s):\n'%s'\n'%s'", 
-                     text, paste(attr_names, collapse = " or "), label(e1), label(e2)))
+                     text, paste(attr_names, collapse = " or "), get_label(e1), get_label(e2)))
     }
     if (check_length && length(e1) != length(e2))
         stop(sprintf("%s that don't have matching lengths: %s and %s", text, length(e1), length(e2)))
@@ -75,12 +76,18 @@ setMethod("+", signature(e1 = "Abundance", e2 = "Abundance"), function(e1, e2) {
                       text = "trying to calculate the mass balance of two abundance objects")
     # FIXME: currently allowing to add vectors of different lengths to support adding a fixed value to a vector
     # but ideally checking here that only length(e1) == length(e2) or length(e1) == 1 or length(e2) ==1 is allowed
+    
+    e1 <- switch_notation(e1, "raw") # convert to raw for mass balance with the same units
+    e2 <- switch_notation(e2, "raw") # convert to raw for mass balance with the same units
+    
     weightsum <- get_weight(e1) + get_weight(e2)
     e1@.Data <- (get_weighted_value(e1) + get_weighted_value(e2))/weightsum
     e1@weight <- weightsum
     e1@compound <- paste(sub("^$", "?", c(e1@compound, e2@compound)), collapse = "+")
     validObject(e1)
-    e1
+    
+    # FIXME: using default notation but should use the same notation the objects have if they are both the same and different from default
+    switch_notation(e1, get_iso_opts("default_ab_notation"))
 })
 
 #' @usage delta +- delta
@@ -95,12 +102,18 @@ NULL
 # adding deltas (i.e. isotope mixing/mass balance calculations)
 setMethod("+", signature(e1 = "Delta", e2 = "Delta"), function(e1, e2) {
     iso_attribs_check(e1, e2, exclude = c("weight", "compound"), text = "trying to calculate the mass balance of two delta values")
+    
+    e1 <- switch_notation(e1, "raw") # convert to raw for mass balance with the same units
+    e2 <- switch_notation(e2, "raw") # convert to raw for mass balance with the same units
+    
     weightsum <- get_weight(e1) + get_weight(e2)
     e1@.Data <- (get_weighted_value(e1) + get_weighted_value(e2))/weightsum
     e1@weight <- weightsum
     e1@compound <- paste(sub("^$", "?", c(e1@compound, e2@compound)), collapse = "+")
     validObject(e1)
-    e1
+    
+    # FIXME: using default notation but should use the same notation the objects have if they are both the same and different from default
+    switch_notation(e1, get_iso_opts("default_delta_notation"))
 })
 
 # Subtraction  ========================
@@ -182,7 +195,7 @@ setMethod("*", signature(e1 = "FractionationFactor", e2 = "FractionationFactor")
 setMethod("*", signature(e1 = "FractionationFactor", e2 = "Delta"), function(e1, e2) fractionate(e1, e2))
 setMethod("*", signature(e1 = "Delta", e2 = "FractionationFactor"), function(e1, e2) e2 * e1) # just reverse
 
-# same for epsilon 
+# same for epsilon  - FIXME remove!
 setMethod("*", signature(e1 = "Epsilon", e2 = "Delta"), function(e1, e2) fractionate(e1, e2))
 setMethod("*", signature(e1 = "Delta", e2 = "Epsilon"), function(e1, e2) e2 * e1) # just reverse
 
@@ -228,8 +241,8 @@ setMethod("/", signature(e1 = "Intensity", e2 = "Intensity"), function(e1, e2) {
 
 #' @usage ratio / ratio
 #' @details
-#' \code{ratio/ratio} allows the creation of an isotope \code{\link{alpha}} object (a fractionation factor).
-#' This is a shorthand for the \link{frac_factor} function.
+#' \code{ratio/ratio} allows the creation of an isotope \code{\link{fractionation_factor}} 
+#' This is a shorthand for the \link{to_ff} function.
 #' @name arithmetic 
 #' @rdname arithmetic
 NULL
@@ -237,15 +250,16 @@ NULL
 # ratio / ratio = alpha (weight of first ratio carried)
 setMethod("/", signature(e1 = "Ratio", e2 = "Ratio"), function(e1, e2) {
     iso_attribs_check(e1, e2, include = c("isoname", "major"), text = "cannot generate a fractionaton factor from two ratio objects")
-    e1@.Data <- e1@.Data / e2@.Data 
+    e1@.Data <- get_value(e1@.Data, "raw") / get_value(e2@.Data, "raw")
+    e1@notation <- new("Notation_alpha") # keep as an alpha value
     recast_isoval(e1, "FractionationFactor", list(compound2 = e2@compound))
 })
 
-#' @usage alpha / alpha
+#' @usage ff / ff
 #' @details
 #' \code{alpha/ alpha} allows the creation of another isotope \code{\link{alpha}} object but requires that
 #' either the denominator names or numerator names of the two alpha objects are identical (i.e. they "cancel").
-#'  This is a shorthand for the \link{frac_factor} function.
+#' This is a shorthand for the \link{to_ff} function.
 #' @name arithmetic 
 #' @rdname arithmetic
 NULL
@@ -260,8 +274,13 @@ setMethod("/", signature(e1 = "FractionationFactor", e2 = "FractionationFactor")
     else
         stop(sprintf("cannot combine two fractionation factors if neither their denominators (%s and %s) nor their numerators (%s and %s) cancel", 
                      e1@compound2, e2@compound2, e1@compound, e2@compound))
+    
+    e1 <- switch_notation(e1, "alpha") # make sure they are alpha values
+    e2 <- switch_notation(e2, "alpha") # make sure they are alpha values
     e1@.Data <- e1@.Data / e2@.Data
-    recast_isoval(e1, "FractionationFactor")
+    
+    # ideally should be the same notation of the originals if they are differnt from the default
+    switch_notation(recast_isoval(e1, "FractionationFactor"), get_iso_opts("default_ff_notation"))
 })
 
 #' @usage delta / delta
@@ -273,6 +292,11 @@ setMethod("/", signature(e1 = "FractionationFactor", e2 = "FractionationFactor")
 #' @name arithmetic 
 #' @rdname arithmetic
 NULL
+
+# delta/delta = alpha (weight of first delta is carried)
+setMethod("/", signature(e1 = "Delta", e2 = "Delta"), function(e1, e2) {
+    to_ff(e1, e2)
+})
 
 # delta/delta = alpha (weight of first delta is carried)
 setMethod("/", signature(e1 = "Epsilon", e2 = "Epsilon"), function(e1, e2) {

@@ -19,9 +19,9 @@ isotope \code{\link{ratio}} object if iso can be converted to a \code{\link{rati
 The \code{to_r} function is a shorthand for \code{to_ratio} but otherwise identical.
 }
 \seealso{
-Other data type conversions: \code{\link{frac_factor}},
-  \code{\link{to_ff}}; \code{\link{to_ab}},
+Other data type conversions: \code{\link{to_ab}},
   \code{\link{to_abundance}}; \code{\link{to_d}},
-  \code{\link{to_delta}}; \code{\link{to_epsilon}}
+  \code{\link{to_delta}}; \code{\link{to_epsilon}};
+  \code{\link{to_ff}}
 }
 

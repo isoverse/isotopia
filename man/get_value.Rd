@@ -3,7 +3,11 @@
 \alias{get_value}
 \title{Retrieve isotope object's primitive values}
 \usage{
-get_value(iso)
+get_value(iso, notation = "raw")
+}
+\arguments{
+\item{notation}{specifiy which notation to return the value in (default is the notation
+that hte object is in)}
 }
 \value{
 In the case of a single isotope object (Isoval), returns the numeric
@@ -20,7 +24,9 @@ primitive data value(s).
 \seealso{
 \code{\link{as.numeric}}, \code{\link{as.data.frame}}, \code{\link[base]{as.data.frame}} (base method)
 
-Other data type attributes: \code{\link{get_weighted_value}};
+Other data type attributes: \code{\link{get_label}},
+  \code{\link{get_name}}, \code{\link{get_units}};
+  \code{\link{get_weighted_value}};
   \code{\link{get_weight}}; \code{\link{set_attrib}};
   \code{\link{switch_notation}}; \code{\link{weight}}
 }

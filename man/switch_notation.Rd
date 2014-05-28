@@ -7,18 +7,28 @@ switch_notation(iso, to)
 }
 \arguments{
 \item{iso}{isotopic data object (\code{\link{ff}}, \code{\link{abundance}}, \code{\link{delta}})}
+
+\item{to}{which notation to convert to}
 }
 \value{
 isotope object with converted notation, an error if it is not a valid conversion
 }
 \description{
-Valid notation:
-Abundance: raw, percent
-Delta: raw, permil, ppm
-Fractionation factor: alpha, eps, permil, ppm (note: alpha is considered the 'raw' unit of a fractionation factor)
+Convert from one notation to another for an isotope data object.
+}
+\details{
+Valid notations depend on the data type:
+\itemize{
+ \item{\code{\link{abundance}}: }{'raw', 'percent'}
+ \item{\code{\link{delta}}: }{'raw', 'permil', 'ppm'}
+ \item{\code{\link{fractionation_factor}}: }{'alpha', 'eps', 'permil', 'ppm'}
+}
+Note: eps, the 'epsilon' value is considered the 'raw' unit of a fractionation factor
 }
 \seealso{
-Other data type attributes: \code{\link{get_value}};
+Other data type attributes: \code{\link{get_label}},
+  \code{\link{get_name}}, \code{\link{get_units}};
+  \code{\link{get_value}};
   \code{\link{get_weighted_value}};
   \code{\link{get_weight}}; \code{\link{set_attrib}};
   \code{\link{weight}}

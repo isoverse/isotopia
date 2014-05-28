@@ -17,7 +17,9 @@ This function returns an isotope object's weight values.
 \seealso{
 \code{\link{as.data.frame}}, \code{\link[base]{as.data.frame}} (base method)
 
-Other data type attributes: \code{\link{get_value}};
+Other data type attributes: \code{\link{get_label}},
+  \code{\link{get_name}}, \code{\link{get_units}};
+  \code{\link{get_value}};
   \code{\link{get_weighted_value}};
   \code{\link{set_attrib}}; \code{\link{switch_notation}};
   \code{\link{weight}}

@@ -19,7 +19,7 @@ intensity / intensity
 
 ratio / ratio
 
-alpha / alpha
+ff / ff
 
 delta / delta
 }
@@ -55,12 +55,12 @@ for details
 
 \code{intensity/intensity} allows the creation of an isotope \code{\link{ratio}} object
 
-\code{ratio/ratio} allows the creation of an isotope \code{\link{alpha}} object (a fractionation factor).
-This is a shorthand for the \link{frac_factor} function.
+\code{ratio/ratio} allows the creation of an isotope \code{\link{fractionation_factor}}
+This is a shorthand for the \link{to_ff} function.
 
 \code{alpha/ alpha} allows the creation of another isotope \code{\link{alpha}} object but requires that
 either the denominator names or numerator names of the two alpha objects are identical (i.e. they "cancel").
- This is a shorthand for the \link{frac_factor} function.
+This is a shorthand for the \link{to_ff} function.
 
 \code{delta/delta} creates an \code{\link{alpha}} fractionation factor object that
 describes the fractionation factor between the two compounds, requires the reference

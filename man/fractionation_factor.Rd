@@ -4,16 +4,22 @@
 \alias{fractionation_factor}
 \title{Fractionation factor}
 \usage{
-fractionation_factor(..., major = get_iso_opts("default_major"), ctop = "",
-  cbot = "", single_as_df = FALSE)
+fractionation_factor(..., major = get_iso_opts("default_major"),
+  notation = get_iso_opts("default_ff_notation"), ctop = "", cbot = "",
+  single_as_df = FALSE)
 
-ff(..., major = get_iso_opts("default_major"), ctop = "", cbot = "",
+ff(..., major = get_iso_opts("default_major"),
+  notation = get_iso_opts("default_ff_notation"), ctop = "", cbot = "",
   single_as_df = FALSE)
 }
 \arguments{
 \item{...}{- numeric vectors (can be named) to turn into fractionation factors}
 
 \item{major}{- name of the major isotope in the isotope system [optional]}
+
+\item{notation}{- which notation the value is in, \code{"alpha"} (alpha value), \code{"eps"} (epsilon value),
+\code{"permil"} (epsilon * 1000) are currently implemented for \code{fractionation_factor} values.
+See \code{\link{switch_notation}} on details how to convert between notations.}
 
 \item{ctop}{- name of the compound representing the top isotope ratio [optional]}
 

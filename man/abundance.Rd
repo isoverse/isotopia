@@ -5,10 +5,12 @@
 \title{Fractional abundance}
 \usage{
 abundance(..., major = get_iso_opts("default_major"), compound = "",
-  weight = numeric(), single_as_df = FALSE)
+  notation = get_iso_opts("default_ab_notation"), weight = numeric(),
+  single_as_df = FALSE)
 
 ab(..., major = get_iso_opts("default_major"), compound = "",
-  weight = numeric(), single_as_df = FALSE)
+  notation = get_iso_opts("default_ab_notation"), weight = numeric(),
+  single_as_df = FALSE)
 }
 \arguments{
 \item{...}{- numeric vectors (can be named) to turn into isotope abundance objects}
@@ -18,6 +20,9 @@ only of importance if converting from abundance to ratio or delta value,
 and want automatic name propagation}
 
 \item{compound}{- name of the compound the isotopic values belong to [optional]}
+
+\item{notation}{- what notation the abundance is in ('raw' values or 'percent'),
+see \code{\link{switch_notation}} for details}
 }
 \description{
 Generate an isotope abundance object. See \link{isotopia} for general information on initializing

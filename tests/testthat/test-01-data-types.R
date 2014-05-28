@@ -12,8 +12,8 @@ test_that("Testing that basic single data types' (ratio, abundance, delta, etc.)
     expect_error(ratio(-0.2), "cannot be negative")
     expect_is(ratio(c(0.1, 0.2, 0.3)), "Ratio")
     expect_error(ratio(`12C` = 0.1, major = "12C"), "isotope ratios cannot be defined for the same isotope as minor and major isotope")
-    expect_equal(label(ratio(`12C` = 0.2, major = "13C")), "R 12C/13C")
-    expect_equal(label(ratio(`13C` = 0.1, major = "12C", compound = "CO2")), "CO2 R 13C/12C")
+    expect_equal(get_label(ratio(`12C` = 0.2, major = "13C")), "R 12C/13C")
+    expect_equal(get_label(ratio(`13C` = 0.1, major = "12C", compound = "CO2")), "CO2 R 13C/12C")
     
     # testing weights
     expect_output(ratio(1), "An isotope value .*")
@@ -31,51 +31,45 @@ test_that("Testing that basic single data types' (ratio, abundance, delta, etc.)
     expect_error(abundance(-0.2), "cannot be negative")
     expect_error(abundance(1.1), "cannot be larger than 1")
     expect_is(abundance(c(0.1, 0.2, 0.3)), "Abundance")
-    expect_equal(label(abundance(`12C` = 0.1)), "F 12C")
-    expect_equal(label(abundance(`13C` = 0.1, major = "12C", compound = "CO2")), "CO2 F 13C")
+    expect_equal(get_label(abundance(`12C` = 0.1)), "F 12C")
+    expect_equal(get_label(abundance(`13C` = 0.1, major = "12C", compound = "CO2")), "CO2 F 13C")
     
     # testing intesnity    
     expect_error(intensity(-1), "ion intensities cannot be negative")
-    expect_equal(label(intensity(`13C` = 1:5, compound = "CO2", major = "12C", unit = "mV")), "CO2 13C [mV]")
+    expect_equal(get_label(intensity(`13C` = 1:5, compound = "CO2", major = "12C", unit = "mV")), "CO2 13C [mV]")
     
    
-    # testing alpha data type
-    #FIXME
-#     expect_error(alpha(-0.2), "cannot be negative")
-#     expect_is(alpha(0.9), "Alpha")
-#     expect_equal(label(alpha(0.9)), isotopia:::get_iso_letter("alpha"))
-#     expect_equal(label(alpha(`13C` = 0.9)), paste("13C", isotopia:::get_iso_letter("alpha")))
-#     expect_equal(label(alpha(`34S` = 0.9, ctop = "SO4", cbot = "H2S")), paste0("34S ", isotopia:::get_iso_letter("alpha"), "_SO4/H2S"))
-#     expect_warning({
-#         a <- alpha(0.1, ctop = "CO2", cbot = "DIC")
-#         a <- alpha(a, cbot = "Corg")
-#     }, "changing the bottom compound name")
-#     expect_equal(a@compound2, "Corg")
-    
-    # testing epsilon data type
-    expect_is(epsilon(c(-20, 20)), "Epsilon")
-    expect_true(epsilon(c(-20, 20))@permil)
-    expect_false(epsilon(c(-0.2, 0.2), permil = FALSE)@permil)
-    expect_true(epsilon(epsilon(20))@permil)
-    expect_error(epsilon(epsilon(20), permil = FALSE), "changing .* from permil to non-permil must be done using the appropriate .* function")
-    expect_equal(label(epsilon(-10)), paste0(isotopia:::get_iso_letter("epsilon"), " [", isotopia:::get_iso_letter("permil"), "]"))
-    expect_equal(label(epsilon(`13C` = -0.01, permil = FALSE)), paste0("13C ", isotopia:::get_iso_letter("epsilon")))
-    expect_equal(label(epsilon(`13C` = -10, ctop = "SO4", cbot = "H2S")), paste0("13C ", isotopia:::get_iso_letter("epsilon"), "_SO4/H2S [", isotopia:::get_iso_letter("permil"), "]"))
+    # testing fractionatoin factors in alpha mode
+    expect_equal(get_label(ff(0.9)), isotopia:::get_iso_letter("alpha"))
+    expect_equal(get_label(ff(`13C` = 0.9)), paste("13C", isotopia:::get_iso_letter("alpha")))
+    expect_equal(get_label(ff(`34S` = 0.9, ctop = "SO4", cbot = "H2S")), paste0("34S ", isotopia:::get_iso_letter("alpha"), "_SO4/H2S"))
     expect_warning({
-        e <- epsilon(25, ctop = "CO2", cbot = "DIC")
-        e <- epsilon(e, cbot = "Corg")
+        a <- ff(0.1, ctop = "CO2", cbot = "DIC")
+        a <- ff(a, cbot = "Corg")
+    }, "changing the bottom compound name")
+    expect_equal(a@compound2, "Corg")
+    
+    # testing fractionation factors in permil mode
+    expect_is(eps <- ff(c(-20, 20), notation = "permil"), "FractionationFactor")
+    expect_equal(get_units(eps), "permil")
+    expect_is(eps <- ff(c(-0.2, 0.2), notation = "eps"), "FractionationFactor")
+    expect_equal(get_units(eps), "")
+    expect_equal(get_label(ff(-10, notation = "permil")), paste0(isotopia:::get_iso_letter("epsilon"), " [", isotopia:::get_iso_letter("permil"), "]"))
+    expect_equal(get_label(ff(`13C` = -0.01, notation = "eps")), paste0("13C ", isotopia:::get_iso_letter("epsilon")))
+    expect_equal(get_label(ff(`13C` = -10, ctop = "SO4", cbot = "H2S", notation = "permil")), paste0("13C ", isotopia:::get_iso_letter("epsilon"), "_SO4/H2S [", isotopia:::get_iso_letter("permil"), "]"))
+    expect_warning({
+        e <- ff(25, ctop = "CO2", cbot = "DIC")
+        e <- ff(e, cbot = "Corg")
     }, "changing the bottom compound name")
     expect_equal(e@compound2, "Corg")
     
     # testing delta data type
     expect_is(delta(c(-20, 20)), "Delta")
-    expect_true(delta(c(-20, 20))@permil)
-    expect_false(delta(c(-0.2, 0.2), permil = FALSE)@permil)
-    expect_true(delta(delta(20))@permil)
-    expect_error(delta(delta(20), permil = FALSE), "changing .* from permil to non-permil must be done using the appropriate .* function")
-    expect_equal(label(delta(-10)), paste0(isotopia:::get_iso_letter("delta"), " [", isotopia:::get_iso_letter("permil"), "]"))
-    expect_equal(label(delta(`13C` = -0.01, permil = FALSE)), paste0(isotopia:::get_iso_letter("delta"),"13C"))
-    expect_equal(label(delta(`13C` = -10, compound = "DIC", ref = "SMOW")), paste0("DIC ", isotopia:::get_iso_letter("delta"), "13C [", isotopia:::get_iso_letter("permil"), "] vs. SMOW"))
+    expect_is(delta(c(-20, 20))@notation, "Notation_permil")
+    expect_is(delta(c(-0.2, 0.2), notation = "raw")@notation, "Notation_raw")
+    expect_equal(get_label(delta(-10)), paste0(isotopia:::get_iso_letter("delta"), " [", isotopia:::get_iso_letter("permil"), "]"))
+    expect_equal(get_label(delta(`13C` = -0.01, notation = "raw")), paste0(isotopia:::get_iso_letter("delta"),"13C"))
+    expect_equal(get_label(delta(`13C` = -10, compound = "DIC", ref = "SMOW")), paste0("DIC ", isotopia:::get_iso_letter("delta"), "13C [", isotopia:::get_iso_letter("permil"), "] vs. SMOW"))
     expect_warning({
         d <- delta(25, ref = "SMOW")
         d <- delta(d, ref = "Air")
@@ -260,11 +254,6 @@ test_that("Testing that object type check functions (is.x()) are working", {
 #     expect_true(is.alpha(alpha(100)))
 #     expect_true(is.alpha(alpha(100, 400)))
 #     expect_false(is.alpha(abundance(0.1)))
-    
-    # is.epsilon
-    expect_true(is.epsilon(epsilon(100)))
-    expect_true(is.epsilon(epsilon(100, 400)))
-    expect_false(is.epsilon(abundance(0.1)))
     
     # is.isosys vs is.isoval
     expect_true(is.isoval(ratio(0.1)))

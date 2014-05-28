@@ -40,7 +40,7 @@ set_iso_opts <- function (
     standards = c()) {
     
     # new options
-    opts <- as.list(match.call())[-1]
+    opts <- as.list(match.call())[-1] #FIXME: this might not work with lazy evaluation!
     
     # check consistency of notations
     if (!missing(default_ab_notation)) 

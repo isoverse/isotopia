@@ -26,9 +26,9 @@ isotope \code{\link{delta}} object if iso can be converted to a \code{\link{delt
 The \code{to_d} function is a shorthand for \code{to_delta} but otherwise identical.
 }
 \seealso{
-Other data type conversions: \code{\link{frac_factor}},
-  \code{\link{to_ff}}; \code{\link{to_ab}},
+Other data type conversions: \code{\link{to_ab}},
   \code{\link{to_abundance}}; \code{\link{to_epsilon}};
-  \code{\link{to_r}}, \code{\link{to_ratio}}
+  \code{\link{to_ff}}; \code{\link{to_r}},
+  \code{\link{to_ratio}}
 }
 

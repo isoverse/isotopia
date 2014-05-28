@@ -126,8 +126,12 @@ setValidity(
 setValidity(
     "Abundance",
     function(object) {
+        # FIXME: this is fine with a switch_notation but doesn't work with abundance(20, notation="percent")!
         if (any(object < 0)) return('fractional abundances cannot be negative')
-        if (any(object > 1)) return('fractional abundances cannot be larger than 1')
+        if (is(object@notation, "Notation_raw") & any(object > 1)) 
+            return('fractional abundances cannot be larger than 1') 
+        if (is(object@notation, "Notation_percent") & any(object > 100)) 
+            return('fractional abundances cannot be larger than 100%') 
         return(TRUE)
     })
 
@@ -136,6 +140,7 @@ setValidity(
 setValidity(
     "FractionationFactor",
     function(object) {
+        # FIXME: depends on notation, make sure that it works both with initialization and with switch_notation!
         #if (any(object < 0)) return('alpha values cannot be negative')
         return(TRUE)
     })
@@ -190,6 +195,8 @@ setValidity(
         return (TRUE)
     })
 
+
+#FIXME: should probably check that notation is the same here!!!
 
 setValidity(
     "Intensities",
