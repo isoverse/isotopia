@@ -22,7 +22,6 @@ See \link{isotopia} for general information on initializing and converting isoto
 \seealso{
 Other isotope data types: \code{\link{ab}},
   \code{\link{abundance}}; \code{\link{delta}};
-  \code{\link{epsilon}}, \code{\link{use_permil}};
   \code{\link{ff}}, \code{\link{fractionation_factor}};
   \code{\link{ratio}}
 }

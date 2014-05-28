@@ -89,9 +89,6 @@ setMethod("fractionate", signature("FractionationFactor", "Delta"), function(fra
     switch_notation(to_delta(new, ref_ratio = iso@ref_ratio), notation)# convert back to delta with the proper ref_ratio and notation
 })
 
-# other options (use epsilon to fractionate something)
-setMethod("fractionate", signature("Epsilon", "ANY"), function(frac, iso) fractionate(to_ff(frac), iso))
-
 #' Shift reference frame
 #' 
 #' This function shifts the reference frame of an isotopic data object

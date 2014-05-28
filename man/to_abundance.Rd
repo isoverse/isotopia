@@ -20,8 +20,7 @@ The \code{to_ab} function is a shorthand for \code{to_abundance} but otherwise i
 }
 \seealso{
 Other data type conversions: \code{\link{to_d}},
-  \code{\link{to_delta}}; \code{\link{to_epsilon}};
-  \code{\link{to_ff}}; \code{\link{to_r}},
-  \code{\link{to_ratio}}
+  \code{\link{to_delta}}; \code{\link{to_ff}};
+  \code{\link{to_r}}, \code{\link{to_ratio}}
 }
 

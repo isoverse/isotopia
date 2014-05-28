@@ -38,7 +38,6 @@ The \code{ff} function is a shorthand for \code{fractionation_factor} but otherw
 \seealso{
 Other isotope data types: \code{\link{ab}},
   \code{\link{abundance}}; \code{\link{delta}};
-  \code{\link{epsilon}}, \code{\link{use_permil}};
   \code{\link{intensity}}; \code{\link{ratio}}
 }
 

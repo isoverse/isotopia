@@ -200,19 +200,3 @@ get_standard <- function(minor = NULL, major = NULL, name = NULL) {
     
     return(stds[[1]])
 }
-
-
-#' @note
-#' \code{use_permil} is a function to globally enable/disable the use of permil values
-#' in conversions from/to delta and epsilon values. It can always be overwritten in
-#' individual conversions using the \code{permil} parameter.
-#' 
-#' @rdname epsilon
-#' @export
-use_permil <- function(permil) {
-    if (!missing(permil)) {
-        options(use_permil = permil)
-        return(invisible(permil))
-    } else
-        return(options("use_permil")[[1]])
-}

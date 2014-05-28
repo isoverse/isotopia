@@ -9,7 +9,9 @@ abundance +- abundance
 
 delta +- delta
 
-ff - 1
+alpha - 1
+
+eps[raw] * 1000
 
 ff * ratio
 
@@ -39,10 +41,15 @@ two \code{\link{abundance}} objects, see \code{\link{mass_balance}} for details
 two \code{\link{delta}} objects, see \code{\link{mass_balance}} for details,
 will use the global \code{\link{exact_mass_balance}} setting for the calculation
 
-\code{ff - 1} is a shorthand for converting a fractionation factor from
+\code{alpha - 1} is a shorthand for converting a fractionation factor from
 alpha to epsilon notation. The ff object has to be in alpha notation,
 otherwise this is just interpreted as a regular arithmetic operation
 and the result will no longer be an isotope object.
+\code{eps  + 1} is the reverse operation.
+
+\code{delta * 1000} is a shorthand for converting a raw delta
+value to permil notation. The same works for fractionation factors
+in epsilon notation. \code{delta / 1000} is the reverse
 
 \code{ff*ratio}, \code{ff*ff}, \code{ff*delta} are a shorthand for
 fractionating an isotope object with a factionation factor,
@@ -65,6 +72,5 @@ This is a shorthand for the \link{to_ff} function.
 \code{delta/delta} creates an \code{\link{alpha}} fractionation factor object that
 describes the fractionation factor between the two compounds, requires the reference
 name of the two delta values to be identical. This is a shorthand for the \link{frac_factor} function.
-Works identically for two epsilon values.
 }
 

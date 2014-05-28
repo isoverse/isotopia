@@ -34,7 +34,7 @@ See \link{arithmetic} for details.
 \seealso{
 Other data type conversions: \code{\link{to_ab}},
   \code{\link{to_abundance}}; \code{\link{to_d}},
-  \code{\link{to_delta}}; \code{\link{to_epsilon}};
-  \code{\link{to_r}}, \code{\link{to_ratio}}
+  \code{\link{to_delta}}; \code{\link{to_r}},
+  \code{\link{to_ratio}}
 }
 

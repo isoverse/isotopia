@@ -31,7 +31,6 @@ ratio(`33S` = c(0.1, 0.2, 0.3), `34S` = c(0.2, 0.4, 0.6), major = "32S") # isoto
 \seealso{
 Other isotope data types: \code{\link{ab}},
   \code{\link{abundance}}; \code{\link{delta}};
-  \code{\link{epsilon}}, \code{\link{use_permil}};
   \code{\link{ff}}, \code{\link{fractionation_factor}};
   \code{\link{intensity}}
 }

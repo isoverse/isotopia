@@ -74,14 +74,6 @@ is.intensity <- function(obj) inherits(obj, "Intensity") || inherits(obj, "Inten
 is.ff <- function(obj) inherits(obj, "FractionationFactor") || inherits(obj, "FractionationFactors")
 
 #' @details
-#' \code{is.epsilon} checks whether the object is an epsilon value object.
-#' Returns TRUE if it's a single epsilon value object or a system of epsilon values,
-#' FALSE otherwise.
-#' @rdname is.iso
-#' @export
-is.epsilon <- function(obj) class(obj) %in% c("Epsilon", "Epsilons") # because delta inherits from Epsilon, must be more precise!
-
-#' @details
 #' \code{is.weighted} checks if an isotope object is weighted. An object
 #' counts as weighted if any of the weights associated with the data values
 #' is != 1, that means only objects whose weights are ALL 1 is considered

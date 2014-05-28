@@ -75,19 +75,6 @@ setMethod("update_iso", "FractionationFactor", function(obj, attribs) {
     obj
 })
 
-setMethod("update_iso", "Epsilon", function(obj, attribs) {
-    obj <- callNextMethod(obj, attribs)
-    obj <- update_text_attrib (obj, attribs, "compound2", "changing the bottom compound name of a fractionation factor")    
-    if (!is.null(permil <- attribs$permil) && length(permil) > 0) {
-        if (length(obj@permil) > 0 && obj@permil != permil)
-            stop("changing the type of an already initialized ", tolower(class(obj)), 
-                 " value from permil to non-permil must be done using the appropriate to_", 
-                 tolower(class(obj)), "(..., permil = TRUE/FALSE) function")
-        obj@permil <- permil
-    }
-    obj
-})
-
 setMethod("update_iso", "Delta", function(obj, attribs) {
     # ref ratio
     if (!is.null(ref_ratio <- attribs$ref_ratio) && length(ref_ratio) > 0) {

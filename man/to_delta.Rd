@@ -4,9 +4,9 @@
 \alias{to_delta}
 \title{Convert to delta value}
 \usage{
-to_delta(iso, ref_ratio, permil = use_permil())
+to_delta(iso, ref_ratio)
 
-to_d(iso, ref_ratio, permil = use_permil())
+to_d(iso, ref_ratio)
 }
 \arguments{
 \item{iso}{isotopic data object (\code{\link{ratio}}, \code{\link{abundance}}, \code{\link{delta}}, etc.)}
@@ -15,8 +15,6 @@ to_d(iso, ref_ratio, permil = use_permil())
 later conversions back to ratios or abundane values. Can be supplied as a raw numeric numer or a Ratio object
 (in the case of the latter, the compound name of the Ratio object will be registered as the name of the
 reference).}
-
-\item{permil}{whether to generate epsilon object in permil values (x1000) or not}
 }
 \value{
 isotope \code{\link{delta}} object if iso can be converted to a \code{\link{delta}}, an error otherwise
@@ -27,8 +25,7 @@ The \code{to_d} function is a shorthand for \code{to_delta} but otherwise identi
 }
 \seealso{
 Other data type conversions: \code{\link{to_ab}},
-  \code{\link{to_abundance}}; \code{\link{to_epsilon}};
-  \code{\link{to_ff}}; \code{\link{to_r}},
-  \code{\link{to_ratio}}
+  \code{\link{to_abundance}}; \code{\link{to_ff}};
+  \code{\link{to_r}}, \code{\link{to_ratio}}
 }
 

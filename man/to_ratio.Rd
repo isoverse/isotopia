@@ -21,7 +21,6 @@ The \code{to_r} function is a shorthand for \code{to_ratio} but otherwise identi
 \seealso{
 Other data type conversions: \code{\link{to_ab}},
   \code{\link{to_abundance}}; \code{\link{to_d}},
-  \code{\link{to_delta}}; \code{\link{to_epsilon}};
-  \code{\link{to_ff}}
+  \code{\link{to_delta}}; \code{\link{to_ff}}
 }
 

@@ -2,7 +2,6 @@
 \name{is.iso}
 \alias{is.abundance}
 \alias{is.delta}
-\alias{is.epsilon}
 \alias{is.ff}
 \alias{is.intensity}
 \alias{is.iso}
@@ -27,8 +26,6 @@ is.delta(obj)
 is.intensity(obj)
 
 is.ff(obj)
-
-is.epsilon(obj)
 
 \code{is.weighted(iso)}
 }
@@ -72,10 +69,6 @@ FALSE otherwise.
 
 \code{is.ff} checks whether the object is an fractionation factor value object.
 Returns TRUE if it's a single fractionation factor value object or an isotope system of fractionation factor values,
-FALSE otherwise.
-
-\code{is.epsilon} checks whether the object is an epsilon value object.
-Returns TRUE if it's a single epsilon value object or a system of epsilon values,
 FALSE otherwise.
 
 \code{is.weighted} checks if an isotope object is weighted. An object

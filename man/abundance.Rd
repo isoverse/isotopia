@@ -33,7 +33,6 @@ The \code{ab} function is a shorthand for \code{abundance} but otherwise identic
 }
 \seealso{
 Other isotope data types: \code{\link{delta}};
-  \code{\link{epsilon}}, \code{\link{use_permil}};
   \code{\link{ff}}, \code{\link{fractionation_factor}};
   \code{\link{intensity}}; \code{\link{ratio}}
 }

@@ -83,26 +83,6 @@ fractionation_factor <- function(..., major = get_iso_opts("default_major"),
 ff <- fractionation_factor
 
 
-#' Epsilon value
-#'
-#' Generate a a fractionation factor (epsilon value). See \link{isotopia} for general information on initializing
-#' and converting isotope data objects.
-#' 
-#' @param ... - numeric vectors (can be named) to turn into epsilon values
-#' @param major - name of the major isotope in the isotope system [optional]
-#' @param ctop - name of the compound representing the top isotope ratio [optional]
-#' @param cbot - name of the compound representing the bottom isotope ratio [optional]
-#' @param permil - whether the values passed in are in permil or raw values (i.e. no 1000x multiplication)
-#' @family isotope data types
-#' @examples
-#' epsilon(50, permil = TRUE) # enter as permil value
-#' epsilon(0.05, permil = FALSE) # enter as non-permil value
-#' @export
-epsilon <- function(..., major = get_iso_opts("default_major"), 
-                    ctop = "", cbot = "", permil = use_permil(), single_as_df = FALSE) {
-    iso("Epsilons", ..., attribs = list(major = major, compound = ctop, compound2 = cbot, permil = permil), single_as_df = single_as_df)
-}
-
 #' Delta value
 #'
 #' Generate an isotope delta value object. See \link{isotopia} for general information on initializing
@@ -113,7 +93,6 @@ epsilon <- function(..., major = get_iso_opts("default_major"),
 #' the default) and use \code{delta(...) + delta(...)}. Use \code{\link{exact_mass_balance}(TRUE/FALSE)}
 #' to adjust how these are calculated.
 #' 
-#' 
 #' @param ... - numeric vectors (can be named) to turn into delta values
 #' @param major - name of the major isotope in the isotope system [optional]
 #' @param compound - name of the compound the isotopic values belong to [optional]
@@ -123,7 +102,6 @@ epsilon <- function(..., major = get_iso_opts("default_major"),
 #' \code{"raw"} (raw value, i.e. no multiplication) and \code{"ppm"} (10^6 multiplicaiton)
 #' are currently implemented for \code{delta} values. See \code{\link{switch_notation}} on
 #' details how to convert between notations.
-#' @param permil - whether the values passed in are in permil or raw values (i.e. no 1000x multiplication)
 #' @param weight - weight the isotope value (with a mass, concentration, etc.) for easy mass balance calculations.
 #' The default value is 1, i.e. an unweighted isotope value.
 #' If specified, \code{weight} must be a single value or a numeric vector of the same size as the data values. 
@@ -134,9 +112,9 @@ epsilon <- function(..., major = get_iso_opts("default_major"),
 #' delta(0.05, notation = "raw") # enter as non-permil value
 #' @export
 delta <- function(..., major = get_iso_opts("default_major"), compound = "", 
-                  ref = "", ref_ratio = numeric(), permil = use_permil(), notation = get_iso_opts("default_delta_notation"),
+                  ref = "", ref_ratio = numeric(), notation = get_iso_opts("default_delta_notation"),
                   weight = numeric(), single_as_df = FALSE) {
-    iso("Deltas", ..., attribs = list(major = major, compound = compound, compound2 = ref, ref_ratio = ref_ratio, notation = notation, permil = permil, weight = weight), single_as_df = single_as_df)
+    iso("Deltas", ..., attribs = list(major = major, compound = compound, compound2 = ref, ref_ratio = ref_ratio, notation = notation, weight = weight), single_as_df = single_as_df)
 }
 
 #' Ion intensity

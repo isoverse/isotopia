@@ -42,6 +42,8 @@ setMethod("switch_notation", signature("numeric", to = "Notation_alpha", from = 
 setMethod("switch_notation", signature("numeric", to = "Notation_alpha", from = "Notation_raw"), function(iso, to, from) iso + 1) # maybe clean up some redundancy here? but much faster this way
 setMethod("switch_notation", signature("numeric", to = "Notation_permil", from = "Notation_raw"), function(iso, to, from) 1000*iso)
 setMethod("switch_notation", signature("numeric", to = "Notation_raw", from = "Notation_permil"), function(iso, to, from) iso/1000)
+setMethod("switch_notation", signature("numeric", to = "Notation_permil", from = "Notation_eps"), function(iso, to, from) 1000*iso) # FIXME: too much redundancy!
+setMethod("switch_notation", signature("numeric", to = "Notation_eps", from = "Notation_permil"), function(iso, to, from) iso/1000)
 setMethod("switch_notation", signature("numeric", to = "Notation_permil", from = "Notation_alpha"), function(iso, to, from) 1000*(iso - 1))
 setMethod("switch_notation", signature("numeric", to = "Notation_alpha", from = "Notation_permil"), function(iso, to, from) iso/1000 + 1)
 setMethod("switch_notation", signature("numeric", to = "Notation_ppm", from = "ANY"), function(iso, to, from) 1000*switch_notation(iso, to = new("Notation_permil"), from))

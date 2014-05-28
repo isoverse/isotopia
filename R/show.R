@@ -72,9 +72,7 @@ setMethod("get_name", "FractionationFactor", function(object) {
                        get_iso_letter("eps")) # everything else (raw, permil, ppm) is essentially an epsilon value
     ratio_name(object@isoname, notation, "_", object@compound, object@compound2)
 })
-setMethod("get_name", "Epsilon", function(object) {
-    ratio_name(object@isoname, get_iso_letter("epsilon"), "_", object@compound, object@compound2)
-})
+
 setMethod("get_name", "Delta", function(object) paste(get_iso_letter("delta"), object@isoname, sep = ""))
 
 #' @details
@@ -118,8 +116,6 @@ iso_label <- function(object, show_compound = TRUE) {
 setMethod("get_label", "Isoval", function(object) iso_label(object))
 
 setMethod("get_label", "FractionationFactor", function(object) iso_label(object, show_compound = FALSE))
-
-setMethod("get_label", "Epsilon", function(object) iso_label(object, show_compound = FALSE))
 
 setMethod("get_label", "Delta", function(object) {
     paste(c(iso_label(object), 

@@ -147,24 +147,30 @@ setMethod("-", signature(e1 = "Delta", e2 = "Delta"), function(e1, e2) {
     e1 + e2
 })
 
-#' @usage ff - 1
+#' @usage alpha - 1
+#' @usage eps + 1
 #' @details
-#' \code{ff - 1} is a shorthand for converting a fractionation factor from 
+#' \code{alpha - 1} is a shorthand for converting a fractionation factor from 
 #' alpha to epsilon notation. The ff object has to be in alpha notation,
 #' otherwise this is just interpreted as a regular arithmetic operation 
-#' and the result will no longer be an isotope object.
+#' and the result will no longer be an isotope object. 
+#' \code{eps  + 1} is the reverse operation.
 #' @name arithmetic 
 #' @rdname arithmetic
 NULL
 
-#### FIXME ##### 
-# also implement the reverse, ff (epsilon) + 1 = alpha
-
-# alpha - 1 = epsilon
+# alpha - 1 = eps
 setMethod("-", signature(e1 = "FractionationFactor", e2 = "numeric"), function(e1, e2) {
-    # FIXME
-    if (e2 == 1L)
-        return(to_epsilon(e1))
+    if (e2 == 1L && is(e1@notation, "Notation_alpha"))
+        return(switch_notation(e1, "eps"))
+    callNextMethod(e1, NULL)
+})
+
+
+# eps + 1 = alpha
+setMethod("+", signature(e1 = "FractionationFactor", e2 = "numeric"), function(e1, e2) {
+    if (e2 == 1L && is(e1@notation, "Notation_eps"))
+        return(switch_notation(e1, "alpha"))
     callNextMethod(e1, NULL)
 })
 
@@ -174,6 +180,46 @@ setMethod("*", signature(e1 = "Isoval", e2 = "Isoval"), function(e1, e2) operati
 setMethod("*", signature(e1 = "Isoval", e2 = "ANY"), function(e1, e2) operation_error("Multiplication", e1, e2))
 setMethod("*", signature(e1 = "ANY", e2 = "Isoval"), function(e1, e2) operation_error("Multiplication", e1, e2))
 setMethod("*", signature(e1 = "Isosys", e2 = "Isosys"), function(e1, e2) operation_error("Multiplication", e1, e2))
+
+#' @usage eps[raw] * 1000 
+#' @usage eps[permil] / 1000
+#' @usage delta[raw] * 1000 
+#' @usage delta[permil] / 1000
+#' @details
+#' \code{delta * 1000} is a shorthand for converting a raw delta
+#' value to permil notation. The same works for fractionation factors
+#' in epsilon notation. \code{delta / 1000} is the reverse
+#' @name arithmetic 
+#' @rdname arithmetic
+NULL
+
+# 1000*alpha - FIXME: not unit tested!
+setMethod("*", signature(e1 = "FractionationFactor", e2 = "numeric"), function(e1, e2) {
+    if (e2 == 1000L && is(e1@notation, "Notation_eps"))
+        return(switch_notation(e1, "permil"))
+    callNextMethod(e1, NULL)
+})
+setMethod("*", signature(e1 = "numeric", e2 = "FractionationFactor"), function(e1, e2) e2*e1)
+setMethod("/", signature(e1 = "FractionationFactor", e2 = "numeric"), function(e1, e2) {
+    if (e2 == 1000L && is(e1@notation, "Notation_permil"))
+        return(switch_notation(e1, "eps"))
+    callNextMethod(e1, NULL)
+})
+
+# 1000*delta - FIXME: also not unit tested!
+setMethod("*", signature(e1 = "Delta", e2 = "numeric"), function(e1, e2) {
+    if (e2 == 1000L && is(e1@notation, "Notation_raw"))
+        return(switch_notation(e1, "permil"))
+    callNextMethod(e1, NULL)
+})
+setMethod("*", signature(e1 = "numeric", e2 = "Delta"), function(e1, e2) e2*e1)
+setMethod("/", signature(e1 = "Delta", e2 = "numeric"), function(e1, e2) {
+    if (e2 == 1000L && is(e1@notation, "Notation_permil"))
+        return(switch_notation(e1, "raw"))
+    callNextMethod(e1, NULL)
+})
+
+
 
 #' @usage ff * ratio
 #' @details
@@ -194,10 +240,6 @@ setMethod("*", signature(e1 = "FractionationFactor", e2 = "FractionationFactor")
 # ff * delta(x) and delta(x) * ff (always the weight of the delta value is carried over, ff considered a modifier)
 setMethod("*", signature(e1 = "FractionationFactor", e2 = "Delta"), function(e1, e2) fractionate(e1, e2))
 setMethod("*", signature(e1 = "Delta", e2 = "FractionationFactor"), function(e1, e2) e2 * e1) # just reverse
-
-# same for epsilon  - FIXME remove!
-setMethod("*", signature(e1 = "Epsilon", e2 = "Delta"), function(e1, e2) fractionate(e1, e2))
-setMethod("*", signature(e1 = "Delta", e2 = "Epsilon"), function(e1, e2) e2 * e1) # just reverse
 
 #' @usage delta * delta
 #' @details
@@ -288,7 +330,6 @@ setMethod("/", signature(e1 = "FractionationFactor", e2 = "FractionationFactor")
 #' \code{delta/delta} creates an \code{\link{alpha}} fractionation factor object that
 #' describes the fractionation factor between the two compounds, requires the reference
 #' name of the two delta values to be identical. This is a shorthand for the \link{frac_factor} function.
-#' Works identically for two epsilon values.
 #' @name arithmetic 
 #' @rdname arithmetic
 NULL
@@ -298,8 +339,4 @@ setMethod("/", signature(e1 = "Delta", e2 = "Delta"), function(e1, e2) {
     to_ff(e1, e2)
 })
 
-# delta/delta = alpha (weight of first delta is carried)
-setMethod("/", signature(e1 = "Epsilon", e2 = "Epsilon"), function(e1, e2) {
-    to_alpha(e1, e2)
-})
 

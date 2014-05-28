@@ -4,9 +4,8 @@
 \title{Delta value}
 \usage{
 delta(..., major = get_iso_opts("default_major"), compound = "", ref = "",
-  ref_ratio = numeric(), permil = use_permil(),
-  notation = get_iso_opts("default_delta_notation"), weight = numeric(),
-  single_as_df = FALSE)
+  ref_ratio = numeric(), notation = get_iso_opts("default_delta_notation"),
+  weight = numeric(), single_as_df = FALSE)
 }
 \arguments{
 \item{...}{- numeric vectors (can be named) to turn into delta values}
@@ -23,8 +22,6 @@ delta(..., major = get_iso_opts("default_major"), compound = "", ref = "",
 \code{"raw"} (raw value, i.e. no multiplication) and \code{"ppm"} (10^6 multiplicaiton)
 are currently implemented for \code{delta} values. See \code{\link{switch_notation}} on
 details how to convert between notations.}
-
-\item{permil}{- whether the values passed in are in permil or raw values (i.e. no 1000x multiplication)}
 
 \item{weight}{- weight the isotope value (with a mass, concentration, etc.) for easy mass balance calculations.
 The default value is 1, i.e. an unweighted isotope value.
@@ -47,8 +44,7 @@ delta(0.05, notation = "raw") # enter as non-permil value
 }
 \seealso{
 Other isotope data types: \code{\link{ab}},
-  \code{\link{abundance}}; \code{\link{epsilon}},
-  \code{\link{use_permil}}; \code{\link{ff}},
+  \code{\link{abundance}}; \code{\link{ff}},
   \code{\link{fractionation_factor}};
   \code{\link{intensity}}; \code{\link{ratio}}
 }

@@ -77,10 +77,10 @@ test_that("Testing proper response to math operators", {
 #     expect_equal(alpha(0.8, ctop = "CO2", cbot = "DIC") / alpha(0.9, ctop = "Corg", cbot = "DIC"), alpha(0.8/0.9, ctop = "CO2", cbot = "Corg"))
 #     expect_equal(alpha(0.8, ctop = "DIC", cbot = "CO2") / alpha(0.9, ctop = "DIC", cbot = "Corg"), alpha(0.8/0.9, ctop = "Corg", cbot = "CO2"))
 #     
-#     # convert alpha - 1 = epsilon
-#     expect_true(use_permil())
-#     expect_equal(alpha(0.99) - 1, epsilon(-10)) # exception to allow the math of this
-#     expect_error(alpha(0.99) - 2, "Subtraction is not meaningful")
+    # convert alpha - 1 = epsilon
+    expect_equal(eps <- ff(0.99, notation = "alpha") - 1, ff(-0.01, notation = "eps")) # exception to allow the math of this
+    expect_equal(eps + 1, ff(0.99, notation = "alpha"))
+    expect_error(ff(0.99) - 2, "Subtraction is not meaningful")
 #     
 #     # convert deltas to alpha (with delta/delta)
 #     expect_equal(delta(200) / delta(-200), alpha(1.2 / 0.8))
