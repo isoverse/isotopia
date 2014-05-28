@@ -40,6 +40,7 @@ test_that("Testing that basic single data types' (ratio, abundance, delta, etc.)
     
    
     # testing fractionatoin factors in alpha mode
+    expect_error(ff(-0.1, notation = "alpha"), "alpha values cannot be negative")
     expect_equal(get_label(ff(0.9)), isotopia:::get_iso_letter("alpha"))
     expect_equal(get_label(ff(`13C` = 0.9)), paste("13C", isotopia:::get_iso_letter("alpha")))
     expect_equal(get_label(ff(`34S` = 0.9, ctop = "SO4", cbot = "H2S")), paste0("34S ", isotopia:::get_iso_letter("alpha"), "_SO4/H2S"))

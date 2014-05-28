@@ -133,7 +133,7 @@ test_that("Notation conversions are working currectly", {
     expect_equal(get_value(to_delta(to_ff(delta(200), delta(-200))), "raw"), 1.2 / 0.8 - 1)   
     
     # delta conversions (permil conversion)
-    expect_true(use_permil()) # check the default is set to use permil
+    expect_equal(get_iso_opts("default_delta_notation"), "permil") # check the default is set to use permil
     expect_is(dx <- to_delta(delta(0.02, notation="raw")), "Delta")
     expect_equal(get_label(switch_notation(dx, "permil")), paste0(get_iso_letter("delta"), " [", get_iso_letter("permil"), "]"))
     expect_is(d <- switch_notation(delta(20), "raw"), "Delta")

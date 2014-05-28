@@ -3,11 +3,11 @@ NULL
 
 setMethod("show", "Isoval", function(object) {
     validObject(object)
-    text <- if(is.weighted(object) && !is.ff(object) && !is.epsilon(object)) 
+    # only print weighting if it's an intensity, ratio, abundance or delta value (not for fractionation factors!)
+    text <- if(is.weighted(object) && !is.ff(object)) 
         "A weighted isotope" else "An isotope"
     cat(text, " value object of type '", class(object), " value': ", get_label(object), "\n", sep="")
-    # only print weighting if it's an intensity, ratio, abundance or delta value (not for fractionation factors!)
-    if (is.weighted(object) && !is.ff(object) && !is.epsilon(object)) {
+    if (is.weighted(object) && !is.ff(object)) {
         print(data.frame(
                 value = object@.Data, 
                 weight = object@weight))

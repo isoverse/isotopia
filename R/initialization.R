@@ -152,8 +152,16 @@ iso <- function(class_isosys, ..., attribs = list(), single_as_df = FALSE) {
     
     # function to make a new isotope value object
     new_isoval <- function(data, isoname) {
-        if (!is (data, class_isoval))
-            data <- new(class_isoval, data) # initialize new if not already the right object
+        if (!is (data, class_isoval)) {
+            # initialize new if not already the right object
+            notation <- new("Notation_raw")
+            if (!is.null(attribs$notation) && attribs$notation != "raw") {
+                # test if this notation is legal for the data type throws an error if there is trouble
+                convertible <- switch_notation(new(class_isoval, numeric()), attribs$notation) 
+                notation <- convertible@notation
+            }
+            data <- new(class_isoval, data, notation = notation)
+        }
         if (length(isoname) == 0 || nchar(isoname) == 0) 
             isoname <- get_iso_opts("default_minor")
         obj <- update_iso(data, attribs = c(list(isoname = isoname), attribs)) # update attributes

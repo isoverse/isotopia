@@ -50,8 +50,9 @@ setMethod("update_iso", "Isoval", function(obj, attribs) {
     obj <- update_text_attrib(obj, attribs, "isoname", "changing the isotope name")
     obj <- update_text_attrib(obj, attribs, "major", "changing the major isotope")
     obj <- update_text_attrib(obj, attribs, "compound", "changing the compound name")
-    # notation
-    if (!is.null(notation <- attribs$notation) && paste0(notation) != "raw" ) {
+    
+    # new notation
+    if (!is.null(notation <- attribs$notation) && notation != sub("Notation_(.*)", "\\1", class(obj@notation) ) ) {
         # tests whether notation switch is permissible (but not actually doing the conversion since this is just 
         # updating the notation class)
         convertible <- switch_notation(obj, notation) # throws an error if there is trouble

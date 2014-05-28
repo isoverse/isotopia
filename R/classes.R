@@ -1,6 +1,23 @@
 #' @include utils.R
 NULL
 
+# little helper function for isotope letters
+# --> to be expanded for proper formatting in the future
+get_iso_letter <- function(letter = c("alpha", "delta", "epsilon", "permil")) {
+    letter <- match.arg(letter)
+    # ideally these would be like this but this greek alphabet support doesn't really work
+    #switch(letter,
+    #   alpha = "α",
+    #   delta = "δ",
+    #   epsilon = "ε",
+    #   permil = "‰")
+    switch(letter,
+           alpha = "alpha",
+           delta = "d",
+           epsilon = "eps",
+           permil = "permil")
+}
+
 # Notation classes
 setClass("Notation", representation(unit = "character"))
 # alpha fractionation factor
