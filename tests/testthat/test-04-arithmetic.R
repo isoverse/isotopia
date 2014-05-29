@@ -40,54 +40,50 @@ test_that("Testing proper response to math operators", {
     expect_equal(r@isoname, "13C")
     expect_equal(r@major, "12C")
     
-#     # converting ratios to alpha values - FIXME
-#     expect_error(frac_factor(0.2, 0.5), "fractionation factor not defined between .*")
-#     expect_error(ratio(a = 0.1) / ratio(b = 0.2), "cannot generate a fractionaton factor from two ratio objects that don't have matching attributes")
-#     expect_error(ratio(0.1, major = "12C") / ratio(0.2), "cannot generate a fractionaton factor from two ratio objects that don't have matching attributes")
-#     expect_equal(ratio(0.1) / ratio(0.2), alpha(0.5))
-#     expect_equal(frac_factor(ratio(0.1), ratio(0.2)), alpha(0.5))
-#     expect_equal(a <- ratio(`13C` = 0.1, major = "12C", compound = "CO2") / ratio(`13C` = 0.2, major = "12C", compound = "Corg"), 
-#                  alpha(`13C` = 0.5, major = "12C", ctop = "CO2", cbot = "Corg"))
-#     
-#     # converting alpha * ratio to ratio
-#     expect_error(alpha(a = 0.5) * ratio(b = 0.1), "cannot generate a ratio from a fractionation factor and a ratio")
-#     expect_error(alpha(0.5, major = "12C") * ratio(0.1, major = "13C"), "cannot generate a ratio from a fractionation factor and a ratio")
-#     expect_error(alpha(0.5, cbot = "Corg") * ratio(0.4, compound = "CO2"), "cannot generate a ratio .* denominator .* not match .* compound")
-#     expect_equal(a * ratio(`13C` = 0.4, major = "12C", compound = "Corg"), ratio(`13C` = 0.2, major = "12C", compound = "CO2"))
-#     expect_equal(get_weight(weight(alpha(0.9), 2) * ratio(0.2, weight = 3)), 3) # keeping weight of ratio
-#     expect_equal(get_weight(ratio(0.2, weight = 3) * alpha(0.9)), 3) # keeping weight of ratio
-#     
-#     # converting alpha * alpha to alpha
-#     expect_error(alpha(a = 0.8) * alpha(b = 0.9), "cannot generate a fractionation factor from two fractionation factors that don't have matching attributes")
-#     expect_error(alpha(0.8, major = "12C") * alpha(0.9, major = "13C"), "cannot generate a fractionation factor from two fractionation factors that don't have matching attributes")
-#     expect_error(alpha(0.8, cbot = "Corg") * alpha(0.9, ctop = "CO2"), "cannot combine two fractionation factors if their denominator .* numerator .* don't cancel")
-#     expect_equal(alpha(0.8, ctop = "CO2", cbot = "DIC") * alpha(0.9, ctop = "DIC", cbot = "Corg"), alpha(0.8*0.9, ctop = "CO2", cbot = "Corg"))
-#     
-#     # converting alpha * delta to delta (fractionate it)
-#     expect_error(alpha(a = 0.8) * delta(b = 0.9), "cannot generate a fractionation factor from two fractionation factors that don't have matching attributes")
-#     expect_equal(alpha(0.8) * delta(200), delta((0.8*1.2 - 1)*1000))
-#     expect_equal(alpha(0.8) * delta(0.2, permil = F), delta(0.8*1.2 - 1, permil = F))
-#     expect_equal(alpha(0.8) * delta(200), fractionate(alpha(0.8), delta(200))) # test actual fractionate function does the same
-#     
-#     # testing the same with epsilon
-#     expect_equal(fractionate(epsilon(-200), delta(0.2, permil = F)), delta(0.8*1.2 - 1, permil = F))
-#     
-#     # converting alpha / alpha to alpha
-#     expect_error(alpha(a = 0.8) / alpha(b = 0.9), "cannot generate a fractionation factor from two fractionation factors that don't have matching attributes")
-#     expect_error(alpha(0.8, ctop = "CO2", cbot = "Corg") / alpha(0.9, ctop = "Corg", cbot = "CO2"), "cannot combine two fractionation factors if neither their denominators .* numerators .* cancel")
-#     expect_equal(alpha(0.8, ctop = "CO2", cbot = "DIC") / alpha(0.9, ctop = "Corg", cbot = "DIC"), alpha(0.8/0.9, ctop = "CO2", cbot = "Corg"))
-#     expect_equal(alpha(0.8, ctop = "DIC", cbot = "CO2") / alpha(0.9, ctop = "DIC", cbot = "Corg"), alpha(0.8/0.9, ctop = "Corg", cbot = "CO2"))
-#     
+    # converting ratios to alpha values - FIXME
+    expect_error(ratio(a = 0.1) / ratio(b = 0.2), "cannot generate a fractionaton factor from two ratio objects that don't have matching attributes")
+    expect_error(ratio(0.1, major = "12C") / ratio(0.2), "cannot generate a fractionaton factor from two ratio objects that don't have matching attributes")
+    expect_equal(ratio(0.1) / ratio(0.2), ff(0.5))
+    expect_equal(to_ff(ratio(0.1), ratio(0.2)), ff(0.5))
+    expect_equal(a <- ratio(`13C` = 0.1, major = "12C", compound = "CO2") / ratio(`13C` = 0.2, major = "12C", compound = "Corg"), 
+                 ff(`13C` = 0.5, major = "12C", ctop = "CO2", cbot = "Corg"))
+    
+    # converting ff * ratio to ratio
+    expect_error(ff(a = 0.5) * ratio(b = 0.1), "cannot generate a ratio from a fractionation factor and a ratio")
+    expect_error(ff(0.5, major = "12C") * ratio(0.1, major = "13C"), "cannot generate a ratio from a fractionation factor and a ratio")
+    expect_error(ff(0.5, cbot = "Corg") * ratio(0.4, compound = "CO2"), "cannot generate a ratio .* denominator .* not match .* compound")
+    expect_equal(a * ratio(`13C` = 0.4, major = "12C", compound = "Corg"), ratio(`13C` = 0.2, major = "12C", compound = "CO2"))
+    expect_equal(get_weight(weight(ff(0.9), 2) * ratio(0.2, weight = 3)), 3) # keeping weight of ratio
+    expect_equal(get_weight(ratio(0.2, weight = 3) * ff(0.9)), 3) # keeping weight of ratio
+    
+    # converting alpha * alpha to alpha
+    expect_error(ff(a = 0.8) * ff(b = 0.9), "cannot generate a fractionation factor from two fractionation factors that don't have matching attributes")
+    expect_error(ff(0.8, major = "12C") * ff(0.9, major = "13C"), "cannot generate a fractionation factor from two fractionation factors that don't have matching attributes")
+    expect_error(ff(0.8, cbot = "Corg") * ff(0.9, ctop = "CO2"), "cannot combine two fractionation factors if their denominator .* numerator .* don't cancel")
+    expect_equal(ff(0.8, ctop = "CO2", cbot = "DIC") * ff(0.9, ctop = "DIC", cbot = "Corg"), ff(0.8*0.9, ctop = "CO2", cbot = "Corg"))
+    expect_equal(ff(0.8, ctop = "CO2", cbot = "DIC", notation = "alpha") * ff(-100, ctop = "DIC", cbot = "Corg", notation = "permil"), ff(0.8*0.9, ctop = "CO2", cbot = "Corg"))
+    
+    # converting alpha * delta to delta (fractionate it)
+    expect_error(ff(a = 0.8) * delta(b = 0.9), "cannot generate a fractionation factor from two fractionation factors that don't have matching attributes")
+    expect_equal(ff(0.8) * delta(200), delta((0.8*1.2 - 1)*1000))
+    expect_equal(ff(0.8) * delta(0.2, notation = "raw"), delta(0.8*1.2 - 1, notation = "raw"))
+    expect_equal(ff(0.8) * delta(200), fractionate(ff(0.8), delta(200))) # test actual fractionate function does the same
+
+    # converting alpha / alpha to alpha
+    expect_error(ff(a = 0.8) / ff(b = 0.9), "cannot generate a fractionation factor from two fractionation factors that don't have matching attributes")
+    expect_error(ff(0.8, ctop = "CO2", cbot = "Corg") / ff(0.9, ctop = "Corg", cbot = "CO2"), "cannot combine two fractionation factors if neither their denominators .* numerators .* cancel")
+    expect_equal(ff(0.8, ctop = "CO2", cbot = "DIC") / ff(0.9, ctop = "Corg", cbot = "DIC"), ff(0.8/0.9, ctop = "CO2", cbot = "Corg"))
+    expect_equal(ff(0.8, ctop = "DIC", cbot = "CO2") / ff(0.9, ctop = "DIC", cbot = "Corg"), ff(0.8/0.9, ctop = "Corg", cbot = "CO2"))
+    
     # convert alpha - 1 = epsilon
     expect_equal(eps <- ff(0.99, notation = "alpha") - 1, ff(-0.01, notation = "eps")) # exception to allow the math of this
     expect_equal(eps + 1, ff(0.99, notation = "alpha"))
     expect_error(ff(0.99) - 2, "Subtraction is not meaningful")
 #     
-#     # convert deltas to alpha (with delta/delta)
-#     expect_equal(delta(200) / delta(-200), alpha(1.2 / 0.8))
-#     expect_equal(delta(200) / delta(-200), frac_factor(delta(200), delta(-200)))
-#     expect_equal(to_epsilon(delta(200) / delta(-200)), epsilon((1.2 / 0.8 - 1) * 1000))
-#     
+    # convert deltas to alpha (with delta/delta)
+    expect_equal(delta(200) / delta(-200), ff(1.2 / 0.8))
+    expect_equal(delta(200) / delta(-200), to_ff(delta(200), delta(-200)))
+    
     # shift refrence frame
     expect_equal(get_value(delta(200) * delta(-200)), (1.2 * 0.8 - 1) * 1000) # formula test
     expect_equal(delta(200) * delta(-200), shift_reference(delta(200), delta(-200))) # actual function equivalent to arithmetic

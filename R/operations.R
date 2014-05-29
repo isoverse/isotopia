@@ -67,7 +67,7 @@ setMethod("fractionate", signature("FractionationFactor", "Ratio"), function(fra
     iso_attribs_check(frac, iso, include = c("isoname", "major"), text = "cannot generate a ratio from a fractionation factor and a ratio")
     if (frac@compound2 != iso@compound)
         stop(sprintf("cannot generate a ratio if the fractionation factor's denominator (%s) does not match the ratio compound (%s)", frac@compound2, iso@compound))
-    iso@.Data <- get_value(frac, notation = "raw") * iso@.Data # weight carried in second value
+    iso@.Data <- get_value(frac, notation = "alpha") * iso@.Data # weight carried in second value
     recast_isoval(iso, "Ratio", list(compound = frac@compound))
 })
 
@@ -78,7 +78,7 @@ setMethod("fractionate", signature("FractionationFactor", "FractionationFactor")
         stop(sprintf("cannot combine two fractionation factors if their denominator (%s) and numerator (%s) don't cancel", frac@compound2, iso@compound))
     notation <- frac@notation # original notation
     frac <- switch_notation(frac, "alpha") # convert to alphas for calculaton
-    frac@.Data <- frac@.Data * get_value(iso@.Data, "alpha")
+    frac@.Data <- frac@.Data * get_value(iso, "alpha")
     switch_notation(recast_isoval(frac, "FractionationFactor", list(compound2 = iso@compound2)), notation)
 })
 

@@ -207,6 +207,7 @@ setMethod("to_abundance", "Delta", function(iso) {
 
 # to.ff =============================================
 
+
 #' Fractionation factor
 #' 
 #' @description
