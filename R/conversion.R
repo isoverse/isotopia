@@ -334,7 +334,7 @@ setMethod("to_delta", signature("Ratio", "missing"), function(iso, ref_ratio) {
 
 # ratio to delta (with numeric ref ratio)
 setMethod("to_delta", signature("Ratio", "numeric"), function(iso, ref_ratio) {
-    to_delta(iso, update_iso(ratio(ref_ratio), list(isoname = iso@isoname, major = iso@isoname)))
+    to_delta(iso, update_iso(ratio(ref_ratio), list(isoname = iso@isoname, major = iso@major)))
 })
 
 

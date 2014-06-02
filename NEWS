@@ -1,0 +1,5 @@
+isotopia 0.5
+----------------------------------------------------------------
+
+* Bug fix for error when converting `to_delta` from a `ratio` with defined `minor` 
+  or `major`, and a `numeric` reference value. Example: `to_delta(ratio(`13C` = 0.1, major = "12C"), 0.1)`
