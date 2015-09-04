@@ -222,7 +222,7 @@ show(ab)
 ## 1 0.0075 0.0421 2e-04
 ```
 
-Because the system of intensities (here as ion counts #) had the major isotope attribute specified, the conversion ```to_ratio``` could automatically figure out what ratios to form. Without specifying which one is the major isotope, the intensities would have still initialized just fine but **isotopia** would have thrown an error when trying to convert to isotope ratios. Thereâs much more functionality in the conversions, which are all listed in the reference manual available directly within R by calling ```?isotopia``` or ```?to_ratio``` or any other function defined in the module.
+Because the system of intensities (here as ion counts #) had the major isotope attribute specified, the conversion ```to_ratio``` could automatically figure out what ratios to form. Without specifying which one is the major isotope, the intensities would have still initialized just fine but **isotopia** would have thrown an error when trying to convert to isotope ratios. There's much more functionality in the conversions, which are all listed in the reference manual available directly within R by calling ```?isotopia``` or ```?to_ratio``` or any other function defined in the module.
 
 ### Delta values and reference standards
 
@@ -297,7 +297,7 @@ With the conversions and data types all in place, **isotopia** can easily expand
 
 ### Mass balance
 
-Mass balance makes use of an additional attribute not mentioned before, the weight attribute. This allows one to weight values according to their reservoir sizes such that during mass balance calculations, isotopically different pools are mixed according to their relative proportions. Weight can be specified either during initialization or by using the ```weight()``` function later on. Imagine a reservoir of CO2 that receives a tiny spike of heavily labeled additional carbon. For convenience, weâre introducing here the **isotopia** options to set the default minor and major isotope names - this is nice for working on a problem in a specific isotope system. Also, weâre going to do the mass balance exact by converting to fractional abundances (although **isotopia** provides the approximate ```mass_balance()``` directly with delta value objects as well).
+Mass balance makes use of an additional attribute not mentioned before, the weight attribute. This allows one to weight values according to their reservoir sizes such that during mass balance calculations, isotopically different pools are mixed according to their relative proportions. Weight can be specified either during initialization or by using the ```weight()``` function later on. Imagine a reservoir of CO2 that receives a tiny spike of heavily labeled additional carbon. For convenience, we're introducing here the **isotopia** options to set the default minor and major isotope names - this is nice for working on a problem in a specific isotope system. Also, we're going to do the mass balance exact by converting to fractional abundances (although **isotopia** provides the approximate ```mass_balance()``` directly with delta value objects as well).
 
 
 ```r
@@ -420,7 +420,7 @@ show(sample * standard)
 
 ### Arithmetic
 
-Several of the arithmetic shorthands were introduced already, but there are several more (for all, see the manual). For all of these, it is always recommend to use the actual real functions in more complex scenarios for clarity. Hereâs just an example of what **isotopia** can automatically keep track of in terms of isotope data objects. Here are two ways of turning isotope ratios into a fractionation factor in permil notation - it works booth by explicit mention of each functional step, or by the arithmetic equivalent.
+Several of the arithmetic shorthands were introduced already, but there are several more (for all, see the manual). For all of these, it is always recommend to use the actual real functions in more complex scenarios for clarity. Here's just an example of what **isotopia** can automatically keep track of in terms of isotope data objects. Here are two ways of turning isotope ratios into a fractionation factor in permil notation - it works booth by explicit mention of each functional step, or by the arithmetic equivalent.
 
 
 ```r
@@ -488,5 +488,5 @@ The **isotopia** package currently implements a lot of the core functionality fo
 
 ## References
  
-  - [Wickham, H., 2011. testthat: Get started with testing. The R Journal 3, 5â10.](http://journal.r-project.org/archive/2011-1/RJournal_2011-1_Wickham.pdf)
+  - [Wickham, H., 2011. testthat: Get started with testing. The R Journal 3, 5-10.](http://journal.r-project.org/archive/2011-1/RJournal_2011-1_Wickham.pdf)
   - [Xie, Y., 2013b. knitr: A general-purpose package for dynamic report generation in R.](http://cran.r-project.org/web/packages/knitr/index.html)
