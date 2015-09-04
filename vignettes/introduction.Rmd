@@ -5,8 +5,8 @@ date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Introduction}
-  %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf16]{inputenc}
+  %\VignetteEngine{knitr}
+  \usepackage[utf8]{inputenc}
 ---
 
 # [isotopia](https://github.com/sebkopf/isotopia)
