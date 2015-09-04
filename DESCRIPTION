@@ -15,6 +15,7 @@ BugReports: https://github.com/sebkopf/isotopia/issues
 Suggests:
     testthat,
     knitr
+Depends:
 Collate:
     'utils.R'
     'classes.R'
