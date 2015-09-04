@@ -1,7 +1,13 @@
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Introduction}
--->
+---
+title: "Introduction"
+author: "Sebastian Kopf"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf16]{inputenc}
+---
 
 # [isotopia](https://github.com/sebkopf/isotopia)
 
