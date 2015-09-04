@@ -27,3 +27,13 @@ check: build
 	cd ..;\
 	R CMD check $(PKGNAME)_$(PKGVERS).tar.gz --as-cran
 
+local-install:
+	rm -rf .local
+	mkdir .local
+	R CMD Install --library=.local .
+
+autotest: local-install
+
+	R -q -e "library(isotopia, lib.loc = '.local')" \
+          -e "library(testthat)" \
+          -e "auto_test_package(pkg='.')"
