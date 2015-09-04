@@ -1,8 +1,7 @@
 Package: isotopia
 Type: Package
-Title: Work with isotopic data in R
-Version: 0.4
-Date: 2014-05-28
+Title: Work with Isotopic Data in R
+Version: 0.5
 Author: Sebastian Kopf
 Maintainer: Sebastian Kopf <seb.kopf@gmail.com>
 Description: R interface for working with isotopic data (abundances, ratios,

@@ -1,6 +1,7 @@
----
-output: html_document
----
+<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Introduction}
+-->
 
 # [isotopia](https://github.com/sebkopf/isotopia)
 
