@@ -62,7 +62,7 @@ test_that("Testing that isotope data type conversations behave correctly", {
     expect_equal(to_abundance(intensity(x = x, y = y, major = "x")), abundance(y = y/(y + x), major = "x", single_as_df = T)) # formula check
 
     
-    # with ratio specified
+    # to_delta with ratio specified
     expect_error(to_delta(ff(c(0.9, 0.92, 0.93)), ref_ratio = c(0.1, 0.2)), "must have the same number of entries as the value")
     expect_error(to_delta(ff(`13C` = 0.9), ref_ratio = ratio(`12C` = 0.1)), "reference ratio .* cannot be for a different isotope")
     expect_error(to_delta(ff(0.9, major = "14N"), ref_ratio = ratio(0.1, major = "12C")), "reference ratio .* cannot have a different major isotope")
@@ -71,6 +71,11 @@ test_that("Testing that isotope data type conversations behave correctly", {
     expect_equal(get_value(d, "raw"), 0.02)
     expect_equal(d@compound2, "SMOW")
     expect_equal(d@ref_ratio, 0.1)
+    
+    # to_delta with numeric value
+    expect_equal( (d <- to_delta(ratio(`13C` = 0.1, major = "12C"), 0.1)), delta(`13C` = 0, major = "12C", ref_ratio = 0.1))
+    expect_equal(d@isoname, "13C")
+    expect_equal(d@major, "12C")
     
     # alpha to delta FIXME
 #     expect_equal(to_delta(alpha(0.99)), delta(-10))
