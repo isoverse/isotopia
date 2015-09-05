@@ -279,7 +279,7 @@ setGeneric("to_delta", function(iso, ref_ratio) standardGeneric("to_delta"))
 
 #' @rdname to_delta
 #' @export
-to_d <- function(iso, ref_ratio) to_delta(iso, ref_ratio, permil)
+to_d <- function(iso, ref_ratio) to_delta(iso, ref_ratio)
 
 #' @method to_delta
 #' @export

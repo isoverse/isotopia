@@ -79,8 +79,6 @@ is.ff <- function(obj) inherits(obj, "FractionationFactor") || inherits(obj, "Fr
 #' is != 1, that means only objects whose weights are ALL 1 is considered
 #' unweighted.
 #' 
-#' @usage
-#' \code{is.weighted(iso)}
 #' @examples
 #' is.weighted(ratio(0.2)) # returns FALSE
 #' is.weighted(ratio(0.2, weight = 1)) # returns FALSE

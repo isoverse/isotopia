@@ -1,0 +1,5 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+.Rd2*
+.travis.yml
+.local

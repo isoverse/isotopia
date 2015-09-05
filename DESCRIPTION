@@ -12,10 +12,12 @@ Roxygen: list(wrap = FALSE)
 VignetteBuilder: knitr
 URL: https://github.com/sebkopf/isotopia
 BugReports: https://github.com/sebkopf/isotopia/issues
+Depends:
+    methods,
+    utils
 Suggests:
     testthat,
     knitr
-Depends:
 Collate:
     'utils.R'
     'classes.R'

@@ -28,13 +28,3 @@ quietly <- function(expr) {
     suppressMessages(suppressWarnings(expr))
 }
 
-# this is not executed automatically in autotesting (since autotesting only 
-# sources all code rather than loading a package)
-# instead run these lines to starte the autotest
-run_autotest <- function() {
-    library(testthat)
-    auto_test("R", "tests/testthat")
-#    auto_test("/Users/sk/Dropbox/Tools/software/r/isotopia/R", "/Users/sk/Dropbox/Tools/software/r/isotopia/tests/testthat")
-}
-
-
