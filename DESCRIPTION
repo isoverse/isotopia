@@ -16,7 +16,8 @@ Depends:
     utils
 Suggests:
     testthat,
-	rmarkdown
+	rmarkdown,
+	knitr
 Collate:
     'utils.R'
     'classes.R'
