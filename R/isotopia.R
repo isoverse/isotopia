@@ -49,5 +49,5 @@ NULL
 #' @include operations.R
 #' @include arithmetic.R
 #' @include initialization.R
+#' @importFrom methods setClass setGeneric new show allNames callGeneric is slot slot<- slotNames validObject
 NULL
-

@@ -240,6 +240,7 @@ setMethod("get_weighted_value", "Isosys", function(iso) {
 #' value objects. 
 #' @seealso \code{\link[base]{as.data.frame}}
 #' @name as.data.frame
+#' @method as.data.frame Isosys
 #' @export
 as.data.frame.Isosys <- function(x, ..., stringsAsFactors = default.stringsAsFactors()){
     df <- data.frame(x@.Data, stringsAsFactors = stringsAsFactors)
