@@ -28,7 +28,7 @@ devtools::install_github("sebkopf/isotopia", build_vignettes = T)
 
 To look at the newest version of this tutorial directly within R, call the vignette:
 
-```{r install, eval=FALSE}
+```{r vignette, eval=FALSE}
 vignette("isotopia")
 ```
 
