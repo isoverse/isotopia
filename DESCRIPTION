@@ -18,6 +18,7 @@ Suggests:
     testthat,
 	rmarkdown,
 	knitr
+VignetteBuilder: knitr
 Collate:
     'utils.R'
     'classes.R'
@@ -32,5 +33,4 @@ Collate:
     'isotopia.R'
     'notation.R'
     'zzz.R'
-VignetteBuilder: rmarkdown
 RoxygenNote: 5.0.0
