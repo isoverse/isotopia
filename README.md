@@ -10,13 +10,17 @@ The **isotopia** module thus provides several isotopic data types that can be in
 
 ## Installation
 
-The **isotopia** R module can be installed directly from [GitHub](https://github.com/), by using the R development tools module [#devtools2014]. The version of **isotopia** that is used throughout this tutorial is v0.4. I recommend installing this version for the purpose of running any of these code examples locally because **isotopia** is still under active development and the development version includes additional functionality with syntax that might not be backwards compatible. This tutorial will be updated as new versions are released.
+The [**isotopia**](https://github.com/sebkopf/isotopia) R module can be installed directly from [GitHub](https://github.com/), by using the R development tools module (Wickham and Chang, 2014). A word of caution that isotopia is still under active development and development versions include additional functionality with syntax that might not be backwards compatible. This tutorial is available as a vignette directly in the package and will be updated as new versions are released. Please use the [Issue Tracker](https://github.com/sebkopf/isotopia/issues) to report any problems, bugs or feature requests. 
 
-
-```r
+```{r install, eval=FALSE}
 install.packages('devtools', depen=T) 
-library(devtools)
-install_github('isotopia', 'sebkopf', ref = "v0.4")
+devtools::install_github("sebkopf/isotopia", build_vignettes = T)
+```
+
+To look at the newest version of this tutorial directly within R, call the vignette:
+
+```{r vignette, eval=FALSE}
+vignette("isotopia")
 ```
 
 ## Data types
