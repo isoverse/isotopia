@@ -16,9 +16,9 @@ test_that("Testing that basic single data types' (ratio, abundance, delta, etc.)
     expect_equal(get_label(ratio(`13C` = 0.1, major = "12C", compound = "CO2")), "CO2 R 13C/12C")
     
     # testing weights
-    expect_output(ratio(1), "An isotope value .*")
-    expect_output(ratio(1, weight = 1), "An isotope value .*")
-    expect_output(ratio(1, weight = 2), "A weighted isotope value .*")
+    expect_output(print(ratio(1)), "An isotope value .*")
+    expect_output(print(ratio(1, weight = 1)), "An isotope value .*")
+    expect_output(print(ratio(1, weight = 2)), "A weighted isotope value .*")
     expect_error(ratio(1:5, weight = 2:3), "Not the same number of data values and weights") 
     expect_error(weight(ratio(1:5), 2:3), "Not the same number of data values and weights") 
     expect_equal(ratio(1:5, weight = 1:5)@weight, 1.0:5) # check weight
