@@ -142,7 +142,7 @@ register_standard <- function(ratio) {
     else if (length(index) == 1) {
         index <- index
         if (get_value(ratio) != refs$ratio[index])
-            warning("overwriting an existing standard with ratio: ", refs$ratio[index])
+            warning("overwriting an existing standard with ratio: ", refs$ratio[index], call. = FALSE)
     } else
         index <- nrow(refs) + 1
     

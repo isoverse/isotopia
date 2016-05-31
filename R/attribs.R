@@ -64,7 +64,8 @@ setMethod("update_iso", "Isoval", function(obj, attribs) {
         if (length(weight) == 1L) weight <- rep(weight, length(obj@.Data))
         if (is.weighted(obj) && 
                 length(diffs <- union(setdiff(obj@weight, weight), setdiff(weight, obj@weight))) > 0)
-            warning("changing the weight of a '", class(obj), " value' object, differences: '", paste(diffs, collapse=", "), "'")
+            warning("changing the weight of a '", class(obj), " value' object, differences: '", 
+                    paste(diffs, collapse=", "), "'", call. = FALSE)
         obj@weight <- weight
     }
     obj
@@ -86,7 +87,8 @@ setMethod("update_iso", "Delta", function(obj, attribs) {
         if (length(ref_ratio) != 1)
             stop("reference ratio for a delta value object must be exactly one numeric value, supplied ", length(ref_ratio))
         if (length(obj@ref_ratio) > 0 && obj@ref_ratio != ref_ratio)
-            warning(sprintf("changing the reference ratio of a delta value object from %s to %s", obj@ref_ratio, ref_ratio))
+            warning(sprintf("changing the reference ratio of a delta value object from %s to %s", 
+                            obj@ref_ratio, ref_ratio), call. = FALSE)
         obj@ref_ratio <- ref_ratio
     }
     obj <- update_text_attrib (obj, attribs, "compound2", "changing the reference name")    
@@ -99,7 +101,8 @@ setMethod("update_iso", "Intensity", function(obj, attribs) {
     obj <- callNextMethod(obj, attribs)
     if (!is.null(unit <- attribs$unit) && nchar(unit) > 0) {
         if (nchar(obj@unit) > 0 && obj@unit != unit)
-            warning("changing the unit of a '", class(obj), " value' object from '", obj@unit, "' to '", unit, "'")
+            warning("changing the unit of a '", class(obj), " value' object from '", 
+                    obj@unit, "' to '", unit, "'", call. = FALSE)
         obj@unit <- unit
     }
     obj
@@ -109,7 +112,8 @@ setMethod("update_iso", "Intensity", function(obj, attribs) {
 update_text_attrib <- function(obj, attribs, slot_name, msg) {
     if (!is.null(value <- attribs[[slot_name]]) && nchar(value) > 0){
         if (nchar(slot(obj, slot_name)) > 0 && slot(obj, slot_name) != value) 
-            warning(msg, " ('", class(obj), " value' object) from '", slot(obj, slot_name), "' to '", value, "'")
+            warning(msg, " ('", class(obj), " value' object) from '", 
+                    slot(obj, slot_name), "' to '", value, "'", call. = FALSE)
         slot(obj, slot_name) <- value
     }
     obj

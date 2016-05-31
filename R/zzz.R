@@ -1,5 +1,7 @@
 # package on load function
-setLoadActions(function(ns) {
+.onAttach <- function(libname, pkgname) {
+    
+    library(methods)
     
     # default startup options (documented in options.R get_iso_opts !!)
     set_iso_opts(
@@ -19,4 +21,6 @@ setLoadActions(function(ns) {
         register_standard(ratio(`18O` = 0.0020052, major = "16O", compound = "VSMOW"))
         register_standard(ratio(`34S` = 0.0045005, major = "32S", compound = "CDT"))
     })
-})
+    
+    invisible()
+}

@@ -19,7 +19,7 @@ The [**isotopia**](https://github.com/sebkopf/isotopia) module thus provides sev
 
 ## Installation
 
-The [**isotopia**](https://github.com/sebkopf/isotopia) R module can be installed directly from [GitHub](https://github.com/), by using the R development tools module (Wickham and Chang, 2014). A word of caution that isotopia is still under active development and development versions include additional functionality with syntax that might not be backwards compatible. This tutorial is available as a vignette directly in the package and will be updated as new versions are released. Please use the [Issue Tracker](https://github.com/sebkopf/isotopia/issues) to report any problems, bugs or feature requests. 
+The [**isotopia**](https://github.com/sebkopf/isotopia) R module can be installed directly from [GitHub](https://github.com/), by using the R development tools module (Wickham and Chang, 2014). A word of caution that isotopia is still under active development and development versions include additional functionality with syntax that might not be backwards compatible. This tutorial is available [directly in this repository](vignettes/isotopia.Rmd) including the resulting [HTML output](https://rawgit.com/sebkopf/isotopia/master/inst/doc/isotopia.html), and also as a vignette directly in the package and will be updated as new versions are released. Please use the [Issue Tracker](https://github.com/sebkopf/isotopia/issues) to report any problems, bugs or feature requests. 
 
 ```{r install, eval=FALSE}
 install.packages('devtools', depen=T) 
