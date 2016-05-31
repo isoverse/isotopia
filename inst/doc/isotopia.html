@@ -82,7 +82,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>The <a href="https://github.com/sebkopf/isotopia"><strong>isotopia</strong></a> module thus provides several isotopic data types that can be initialized by calling the respective <code>ratio</code>, <code>abundance</code>, <code>delta</code>, <code>fractionation_factor</code> and <code>intensity</code> functions. Each data type has additional attributes (such as name of the minor and major isotopes, and what compound it represents, what the reference ratio is for delta values, and what notation is used), which are all described in great detail in the help functions of <a href="https://github.com/sebkopf/isotopia"><strong>isotopia</strong></a> that are accessible directly from R. Each data type can be initialized as a single vector of isotopic data or an entire system of isotope values for the same element (e.g. all oxygen or all sulfur isotopes). As all isotope data objects are implemented as extensions of primitive data types in R, they can be structured and aggregated in all the ways familiar to people with prior R experience, but should be intuitive enough to be useful “out of the box” for users new to this language. Isotope data types can then be converted from one type to another using <code>to_ratio</code>, <code>to_abundance</code>, <code>to_delta</code>, <code>to_fractionation_factor</code> methods, can be used in operations (<code>mass_balance</code>, <code>fractionation</code>, etc.) or transferred from one notation to another using switch_notation. Here, I provide a few examples how <a href="https://github.com/sebkopf/isotopia"><strong>isotopia</strong></a> works and how it can be used, with the complete documentation available in the reference manual.</p>
 <div id="installation" class="section level2">
 <h2>Installation</h2>
-<p>The <a href="https://github.com/sebkopf/isotopia"><strong>isotopia</strong></a> R module can be installed directly from <a href="https://github.com/">GitHub</a>, by using the R development tools module (Wickham and Chang, 2014). A word of caution that isotopia is still under active development and development versions include additional functionality with syntax that might not be backwards compatible. This tutorial is available as a vignette directly in the package and will be updated as new versions are released. Please use the <a href="https://github.com/sebkopf/isotopia/issues">Issue Tracker</a> to report any problems, bugs or feature requests.</p>
+<p>The <a href="https://github.com/sebkopf/isotopia"><strong>isotopia</strong></a> R module can be installed directly from <a href="https://github.com/">GitHub</a>, by using the R development tools module (Wickham and Chang, 2014). A word of caution that isotopia is still under active development and development versions include additional functionality with syntax that might not be backwards compatible. This tutorial is available <a href="vignettes/isotopia.Rmd">directly in this repository</a> including the resulting <a href="https://rawgit.com/sebkopf/isotopia/master/inst/doc/isotopia.html">HTML output</a>, and also as a vignette directly in the package and will be updated as new versions are released. Please use the <a href="https://github.com/sebkopf/isotopia/issues">Issue Tracker</a> to report any problems, bugs or feature requests.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">'devtools'</span>, <span class="dt">depen=</span>T) 
 devtools::<span class="kw">install_github</span>(<span class="st">&quot;sebkopf/isotopia&quot;</span>, <span class="dt">build_vignettes =</span> T)</code></pre></div>
 <p>To look at the newest version of this tutorial directly within R, call the vignette:</p>
@@ -93,19 +93,19 @@ devtools::<span class="kw">install_github</span>(<span class="st">&quot;sebkopf/
 <p>After <em>isotopia</em> is installed, it can be loaded at any time like any other R module using <code>library(isotopia)</code>. The basic data types are initialized simply by calling the respective <code>ratio</code>, <code>abundance</code>, <code>delta</code> and <code>fractionation_factor</code> functions with single or multiple values.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(isotopia)
 <span class="kw">show</span>(<span class="kw">ratio</span>(<span class="fl">0.1</span>)) </code></pre></div>
-<pre><code>## An isotope value object of type 'Ratio value': R
+<pre><code>## An isotope value object of type 'Ratio value': R 13C/12C
 ## [1] 0.1</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show</span>(<span class="kw">abundance</span>(<span class="kw">c</span>(<span class="fl">0.1</span>, <span class="fl">0.2</span>))) </code></pre></div>
-<pre><code>## An isotope value object of type 'Abundance value': F
+<pre><code>## An isotope value object of type 'Abundance value': F 13C
 ## [1] 0.1 0.2</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show</span>(<span class="kw">delta</span>(<span class="dv">100</span>, <span class="dt">notation =</span> <span class="st">&quot;permil&quot;</span>)) </code></pre></div>
-<pre><code>## An isotope value object of type 'Delta value': d [permil]
+<pre><code>## An isotope value object of type 'Delta value': d13C [permil]
 ## [1] 100</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show</span>(<span class="kw">fractionation_factor</span>(<span class="kw">seq</span>(<span class="fl">0.97</span>, <span class="fl">1.03</span>, <span class="dt">by=</span><span class="fl">0.01</span>), <span class="dt">notation =</span> <span class="st">&quot;alpha&quot;</span>))</code></pre></div>
-<pre><code>## An isotope value object of type 'FractionationFactor value': alpha
+<pre><code>## An isotope value object of type 'FractionationFactor value': 13C alpha
 ## [1] 0.97 0.98 0.99 1.00 1.01 1.02 1.03</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show</span>(<span class="kw">intensity</span>(<span class="dv">100</span>, <span class="dt">unit =</span> <span class="st">&quot;mV&quot;</span>))</code></pre></div>
-<pre><code>## An isotope value object of type 'Intensity value':  [mV]
+<pre><code>## An isotope value object of type 'Intensity value': 13C [mV]
 ## [1] 100</code></pre>
 <div id="attributes" class="section level4">
 <h4>Attributes</h4>
@@ -142,17 +142,17 @@ r &lt;-<span class="st"> </span><span class="kw">set_attrib</span>(r, <span clas
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show</span>(<span class="kw">get_iso_opts</span>(<span class="st">&quot;default_ff_notation&quot;</span>)) </code></pre></div>
 <pre><code>## [1] &quot;alpha&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show</span>(<span class="kw">ff</span>(<span class="fl">1.02</span>)) <span class="co"># alpha notation </span></code></pre></div>
-<pre><code>## An isotope value object of type 'FractionationFactor value': alpha
+<pre><code>## An isotope value object of type 'FractionationFactor value': 13C alpha
 ## [1] 1.02</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set_iso_opts</span>(<span class="dt">default_ff_notation =</span> <span class="st">&quot;permil&quot;</span>) 
 <span class="kw">show</span>(p &lt;-<span class="st"> </span><span class="kw">ff</span>(<span class="dv">20</span>))  <span class="co"># permil notation </span></code></pre></div>
-<pre><code>## An isotope value object of type 'FractionationFactor value': eps [permil]
+<pre><code>## An isotope value object of type 'FractionationFactor value': 13C eps [permil]
 ## [1] 20</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show</span>(<span class="kw">switch_notation</span>(p, <span class="st">&quot;eps&quot;</span>)) </code></pre></div>
-<pre><code>## An isotope value object of type 'FractionationFactor value': eps
+<pre><code>## An isotope value object of type 'FractionationFactor value': 13C eps
 ## [1] 0.02</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show</span>(<span class="kw">switch_notation</span>(p, <span class="st">&quot;alpha&quot;</span>))</code></pre></div>
-<pre><code>## An isotope value object of type 'FractionationFactor value': alpha
+<pre><code>## An isotope value object of type 'FractionationFactor value': 13C alpha
 ## [1] 1.02</code></pre>
 <p>It is important to note that of course all of these values are equivalent, they are just representions of the same fractionation factor in different notation. Accordingly, they behave <strong>exactly</strong> the same in all calculations implemented by <a href="https://github.com/sebkopf/isotopia"><strong>isotopia</strong></a> regardless what notation they are in.</p>
 </div>
@@ -188,9 +188,8 @@ d &lt;-<span class="st"> </span><span class="kw">to_delta</span>(r, <span class=
 <pre><code>## An isotope value object of type 'Ratio value': R 13C/12C
 ## [1] 0.0115</code></pre>
 <p>Additionally, <a href="https://github.com/sebkopf/isotopia"><strong>isotopia</strong></a> keeps a register of known reference materials with several default values already entered and the possibility for the user to add additional ones they want to use (with the <code>register_standard()</code> function). Standards can be retrieved as ratio objects by calling <code>get_standard()</code> and specifying which standard to retrieve for which isotope (see the manual in section A.2.8 for details). The list of all registered ratios can be retrieved as any other option with a call to <code>get_iso_opts</code> (here turned into a table with the k-table or <code>kable</code> command provided by the knitr module - Xie, 2013):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(knitr)</code></pre></div>
-<pre><code>## Warning: package 'knitr' was built under R version 3.2.5</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">kable</span>(<span class="kw">get_iso_opts</span>(<span class="st">&quot;standards&quot;</span>), <span class="dt">format=</span><span class="st">&quot;markdown&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(knitr)
+<span class="kw">kable</span>(<span class="kw">get_iso_opts</span>(<span class="st">&quot;standards&quot;</span>), <span class="dt">format=</span><span class="st">&quot;markdown&quot;</span>)</code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -239,6 +238,10 @@ d &lt;-<span class="st"> </span><span class="kw">to_delta</span>(r, <span class=
 <pre><code>## An isotope value object of type 'Delta value': d2H [permil] vs. VSMOW
 ## [1] 100</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show</span>(<span class="kw">to_ratio</span>(d))</code></pre></div>
+<pre><code>## Warning: changing the isotope name ('Ratio value' object) from '13C' to
+## '2H'</code></pre>
+<pre><code>## Warning: changing the major isotope ('Ratio value' object) from '12C' to
+## '1H'</code></pre>
 <pre><code>## Successfully found a registered standard to convert delta value: VSMOW R 2H/1H: 0.0001558</code></pre>
 <pre><code>## An isotope value object of type 'Ratio value': R 2H/1H
 ## [1] 0.000171325</code></pre>
@@ -350,9 +353,9 @@ p &lt;-<span class="st"> </span><span class="kw">switch_notation</span>(<span cl
 <p>And this is what happens as soon as a test fails (here have to catch the error, otherwise this document would not compile):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tryCatch</span>(
 <span class="kw">expect_equal</span>(<span class="kw">fractionate</span>(<span class="kw">ff</span>(<span class="fl">0.995</span>), <span class="kw">delta</span>(<span class="dv">42</span>)), <span class="kw">delta</span>(<span class="dv">42</span>)),
-<span class="dt">error =</span> function(e) <span class="kw">show</span>(e))</code></pre></div>
-<pre><code>## &lt;simpleError: fractionate(ff(0.995), delta(42)) not equal to delta(42)
-## 36.8 - 42 == -Inf&gt;</code></pre>
+<span class="dt">error =</span> function(e) <span class="kw">message</span>(e$message))</code></pre></div>
+<pre><code>## fractionate(ff(0.995), delta(42)) not equal to delta(42)
+## 36.8 - 42 == -Inf</code></pre>
 </div>
 <div id="future-extensions" class="section level2">
 <h2>Future extensions</h2>
