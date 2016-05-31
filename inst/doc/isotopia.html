@@ -93,19 +93,19 @@ devtools::<span class="kw">install_github</span>(<span class="st">&quot;sebkopf/
 <p>After <em>isotopia</em> is installed, it can be loaded at any time like any other R module using <code>library(isotopia)</code>. The basic data types are initialized simply by calling the respective <code>ratio</code>, <code>abundance</code>, <code>delta</code> and <code>fractionation_factor</code> functions with single or multiple values.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(isotopia)
 <span class="kw">show</span>(<span class="kw">ratio</span>(<span class="fl">0.1</span>)) </code></pre></div>
-<pre><code>## An isotope value object of type 'Ratio value': R 13C/12C
+<pre><code>## An isotope value object of type 'Ratio value': R
 ## [1] 0.1</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show</span>(<span class="kw">abundance</span>(<span class="kw">c</span>(<span class="fl">0.1</span>, <span class="fl">0.2</span>))) </code></pre></div>
-<pre><code>## An isotope value object of type 'Abundance value': F 13C
+<pre><code>## An isotope value object of type 'Abundance value': F
 ## [1] 0.1 0.2</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show</span>(<span class="kw">delta</span>(<span class="dv">100</span>, <span class="dt">notation =</span> <span class="st">&quot;permil&quot;</span>)) </code></pre></div>
-<pre><code>## An isotope value object of type 'Delta value': d13C [permil]
+<pre><code>## An isotope value object of type 'Delta value': d [permil]
 ## [1] 100</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show</span>(<span class="kw">fractionation_factor</span>(<span class="kw">seq</span>(<span class="fl">0.97</span>, <span class="fl">1.03</span>, <span class="dt">by=</span><span class="fl">0.01</span>), <span class="dt">notation =</span> <span class="st">&quot;alpha&quot;</span>))</code></pre></div>
-<pre><code>## An isotope value object of type 'FractionationFactor value': 13C alpha
+<pre><code>## An isotope value object of type 'FractionationFactor value': alpha
 ## [1] 0.97 0.98 0.99 1.00 1.01 1.02 1.03</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show</span>(<span class="kw">intensity</span>(<span class="dv">100</span>, <span class="dt">unit =</span> <span class="st">&quot;mV&quot;</span>))</code></pre></div>
-<pre><code>## An isotope value object of type 'Intensity value': 13C [mV]
+<pre><code>## An isotope value object of type 'Intensity value':  [mV]
 ## [1] 100</code></pre>
 <div id="attributes" class="section level4">
 <h4>Attributes</h4>
@@ -142,17 +142,17 @@ r &lt;-<span class="st"> </span><span class="kw">set_attrib</span>(r, <span clas
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show</span>(<span class="kw">get_iso_opts</span>(<span class="st">&quot;default_ff_notation&quot;</span>)) </code></pre></div>
 <pre><code>## [1] &quot;alpha&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show</span>(<span class="kw">ff</span>(<span class="fl">1.02</span>)) <span class="co"># alpha notation </span></code></pre></div>
-<pre><code>## An isotope value object of type 'FractionationFactor value': 13C alpha
+<pre><code>## An isotope value object of type 'FractionationFactor value': alpha
 ## [1] 1.02</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set_iso_opts</span>(<span class="dt">default_ff_notation =</span> <span class="st">&quot;permil&quot;</span>) 
 <span class="kw">show</span>(p &lt;-<span class="st"> </span><span class="kw">ff</span>(<span class="dv">20</span>))  <span class="co"># permil notation </span></code></pre></div>
-<pre><code>## An isotope value object of type 'FractionationFactor value': 13C eps [permil]
+<pre><code>## An isotope value object of type 'FractionationFactor value': eps [permil]
 ## [1] 20</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show</span>(<span class="kw">switch_notation</span>(p, <span class="st">&quot;eps&quot;</span>)) </code></pre></div>
-<pre><code>## An isotope value object of type 'FractionationFactor value': 13C eps
+<pre><code>## An isotope value object of type 'FractionationFactor value': eps
 ## [1] 0.02</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show</span>(<span class="kw">switch_notation</span>(p, <span class="st">&quot;alpha&quot;</span>))</code></pre></div>
-<pre><code>## An isotope value object of type 'FractionationFactor value': 13C alpha
+<pre><code>## An isotope value object of type 'FractionationFactor value': alpha
 ## [1] 1.02</code></pre>
 <p>It is important to note that of course all of these values are equivalent, they are just representions of the same fractionation factor in different notation. Accordingly, they behave <strong>exactly</strong> the same in all calculations implemented by <a href="https://github.com/sebkopf/isotopia"><strong>isotopia</strong></a> regardless what notation they are in.</p>
 </div>
@@ -238,13 +238,9 @@ d &lt;-<span class="st"> </span><span class="kw">to_delta</span>(r, <span class=
 <pre><code>## An isotope value object of type 'Delta value': d2H [permil] vs. VSMOW
 ## [1] 100</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show</span>(<span class="kw">to_ratio</span>(d))</code></pre></div>
-<pre><code>## Warning: changing the isotope name ('Ratio value' object) from '13C' to
-## '2H'</code></pre>
-<pre><code>## Warning: changing the major isotope ('Ratio value' object) from '12C' to
-## '1H'</code></pre>
 <pre><code>## Successfully found a registered standard to convert delta value: VSMOW R 2H/1H: 0.0001558</code></pre>
 <pre><code>## An isotope value object of type 'Ratio value': R 2H/1H
-## [1] 0.000171325</code></pre>
+## [1] 0.0001713407</code></pre>
 </div>
 </div>
 <div id="operations" class="section level2">
@@ -350,12 +346,6 @@ p &lt;-<span class="st"> </span><span class="kw">switch_notation</span>(<span cl
 <span class="kw">expect_equal</span>(<span class="kw">get_label</span>(amix), <span class="st">&quot;a+b+c F 13C&quot;</span>) 
 <span class="kw">expect_equal</span>(<span class="kw">get_value</span>(amix), (<span class="fl">0.2</span>*<span class="dv">2</span> +<span class="st"> </span><span class="fl">0.5</span> +<span class="st"> </span><span class="fl">0.3</span>*<span class="dv">3</span>) /<span class="st"> </span>(<span class="dv">2+1+3</span>))
 <span class="kw">expect_equal</span>(<span class="kw">get_value</span>(<span class="kw">ff</span>(<span class="fl">0.8</span>) *<span class="st"> </span><span class="kw">delta</span>(<span class="dv">200</span>) +<span class="st"> </span><span class="kw">delta</span>(<span class="dv">100</span>), <span class="st">&quot;permil&quot;</span>), <span class="dv">1000</span>*(<span class="fl">0.8</span>*<span class="fl">1.2</span> -<span class="st"> </span><span class="dv">1</span> +<span class="st"> </span><span class="fl">0.1</span>)/<span class="dv">2</span>)</code></pre></div>
-<p>And this is what happens as soon as a test fails (here have to catch the error, otherwise this document would not compile):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tryCatch</span>(
-<span class="kw">expect_equal</span>(<span class="kw">fractionate</span>(<span class="kw">ff</span>(<span class="fl">0.995</span>), <span class="kw">delta</span>(<span class="dv">42</span>)), <span class="kw">delta</span>(<span class="dv">42</span>)),
-<span class="dt">error =</span> function(e) <span class="kw">message</span>(e$message))</code></pre></div>
-<pre><code>## fractionate(ff(0.995), delta(42)) not equal to delta(42)
-## 36.8 - 42 == -Inf</code></pre>
 </div>
 <div id="future-extensions" class="section level2">
 <h2>Future extensions</h2>
