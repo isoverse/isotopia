@@ -238,9 +238,9 @@ expect_equal(get_value(ff(0.8) * delta(200) + delta(100), "permil"), 1000*(0.8*1
 And this is what happens as soon as a test fails (here have to catch the error, otherwise this document would not compile):
 
 ```{r}
-tryCatch(
-expect_equal(fractionate(ff(0.995), delta(42)), delta(42)),
-error = function(e) message(e$message))
+# tryCatch(
+# expect_equal(fractionate(ff(0.995), delta(42)), delta(42)),
+# error = function(e) message(e$message))
 ```
 
 ## Future extensions
