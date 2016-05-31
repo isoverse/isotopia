@@ -16,8 +16,8 @@ Depends:
     utils
 Suggests:
     testthat,
-	rmarkdown,
-	knitr
+    rmarkdown,
+    knitr
 VignetteBuilder: knitr
 Collate:
     'utils.R'
@@ -33,4 +33,4 @@ Collate:
     'isotopia.R'
     'notation.R'
     'zzz.R'
-RoxygenNote: 5.0.0
+RoxygenNote: 5.0.1

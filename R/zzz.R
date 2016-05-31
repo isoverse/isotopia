@@ -1,8 +1,6 @@
 # package on load function
 .onAttach <- function(libname, pkgname) {
     
-    library(methods)
-    
     # default startup options (documented in options.R get_iso_opts !!)
     set_iso_opts(
         default_ab_notation = "raw", 
