@@ -240,7 +240,7 @@ And this is what happens as soon as a test fails (here have to catch the error, 
 ```{r}
 tryCatch(
 expect_equal(fractionate(ff(0.995), delta(42)), delta(42)),
-error = function(e) show(e))
+error = function(e) message(e))
 ```
 
 ## Future extensions
