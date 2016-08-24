@@ -19,7 +19,10 @@ setGeneric("mass_balance", function(iso, iso2, ..., exact = get_iso_opts("exact_
 
 #' @method mass_balance
 #' @export
-setMethod("mass_balance", "ANY", function(iso, iso2, ..., exact = get_iso_opts("exact_mass_balance")) stop("mass_balance not defined for objects of class ", class(iso), ", ", class(iso2))) 
+setMethod("mass_balance", "ANY", function(iso, iso2, ...,
+                                          exact = get_iso_opts("exact_mass_balance")) 
+    stop("mass_balance not defined for objects of class ", 
+         class(iso), ", ", class(iso2), call. = FALSE))
 
 setMethod("mass_balance", signature("Abundance", "Abundance"), function(iso, iso2, ..., exact = get_iso_opts("exact_mass_balance")) {
     # consider implementing a performance optimized version for many additions
@@ -30,7 +33,7 @@ setMethod("mass_balance", signature("Abundance", "Abundance"), function(iso, iso
 })
 setMethod("mass_balance", signature("Delta", "Delta"), function(iso, iso2, ..., exact = get_iso_opts("exact_mass_balance")) {
     if (exact)
-        stop("not implemented yet!") # should be implemented here rather than in the operators
+        stop("not implemented yet!", call. = FALSE) # should be implemented here rather than in the operators
     
     all <- c(list(iso2), list(...))
     for (i in all)
@@ -39,7 +42,7 @@ setMethod("mass_balance", signature("Delta", "Delta"), function(iso, iso2, ..., 
 })
 
 setMethod("mass_balance", signature("Deltas", "Deltas"), function(iso, iso2, ..., exact = get_iso_opts("exact_mass_balance")) {
-    stop("not implemented yet")
+    stop("not implemented yet", call. = FALSE)
 })
 
 #' Fractionate an isotopic value
@@ -61,12 +64,12 @@ setGeneric("fractionate", function(frac, iso) standardGeneric("fractionate"))
 
 #' @method fractionate
 #' @export
-setMethod("fractionate", "ANY", function(frac, iso) stop("fractionate not defined for objects of class ", class(frac), ", ", class(iso))) 
+setMethod("fractionate", "ANY", function(frac, iso) stop("fractionate not defined for objects of class ", class(frac), ", ", class(iso), call. = FALSE)) 
 
 setMethod("fractionate", signature("FractionationFactor", "Ratio"), function(frac, iso) {
     iso_attribs_check(frac, iso, include = c("isoname", "major"), text = "cannot generate a ratio from a fractionation factor and a ratio")
     if (frac@compound2 != iso@compound)
-        stop(sprintf("cannot generate a ratio if the fractionation factor's denominator (%s) does not match the ratio compound (%s)", frac@compound2, iso@compound))
+        stop(sprintf("cannot generate a ratio if the fractionation factor's denominator (%s) does not match the ratio compound (%s)", frac@compound2, iso@compound), call. = FALSE)
     iso@.Data <- get_value(frac, notation = "alpha") * iso@.Data # weight carried in second value
     recast_isoval(iso, "Ratio", list(compound = frac@compound))
 })
@@ -75,7 +78,7 @@ setMethod("fractionate", signature("FractionationFactor", "Ratio"), function(fra
 setMethod("fractionate", signature("FractionationFactor", "FractionationFactor"), function(frac, iso) {
     iso_attribs_check(frac, iso, include = c("isoname", "major"), text = "cannot generate a fractionation factor from two fractionation factors")
     if (frac@compound2 != iso@compound)
-        stop(sprintf("cannot combine two fractionation factors if their denominator (%s) and numerator (%s) don't cancel", frac@compound2, iso@compound))
+        stop(sprintf("cannot combine two fractionation factors if their denominator (%s) and numerator (%s) don't cancel", frac@compound2, iso@compound), call. = FALSE)
     notation <- frac@notation # original notation
     frac <- switch_notation(frac, "alpha") # convert to alphas for calculaton
     frac@.Data <- frac@.Data * get_value(iso, "alpha")

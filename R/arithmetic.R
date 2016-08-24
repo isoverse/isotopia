@@ -15,7 +15,7 @@ NULL
 
 # helper function that informs about operation error
 operation_error <- function(operation, e1, e2) {
-    stop(sprintf("%s is not meaningful for these isotope objects (trying to combine '%s' and '%s'). ", operation, class(e1), class(e2)))
+    stop(sprintf("%s is not meaningful for these isotope objects (trying to combine '%s' and '%s'). ", operation, class(e1), class(e2)), call. = FALSE)
 }
 
 # helper function that compares isotope objects' attributes
@@ -33,10 +33,12 @@ iso_attribs_check <- function(e1, e2, include = names(attributes(e1)), exclude =
     if (failed || !identical(e1.attribs, e2.attribs)) {
         attr_names <- paste0("'", names(e1.attribs)[names(e1.attribs)!="class"], "'")
         stop(sprintf("%s that don't have matching attributes (%s):\n'%s'\n'%s'", 
-                     text, paste(attr_names, collapse = " or "), get_label(e1), get_label(e2)))
+                     text, paste(attr_names, collapse = " or "), get_label(e1), get_label(e2)),
+             call. = FALSE)
     }
     if (check_length && length(e1) != length(e2))
-        stop(sprintf("%s that don't have matching lengths: %s and %s", text, length(e1), length(e2)))
+        stop(sprintf("%s that don't have matching lengths: %s and %s", text, 
+                     length(e1), length(e2)), call. = FALSE)
 }
 
 # Addition  ========================
@@ -316,7 +318,8 @@ setMethod("/", signature(e1 = "FractionationFactor", e2 = "FractionationFactor")
         e1@compound <- e2@compound2 # numerators cancel
     else
         stop(sprintf("cannot combine two fractionation factors if neither their denominators (%s and %s) nor their numerators (%s and %s) cancel", 
-                     e1@compound2, e2@compound2, e1@compound, e2@compound))
+                     e1@compound2, e2@compound2, e1@compound, e2@compound), 
+             call. = FALSE)
     
     e1 <- switch_notation(e1, "alpha") # make sure they are alpha values
     e2 <- switch_notation(e2, "alpha") # make sure they are alpha values

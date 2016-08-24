@@ -125,20 +125,21 @@ get_iso_opts <- function (opts) {
 #' @export
 register_standard <- function(ratio) {
     if (!is.ratio(ratio))
-        stop("can only register standards that are ratio isotope objects")
+        stop("can only register standards that are ratio isotope objects", call. = FALSE)
     
     if (length(ratio) != 1L)
-        stop("must be a single ratio value, found ", length(ratio))
+        stop("must be a single ratio value, found ", length(ratio), call. = FALSE)
     
     if (nchar(ratio@isoname) == 0 || nchar(ratio@major) == 0 || nchar(ratio@compound) == 0)
-        stop("can only register ratios that have minor, major isotope and compound name set")
+        stop("can only register ratios that have minor, major isotope and compound name set",
+             call. = FALSE)
     
     refs <- getOption("isotope_standards") %||%
         data.frame(minor = character(), major = character(), name = character(), ratio = numeric(), stringsAsFactors = F)
     
     index <- which(refs$minor == ratio@isoname & refs$major == ratio@major & refs$name == ratio@compound)
     if (length(index) > 1)
-        stop("more than one reference already exists with these characteristics, they must be unique!")
+        stop("more than one reference already exists with these characteristics, they must be unique!", call. = FALSE)
     else if (length(index) == 1) {
         index <- index
         if (get_value(ratio) != refs$ratio[index])
@@ -194,9 +195,9 @@ get_standard <- function(minor = NULL, major = NULL, name = NULL) {
     stds <- get_standards(minor = minor, major = major, name = name)
     
     if (length(stds) == 0)
-        stop("No reference ratio registered for these search parameters: ", paste(c(minor, major, name), collapse = ", "))
+        stop("No reference ratio registered for these search parameters: ", paste(c(minor, major, name), collapse = ", "), call. = FALSE)
     else if (length(stds) > 1)
-        stop("More than one reference ratio (", length(stds), ") found for these search parameters: ", paste(c(minor, major, name), collapse = ", "))
+        stop("More than one reference ratio (", length(stds), ") found for these search parameters: ", paste(c(minor, major, name), collapse = ", "), call. = FALSE)
     
     return(stds[[1]])
 }

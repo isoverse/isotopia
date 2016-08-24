@@ -23,7 +23,7 @@ setGeneric("switch_notation", function(iso, to = NULL, from = NULL) standardGene
 
 #' @method switch_notation
 #' @export
-setMethod("switch_notation", "ANY", function(iso, to = NULL, from = NULL) stop(sprintf("don't know how to convert notation '%s' to notation '%s'", class(from), class(to))))
+setMethod("switch_notation", "ANY", function(iso, to = NULL, from = NULL) stop(sprintf("don't know how to convert notation '%s' to notation '%s'", class(from), class(to)), call. = FALSE))
 
 # what happens mathematically in the conversions
 setMethod("switch_notation", signature("numeric", to = "Notation_raw", from = "Notation_raw"), function(iso, to, from) iso)
@@ -56,7 +56,8 @@ isoval_switch_notation <- function(iso, to) {
 }
 setMethod("switch_notation", signature("Isoval", "ANY", "missing"), function(iso, to, from) {
     if (!is(to, "Notation"))
-        stop("not a recognized notation for isotope value objects: ", class(to))
+        stop("not a recognized notation for isotope value objects: ", class(to),
+             call. = FALSE)
     stop(sprintf("not permitted to convert an isotope value of type '%s' to unit '%s'", class(iso), sub("Notation_", "", class(to))))
 })
 setMethod("switch_notation", signature("Isoval", to = "Notation_raw", from = "missing"), function(iso, to = NULL, from = NULL) isoval_switch_notation(iso, to))
@@ -79,14 +80,16 @@ setMethod("switch_notation", signature("FractionationFactor", to = "Notation_ppm
 setMethod("switch_notation", signature("Isoval", to = "character", from = "missing"), function(iso, to = NULL, from = NULL) {
     to_class <- paste0("Notation_", to)
     if (!extends(to_class, "Notation"))
-        stop("not a recognized notation for isotope value objects: ", to)
+        stop("not a recognized notation for isotope value objects: ", to,
+             call. = FALSE)
     switch_notation(iso, to = new(to_class))
 })
 
 setMethod("switch_notation", signature("Isosys", to = "character", from = "missing"), function(iso, to = NULL, from = NULL) {
     to_class <- paste0("Notation_", to)
     if (!extends(to_class, "Notation"))
-        stop("not a recognized notation for isotope value objects: ", to)
+        stop("not a recognized notation for isotope value objects: ", to,
+             call. = FALSE)
     switch_notation(iso, to = new(to_class))
 })    
  

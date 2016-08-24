@@ -146,7 +146,7 @@ iso <- function(class_isosys, ..., attribs = list(), single_as_df = FALSE) {
     
     # type checks
     if (!extends(class_isosys, "Isosys"))
-        stop("not an Isosys class: ", class_isosys)
+        stop("not an Isosys class: ", class_isosys, call. = FALSE)
     class_isoval <- new(class_isosys)@isoval_class
     
     # function to make a new isotope value object
@@ -187,14 +187,14 @@ iso <- function(class_isosys, ..., attribs = list(), single_as_df = FALSE) {
     
     # system of values / data frame 
     if (!all((val <- sapply(values, length)) == length(values[[1]])))
-        stop("Not the same number of measurements provided for each isotope: ", paste(val, collapse = ", "))
+        stop("Not the same number of measurements provided for each isotope: ", paste(val, collapse = ", "), call. = FALSE)
     
     # tansform to numeric and check completeness
     values <- suppressWarnings(lapply(values, function(i) if (is.isoval(i)) i else as.numeric(i)))
     if (!all(vals <- complete.cases(values))) {
         message("incomplete values in isotope system:")
         print(data.frame(values)[!vals,])
-        stop("NA is not a valid isotope data type")
+        stop("NA is not a valid isotope data type", call. = FALSE)
     }
     
     # initialize each value 

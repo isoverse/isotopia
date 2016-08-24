@@ -56,7 +56,7 @@ setClass("Isoval",
 setMethod("initialize", "Isoval", function(.Object, ...){
     if (nargs() > 1 && is(..1, "Isoval"))
         stop("Cannot initialize an isotope value with another isotope value.\n",
-             " To convert between isotope data types, please use to_ratio(), to_abundance(), etc. instead")
+             " To convert between isotope data types, please use to_ratio(), to_abundance(), etc. instead", call. = FALSE)
     obj <- callNextMethod(.Object, ...)
     
     # initialize with weights = 1 if not specified
@@ -76,7 +76,8 @@ setMethod("[", "Isoval", function(x, i) {
 
 setMethod("[<-", "Isoval", function(x, i, value) { 
     if (is.isoval(value) && !identical(class(x), class(value)))
-        stop("cannot assign a ", class(value), " value to a ", class(x), " value")
+        stop("cannot assign a ", class(value), " value to a ", class(x), " value", 
+             call. = FALSE)
     x@.Data[i] <- as.numeric(value)
     if (is.isoval(value))
         x@weight[i] <- value@weight

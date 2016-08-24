@@ -26,7 +26,8 @@ set_attrib <- function(iso, minor = NULL, major = NULL,
                        ctop = NULL, cbot = NULL,
                        unit = NULL) {
     if (!is.isoval(iso))
-        stop("cannot set attributes of non-isotope value objects: ", class(iso))
+        stop("cannot set attributes of non-isotope value objects: ", class(iso), 
+             call. = FALSE)
     
     # new attribs
     attribs <- list(minor = minor, major = major, compound = compound, 
@@ -85,7 +86,7 @@ setMethod("update_iso", "Delta", function(obj, attribs) {
             ref_ratio <- get_value(to_ratio(ref_ratio)) # convert to numeric
         }
         if (length(ref_ratio) != 1)
-            stop("reference ratio for a delta value object must be exactly one numeric value, supplied ", length(ref_ratio))
+            stop("reference ratio for a delta value object must be exactly one numeric value, supplied ", length(ref_ratio), call. = FALSE)
         if (length(obj@ref_ratio) > 0 && obj@ref_ratio != ref_ratio)
             warning(sprintf("changing the reference ratio of a delta value object from %s to %s", 
                             obj@ref_ratio, ref_ratio), call. = FALSE)
@@ -142,7 +143,7 @@ setGeneric("weight", function(iso, weight) standardGeneric("weight"))
 
 #' @method weight
 #' @export
-setMethod("weight", "ANY", function(iso, weight) stop("weight not defined for objects of class ", class(iso)))
+setMethod("weight", "ANY", function(iso, weight) stop("weight not defined for objects of class ", class(iso), call. = FALSE))
 
 setMethod("weight", signature("Isoval", "numeric"), function(iso, weight) {
     iso <- update_iso(iso, list(weight = weight))
@@ -173,7 +174,7 @@ setGeneric("get_value", function(iso, notation = iso@notation) standardGeneric("
 
 #' @method get_value
 #' @export
-setMethod("get_value", "ANY", function(iso, notation) stop("get_value not defined for objects of class ", class(iso)))
+setMethod("get_value", "ANY", function(iso, notation) stop("get_value not defined for objects of class ", class(iso), call. = FALSE))
 setMethod("get_value", "numeric", function(iso, notation = NULL) iso) # allow this for simplicity so this is similiar to as_numeric
 setMethod("get_value", "Isoval", function(iso, notation = iso@notation) as.numeric(switch_notation(iso, notation)))
 setMethod("get_value", "Isosys", function(iso, notation = NULL) {
@@ -201,7 +202,7 @@ setGeneric("get_weight", function(iso) standardGeneric("get_weight"))
 
 #' @method get_weight
 #' @export
-setMethod("get_weight", "ANY", function(iso) stop("get_weight not defined for objects of class ", class(iso)))
+setMethod("get_weight", "ANY", function(iso) stop("get_weight not defined for objects of class ", class(iso), call. = FALSE))
 setMethod("get_weight", "Isoval", function(iso) iso@weight)
 setMethod("get_weight", "Isosys", function(iso) {
     data.frame(lapply(iso,
@@ -227,7 +228,7 @@ setGeneric("get_weighted_value", function(iso) standardGeneric("get_weighted_val
 
 #' @method get_weighted_value
 #' @export
-setMethod("get_weighted_value", "ANY", function(iso) stop("get_weighted_value not defined for objects of class ", class(iso)))
+setMethod("get_weighted_value", "ANY", function(iso) stop("get_weighted_value not defined for objects of class ", class(iso), call. = FALSE))
 setMethod("get_weighted_value", "Isoval", function(iso) get_weight(iso) * get_value(iso))
 setMethod("get_weighted_value", "Isosys", function(iso) {
     data.frame(lapply(iso,

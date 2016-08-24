@@ -58,7 +58,7 @@ setGeneric("get_name", function(object) standardGeneric("get_name"))
 
 #' @export
 #' @method get_name
-setMethod("get_name", "ANY", function(object) stop("the get_name() function is not defined for objects of type ", class(object)))
+setMethod("get_name", "ANY", function(object) stop("the get_name() function is not defined for objects of type ", class(object), call. = FALSE))
 
 setMethod("get_name", "Isoval", function(object) object@isoname)
 setMethod("get_name", "Ratio", function(object) ratio_name("R", "", spacer = " ", object@isoname, object@major))
@@ -102,7 +102,7 @@ setGeneric("get_label", function(object) standardGeneric("get_label"))
 
 #' @export
 #' @method get_label
-setMethod("get_label", "ANY", function(object) stop("get_label() not defined for objects of type ", class(object)))
+setMethod("get_label", "ANY", function(object) stop("get_label() not defined for objects of type ", class(object), call. = FALSE))
 
 # helper
 iso_label <- function(object, show_compound = TRUE) {

@@ -37,7 +37,8 @@ convert_isosys <- function(iso, class_isosys, conv_fun) {
 #' @param validate - whether to validate after the recast, default TRUE
 recast_isoval <- function(iso, to_class, mods = list(), validate = TRUE){
     if (!is.isoval(iso))
-        stop("don't use this to modify non isoval objects, can be tricky to modify attributes")
+        stop("don't use this to modify non isoval objects, can be tricky to modify attributes",
+             call. = FALSE)
     attr(iso, "class") <- attr(new(to_class), "class")
     attributes(iso) <- modifyList(attributes(iso), mods)
     if (validate)
@@ -48,7 +49,7 @@ recast_isoval <- function(iso, to_class, mods = list(), validate = TRUE){
 # small function that informs about conversion errors
 conversion_error <- function(from, to) {
     stop(sprintf("Don't know how to convert object of class %s to %s. ", class(from)[1], to),
-         if (is(from, "numeric")) "Please us the appropriate functions - ratio(), abundance(), delta(), etc. - to initialize new isotope objects.")
+         if (is(from, "numeric")) "Please us the appropriate functions - ratio(), abundance(), delta(), etc. - to initialize new isotope objects.", call. = FALSE)
 }
 
 # to.ratio =============================================
@@ -112,9 +113,10 @@ setMethod("to_ratio", "Intensities", function(iso) {
         })
         
         if ( (s <- sum(major)) == 0)
-            stop("none of the isotopes in this system of intensities could be identified as the major ion")
+            stop("none of the isotopes in this system of intensities could be identified as the major ion", call. = FALSE)
         else if (s > 1)
-            stop("there was more than one isotope identified as the major ion")
+            stop("there was more than one isotope identified as the major ion",
+                 call. = FALSE)
         
         # convert intensities to ratios
         major_i <- df[[which(major)]]
@@ -144,7 +146,7 @@ setMethod("to_ratio", "Delta", function(iso) {
     
     # continue as usual
     if (length(iso@ref_ratio) != 1)
-        stop("cannot convert from a ratio to a delta value without the reference ratio set in the delta value object")
+        stop("cannot convert from a ratio to a delta value without the reference ratio set in the delta value object", call. = FALSE)
     iso <- switch_notation(iso, "raw") # convert delta value to raw (more for final object to be of type 'raw')
     a <- to_ff(iso) # switch delta to alpha value
     iso@.Data <- get_value(a, "alpha") * iso@ref_ratio # could do it by multiplying alpha value by ratio but then have to generate appropriate ratio object first
@@ -306,14 +308,14 @@ setMethod("to_delta", signature(iso = "FractionationFactor", ref_ratio = "Ratio"
     # make sure Ratio has the appropriate values
     if (length(ref_ratio) > 1 && length(ref_ratio) != length(iso))
         stop("a vector of reference ratios for a delta value must have the same number of entries as the value, found ",
-             length(iso), " vs ", length(ref_ratio))
+             length(iso), " vs ", length(ref_ratio), call. = FALSE)
     if (nchar(ref_ratio@isoname) > 0 && nchar(iso@isoname) > 0 && iso@isoname != ref_ratio@isoname)
-        stop(sprintf("reference ratio for a delta value cannot be for a different isotope, found '%s' vs '%s'", iso@isoname, ref_ratio@isoname))
+        stop(sprintf("reference ratio for a delta value cannot be for a different isotope, found '%s' vs '%s'", iso@isoname, ref_ratio@isoname), call. = FALSE)
     if (nchar(ref_ratio@major) > 0 && nchar(iso@major) > 0 && iso@major != ref_ratio@major)
-        stop(sprintf("reference ratio for a delta value cannot have a different major isotope, found '%s' vs '%s'", iso@major, ref_ratio@major))
+        stop(sprintf("reference ratio for a delta value cannot have a different major isotope, found '%s' vs '%s'", iso@major, ref_ratio@major), call. = FALSE)
     if (nchar(ref_ratio@compound) > 0 && nchar(iso@compound2) > 0 && iso@compound2 != ref_ratio@compound)
         stop(sprintf("reference ratio for a delta value cannot be a different compound than already specified, found '%s' vs '%s'", 
-                     iso@compound2, ref_ratio@compound))
+                     iso@compound2, ref_ratio@compound), call. = FALSE)
     
     # cast as delta value
     iso <- switch_notation(iso, "permil") # switch fractionation factor to permil (same as a delta value but without ref_ratio)
@@ -328,7 +330,8 @@ setMethod("to_delta", signature(iso = "FractionationFactor", ref_ratio = "Ratio"
 
 # ratio to delta (with numeric ref ratio)
 setMethod("to_delta", signature("Ratio", "missing"), function(iso, ref_ratio) {
-    stop("Can't convert from a ratio to a delta value without a reference ratio.")
+    stop("Can't convert from a ratio to a delta value without a reference ratio.",
+         call. = FALSE)
 })
 
 
@@ -343,7 +346,7 @@ setMethod("to_delta", signature("Ratio", "numeric"), function(iso, ref_ratio) {
 # ratio to delta (with Ratio object as ref ratio)
 setMethod("to_delta", signature("Ratio", "Ratio"), function(iso, ref_ratio) {
     if (length(ref_ratio) != 1)
-        stop("reference ratio for a delta value object must be exactly one numeric value, supplied ", length(ref_ratio))
+        stop("reference ratio for a delta value object must be exactly one numeric value, supplied ", length(ref_ratio), call. = FALSE)
     
     # convert to fractionation factor
     iso2 <- switch_notation(ref_ratio, "raw") # first convert to raw before doing any math
@@ -356,13 +359,14 @@ setMethod("to_delta", signature("Ratio", "Ratio"), function(iso, ref_ratio) {
 
 setMethod("to_delta", signature(iso = "Ratios", ref_ratio = "Ratios"), function(iso, ref_ratio) {
     stop("This is the proper way to convert from a system of ratios to Deltas",
-         " but not implemented yet: have to match the ref_ratio Ratios apppropriately")
+         " but not implemented yet: have to match the ref_ratio Ratios apppropriately",
+         call. = FALSE)
 })
 
 # abundance to delta =====
 setMethod("to_delta", signature("Abundance", "ANY"), function(iso, ref_ratio) {
     stop("not currently implemented, probably won't permit because it's dangerous transforming to ratio without taking the",
-         "whole isotope system into consideration --> implement on the Abundances/Ratios level instead")
+         "whole isotope system into consideration --> implement on the Abundances/Ratios level instead", call. = FALSE)
 })
 
 
