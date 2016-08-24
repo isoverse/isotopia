@@ -77,6 +77,15 @@ test_that("Testing that isotope data type conversations behave correctly", {
     expect_equal(d@isoname, "13C")
     expect_equal(d@major, "12C")
     
+    # to_delta with ref standard
+    expect_error (to_delta(ratio(`15N`=0.01), ref_ratio = get_standard("13C")), # mismatch
+                  "cannot generate .* from two ratio objects that don't have matching attributes .*")
+    expect_equal( { # take over standard if undefined
+        d <- ratio(0.01) %>% to_delta(ref_ratio = get_standard("13C")); 
+        c(d@isoname, d@major)},
+        c("13C", "12C"))
+    
+    
     # alpha to delta FIXME
 #     expect_equal(to_delta(alpha(0.99)), delta(-10))
 #     expect_equal(to_delta(alpha(0.99), permil = F), delta(-0.01, permil = F))
