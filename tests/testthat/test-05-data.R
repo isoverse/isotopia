@@ -7,8 +7,6 @@ test_that("Testing that reference standards can be properly registered and retri
     expect_error(register_standard(ratio(a = 0.1, major = "b")), "can only register ratios that have minor, major isotope and compound name set")
     expect_error(register_standard(ratio(0.1, major = "b", compound = "test")), "can only register ratios that have minor, major isotope and compound name set")
     expect_error(register_standard(ratio(a = 0.1, compound = "test")), "can only register ratios that have minor, major isotope and compound name set")
-    register_standard(ratio(`2H` = 0.00015575, major = "1H", compound = "VSMOW"))
-    register_standard(ratio(`18O` = 0.0020052, major = "16O", compound = "VSMOW"))
     expect_warning(register_standard(ratio(`2H` = 0.00015576, major = "1H", compound = "VSMOW")), "overwriting an existing standard")
     expect_warning(register_standard(ratio(`2H` = 0.00015575, major = "1H", compound = "VSMOW")), "overwriting an existing standard")
     expect_error(get_standard(name = "VSMOW"), "More than one")
