@@ -353,7 +353,9 @@ setMethod("to_delta", signature("Ratio", "Ratio"), function(iso, ref_ratio) {
     iso2@.Data <- rep(get_value(ref_ratio), length(iso)) # get ref_ratio to the right length
     
     # allow for undefined ratios to adopt the ref ratio attributes
-    if (iso@isoname == "" && iso@major == "") {
+    if ( (iso@isoname == "" && iso@major == "") ||
+         (iso@isoname == iso2@isoname && iso@major == "") ||
+         (iso@isoname == "" && iso@major == iso2@major)) {
       iso@isoname <- iso2@isoname
       iso@major <- iso2@major
     }
