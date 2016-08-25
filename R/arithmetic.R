@@ -294,6 +294,20 @@ NULL
 
 # ratio / ratio = alpha (weight of first ratio carried)
 setMethod("/", signature(e1 = "Ratio", e2 = "Ratio"), function(e1, e2) {
+    
+    # allow for ratios with one undefined isoname/major combination to be adopted
+    if ( (e1@isoname == "" && e1@major == "") ||
+         (e1@isoname == e2@isoname && e1@major == "") ||
+         (e1@isoname == "" && e1@major == e2@major)) {
+        e1@isoname <- e2@isoname
+        e1@major <- e2@major
+    } else if ( (e2@isoname == "" && e2@major == "") ||
+                (e1@isoname == e2@isoname && e2@major == "") ||
+                (e2@isoname == "" && e1@major == e2@major)) {
+        e2@isoname <- e1@isoname
+        e2@major <- e1@major
+    }
+    
     iso_attribs_check(e1, e2, include = c("isoname", "major"), text = "cannot generate a fractionaton factor from two ratio objects")
     e1@.Data <- get_value(e1@.Data, "raw") / get_value(e2@.Data, "raw")
     e1@notation <- new("Notation_alpha") # keep as an alpha value

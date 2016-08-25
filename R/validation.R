@@ -176,6 +176,7 @@ setValidity(
 setValidity(
     "Abundances",
     function(object) {
+        # FIXME: implement notation for Abundances object
         isovals <- object@.Data[which(sapply(object@.Data, is.isoval))]
         if (any( (sums <- rowSums(data.frame(isovals))) > 1.0)) 
             return(paste("the sum of fractional abundances for each data point in an isotope system cannot exceed 1",

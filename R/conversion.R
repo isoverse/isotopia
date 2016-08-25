@@ -351,14 +351,6 @@ setMethod("to_delta", signature("Ratio", "Ratio"), function(iso, ref_ratio) {
     # convert to fractionation factor
     iso2 <- switch_notation(ref_ratio, "raw") # first convert to raw before doing any math
     iso2@.Data <- rep(get_value(ref_ratio), length(iso)) # get ref_ratio to the right length
-    
-    # allow for undefined ratios to adopt the ref ratio attributes
-    if ( (iso@isoname == "" && iso@major == "") ||
-         (iso@isoname == iso2@isoname && iso@major == "") ||
-         (iso@isoname == "" && iso@major == iso2@major)) {
-      iso@isoname <- iso2@isoname
-      iso@major <- iso2@major
-    }
     a <- to_ff(iso, iso2) 
     
     # to delta

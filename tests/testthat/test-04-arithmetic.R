@@ -42,7 +42,7 @@ test_that("Testing proper response to math operators", {
     
     # converting ratios to alpha values - FIXME
     expect_error(ratio(a = 0.1) / ratio(b = 0.2), "cannot generate a fractionaton factor from two ratio objects that don't have matching attributes")
-    expect_error(ratio(0.1, major = "12C") / ratio(0.2), "cannot generate a fractionaton factor from two ratio objects that don't have matching attributes")
+    expect_error(ratio(0.1, major = "12C") / ratio(`15N`=0.2), "cannot generate a fractionaton factor from two ratio objects that don't have matching attributes")
     expect_equal(ratio(0.1) / ratio(0.2), ff(0.5))
     expect_equal(to_ff(ratio(0.1), ratio(0.2)), ff(0.5))
     expect_equal(a <- ratio(`13C` = 0.1, major = "12C", compound = "CO2") / ratio(`13C` = 0.2, major = "12C", compound = "Corg"), 
