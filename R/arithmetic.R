@@ -308,6 +308,15 @@ setMethod("/", signature(e1 = "Ratio", e2 = "Ratio"), function(e1, e2) {
         e2@major <- e1@major
     }
     
+    # allow for unequal lengths if one is n=1
+    if (length(e1) != length(e2) && length(e1) == 1){
+        e1@.Data <- rep(e1@.Data, length(e2))
+        e1@weight <- rep(e1@weight, length(e2))
+    } else if (length(e1) != length(e2) && length(e2) == 1) {
+        e2@.Data <- rep(e2@.Data, length(e1))
+        e2@weight <- rep(e2@weight, length(e1))
+    }
+    
     iso_attribs_check(e1, e2, include = c("isoname", "major"), text = "cannot generate a fractionaton factor from two ratio objects")
     e1@.Data <- get_value(e1@.Data, "raw") / get_value(e2@.Data, "raw")
     e1@notation <- new("Notation_alpha") # keep as an alpha value
