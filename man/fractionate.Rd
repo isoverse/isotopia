@@ -4,15 +4,19 @@
 \alias{fractionate}
 \title{Fractionate an isotopic value}
 \usage{
-fractionate(frac, iso)
+fractionate(frac, delta)
+fractionate(delta, frac)
+fractionate(frac, ratio)
 }
 \arguments{
 \item{frac}{the fractionation factor \code{\link{ff}} used to fractionate the isotope value}
 
-\item{iso}{the isotope object to fractionate}
+\item{delta}{isotope object to fractionate}
+
+\item{ratio}{isotope object to fractionate}
 }
 \value{
-an object of the same type as \code{iso}
+an object of the same type as the isotope object that gets fractionated
 }
 \description{
 This function calculates the outcome of isotopic fractionation by a \code{\link{fractionation_factor}}

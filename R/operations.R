@@ -51,14 +51,20 @@ setMethod("mass_balance", signature("Deltas", "Deltas"), function(iso, iso2, ...
 #' and can be applied to \code{\link{ratio}} data, \code{\link{delta}} values or other
 #' \code{\link{fractionation_factor}} objects.
 #' @param frac the fractionation factor \code{\link{ff}} used to fractionate the isotope value
-#' @param iso the isotope object to fractionate
-#' @return an object of the same type as \code{iso}
+#' @param delta isotope object to fractionate
+#' @param ratio isotope object to fractionate
+#' 
+#' @return an object of the same type as the isotope object that gets fractionated
 #' @note Several of these calculations are also
 #' implemented with an \code{\link{arithmetic}} shorthand. All calculatinos are
 #' only permissible if the fractionation factors and isotope values have matching
 #' attributes.
 #' @family operations
 #' @method fractionate
+#' @usage 
+#' fractionate(frac, delta)
+#' fractionate(delta, frac)
+#' fractionate(frac, ratio)
 #' @export
 setGeneric("fractionate", function(frac, iso) standardGeneric("fractionate"))
 
@@ -92,6 +98,9 @@ setMethod("fractionate", signature("FractionationFactor", "Delta"), function(fra
     new <- fractionate(frac, a) # fractionate
     switch_notation(to_delta(new, ref_ratio = iso@ref_ratio), notation)# convert back to delta with the proper ref_ratio and notation
 })
+
+# weight of first fractionation factor is carried
+setMethod("fractionate", signature("Delta", "FractionationFactor"), function(frac, iso) fractionate(iso, frac))
 
 #' Shift reference frame
 #' 
