@@ -17,7 +17,7 @@
         register_standard(ratio(`13C` = 0.011237, major = "12C", compound = "VPDB"))
         register_standard(ratio(`15N` = 0.003677, major = "14N", compound = "Air"))
         register_standard(ratio(`18O` = 0.0020052, major = "16O", compound = "VSMOW"))
-        register_standard(ratio(`34S` = 0.0045005, major = "32S", compound = "CDT"))
+        register_standard(ratio(`34S` = 0.045005, major = "32S", compound = "CDT"))
     })
     
     invisible()
