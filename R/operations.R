@@ -127,5 +127,9 @@ setMethod("shift_reference", "ANY", function(iso, ref) stop("shift_reference not
 
 setMethod("shift_reference", signature("Delta", "Delta"), function(iso, ref) {
     a <- to_ff(iso) # convert value to shift to an alpha value
+    if (length(iso) != length(ref) && length(ref) == 1) {
+        ref@.Data <- rep(ref@.Data, length(iso))
+        ref@weight <- rep(ref@weight, length(iso))
+    }
     fractionate(a, ref) # "fractionte" new reference with this (will automatically make sure everything is correct)
 })
