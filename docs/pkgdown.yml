@@ -1,0 +1,6 @@
+urls:
+  reference: http://isotopia.kopflab.org/reference
+  article: http://isotopia.kopflab.org/articles
+articles:
+  isotopia: isotopia.html
+

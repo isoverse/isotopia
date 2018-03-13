@@ -1,6 +1,5 @@
-#' @include conversion.R
+#' @include classes.R
 NULL
-
 
 #' Calculate isotope mass balance
 #' 
@@ -13,17 +12,20 @@ NULL
 #' fully implemented yet
 #' @return weighted abundance or delta value object that represents the combination of the parameters
 #' @family operations
-#' @method mass_balance
-#' @export
+#' @name mass_balance
+#' @rdname mass_balance
+#' @exportMethod mass_balance
 setGeneric("mass_balance", function(iso, iso2, ..., exact = get_iso_opts("exact_mass_balance")) standardGeneric("mass_balance"))
 
-#' @method mass_balance
-#' @export
+#' @rdname mass_balance
+#' @aliases ANY-method
 setMethod("mass_balance", "ANY", function(iso, iso2, ...,
                                           exact = get_iso_opts("exact_mass_balance")) 
     stop("mass_balance not defined for objects of class ", 
          class(iso), ", ", class(iso2), call. = FALSE))
 
+#' @rdname mass_balance
+#' @aliases Abundance,Abundance-method
 setMethod("mass_balance", signature("Abundance", "Abundance"), function(iso, iso2, ..., exact = get_iso_opts("exact_mass_balance")) {
     # consider implementing a performance optimized version for many additions
     all <- c(list(iso2), list(...))
@@ -31,6 +33,8 @@ setMethod("mass_balance", signature("Abundance", "Abundance"), function(iso, iso
         iso = iso + i
     iso
 })
+#' @rdname mass_balance
+#' @aliases Delta,Delta-method
 setMethod("mass_balance", signature("Delta", "Delta"), function(iso, iso2, ..., exact = get_iso_opts("exact_mass_balance")) {
     if (exact)
         stop("not implemented yet!", call. = FALSE) # should be implemented here rather than in the operators
@@ -41,6 +45,8 @@ setMethod("mass_balance", signature("Delta", "Delta"), function(iso, iso2, ..., 
     iso
 })
 
+#' @rdname mass_balance
+#' @aliases Deltas,Deltas-method
 setMethod("mass_balance", signature("Deltas", "Deltas"), function(iso, iso2, ..., exact = get_iso_opts("exact_mass_balance")) {
     stop("not implemented yet", call. = FALSE)
 })
@@ -60,18 +66,21 @@ setMethod("mass_balance", signature("Deltas", "Deltas"), function(iso, iso2, ...
 #' only permissible if the fractionation factors and isotope values have matching
 #' attributes.
 #' @family operations
-#' @method fractionate
 #' @usage 
 #' fractionate(frac, delta)
 #' fractionate(delta, frac)
 #' fractionate(frac, ratio)
-#' @export
+#' @name fractionate
+#' @rdname fractionate
+#' @exportMethod fractionate
 setGeneric("fractionate", function(frac, iso) standardGeneric("fractionate"))
 
-#' @method fractionate
-#' @export
+#' @rdname fractionate
+#' @aliases ANY-method
 setMethod("fractionate", "ANY", function(frac, iso) stop("fractionate not defined for objects of class ", class(frac), ", ", class(iso), call. = FALSE)) 
 
+#' @rdname fractionate
+#' @aliases FractionFactor,Ratio-method
 setMethod("fractionate", signature("FractionationFactor", "Ratio"), function(frac, iso) {
     iso_attribs_check(frac, iso, include = c("isoname", "major"), text = "cannot generate a ratio from a fractionation factor and a ratio")
     if (frac@compound2 != iso@compound)
@@ -81,6 +90,8 @@ setMethod("fractionate", signature("FractionationFactor", "Ratio"), function(fra
 })
 
 # weight of first fractionation factor is carried
+#' @rdname fractionate
+#' @aliases FractionFactor,FractionationFactor-method
 setMethod("fractionate", signature("FractionationFactor", "FractionationFactor"), function(frac, iso) {
     iso_attribs_check(frac, iso, include = c("isoname", "major"), text = "cannot generate a fractionation factor from two fractionation factors")
     if (frac@compound2 != iso@compound)
@@ -92,6 +103,8 @@ setMethod("fractionate", signature("FractionationFactor", "FractionationFactor")
 })
 
 # weight of first fractionation factor is carried
+#' @rdname fractionate
+#' @aliases FractionFactor,Delta-method
 setMethod("fractionate", signature("FractionationFactor", "Delta"), function(frac, iso) {
     notation <- iso@notation
     a <- to_ff(iso) # convert delta to alpha
@@ -100,6 +113,8 @@ setMethod("fractionate", signature("FractionationFactor", "Delta"), function(fra
 })
 
 # weight of first fractionation factor is carried
+#' @rdname fractionate
+#' @aliases Delta,FractionationFactor-method
 setMethod("fractionate", signature("Delta", "FractionationFactor"), function(frac, iso) fractionate(iso, frac))
 
 #' Shift reference frame
@@ -117,14 +132,17 @@ setMethod("fractionate", signature("Delta", "FractionationFactor"), function(fra
 #' only permissible if the fractionation factors and isotope values have matching
 #' attributes.
 #' @family operations
-#' @method shift_reference
-#' @export
+#' @name shift_reference
+#' @rdname shift_reference
+#' @exportMethod shift_reference
 setGeneric("shift_reference", function(iso, ref) standardGeneric("shift_reference"))
 
-#' @method shift_reference
-#' @export
+#' @rdname shift_reference
+#' @aliases ANY-method
 setMethod("shift_reference", "ANY", function(iso, ref) stop("shift_reference not defined for objects of class ", class(iso), ", ", class(ref)))
 
+#' @rdname shift_reference
+#' @aliases Delta,Delta-method
 setMethod("shift_reference", signature("Delta", "Delta"), function(iso, ref) {
     a <- to_ff(iso) # convert value to shift to an alpha value
     if (length(iso) != length(ref) && length(ref) == 1) {

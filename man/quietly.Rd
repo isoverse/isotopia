@@ -13,4 +13,3 @@ messages (it uses \link[base]{suppressMessages} and \link[base]{suppressWarnings
 internally) that might occur. Use with care to suppress warnings, you
 might end up hiding important information.
 }
-

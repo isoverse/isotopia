@@ -1,0 +1,58 @@
+title: isotopia
+url: http://isotopia.kopflab.org
+template:
+  params:
+    bootswatch: simplex
+
+home:
+  strip_header: true
+
+navbar:
+  title: isotopia
+  type: default
+  left:
+  - text: "Getting Started"
+    href: articles/isotopia.html
+  - text: "Reference"
+    href: reference/index.html
+  right:
+  - icon: fa-github fa-lg
+    href: https://github.com/sebkopf/isotopia
+
+
+reference:
+- title: All functions
+  desc: ~
+  contents:
+  - '`abundance`'
+  - '`arithmetic`'
+  - '`as.data.frame`'
+  - '`convert_isosys`'
+  - '`delta`'
+  - '`fractionate`'
+  - '`fractionation_factor`'
+  - '`get_value`'
+  - '`get_weight`'
+  - '`get_weighted_value`'
+  - '`intensity`'
+  - '`is.iso`'
+  - '`set_iso_opts`'
+  - '`iso`'
+  - '`isotopia-package`'
+  - '`mass_balance`'
+  - '`get_name`'
+  - '`quietly`'
+  - '`ratio`'
+  - '`recast_isoval`'
+  - '`set_attrib`'
+  - '`shift_reference`'
+  - '`show,Isoval-method`'
+  - '`register_standard`'
+  - '`switch_notation`'
+  - '`to_abundance`'
+  - '`to_delta`'
+  - '`to_ff`'
+  - '`to_ratio`'
+  - '`update_iso`'
+  - '`weight`'
+
