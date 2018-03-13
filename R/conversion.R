@@ -1,6 +1,3 @@
-#' @include validation.R
-NULL
-
 # general conversion function ===================================
 
 #' generic function to convert an isotope system that is part of a data frame
@@ -63,19 +60,25 @@ conversion_error <- function(from, to) {
 #' @return isotope \code{\link{ratio}} object if iso can be converted to a \code{\link{ratio}}, an error otherwise
 #' @rdname to_ratio
 #' @family data type conversions
-#' @method to_ratio
-#' @export
+#' @name to_ratio
+#' @rdname to_ratio
+#' @exportMethod to_ratio
 setGeneric("to_ratio", function(iso) standardGeneric("to_ratio"))
-
-#' @method to_ratio
-#' @export
-setMethod("to_ratio", "ANY", function(iso) conversion_error(iso, "isotope ratio"))
 
 #' @rdname to_ratio
 #' @export
 to_r <- function(iso) to_ratio(iso)
 
+#' @rdname to_ratio
+#' @aliases ANY-method
+setMethod("to_ratio", "ANY", function(iso) conversion_error(iso, "isotope ratio"))
+
+#' @rdname to_ratio
+#' @aliases Ratio-method
 setMethod("to_ratio", "Ratio", function(iso) iso)
+
+#' @rdname to_ratio
+#' @aliases Ratios-method
 setMethod("to_ratio", "Ratios", function(iso) iso)
 
 # abundance to ratio
@@ -164,27 +167,37 @@ setMethod("to_ratio", "Delta", function(iso) {
 #' @return isotope \code{\link{abundance}} object if iso can be converted to a \code{\link{abundance}}, an error otherwise
 #' @rdname to_abundance
 #' @family data type conversions
-#' @method to_abundance
-#' @export
+#' @name to_abundance
+#' @rdname to_abundance
+#' @exportMethod to_abundance
 setGeneric("to_abundance", function(iso) standardGeneric("to_abundance"))
-
-#' @method to_abundance
-#' @export
-setMethod("to_abundance", "ANY", function(iso) conversion_error(iso, "isotope abundance"))
-setMethod("to_abundance", "Abundance", function(iso) iso)
-setMethod("to_abundance", "Abundances", function(iso) iso)
 
 #' @rdname to_abundance
 #' @export
 to_ab <- function(iso) to_abundance(iso)
 
-# ratio to abundance
+#' @rdname to_abundance
+#' @aliases ANY-method
+setMethod("to_abundance", "ANY", function(iso) conversion_error(iso, "isotope abundance"))
+
+#' @rdname to_abundance
+#' @aliases Abundance-method
+setMethod("to_abundance", "Abundance", function(iso) iso)
+
+#' @rdname to_abundance
+#' @aliases Abundances-method
+setMethod("to_abundance", "Abundances", function(iso) iso)
+
+#' @rdname to_abundance
+#' @aliases Ratio-method
 setMethod("to_abundance", "Ratio", function(iso)  {
     iso <- switch_notation(iso, "raw") # first convert to raw before doing any math
     iso@.Data <- iso@.Data / (1 + iso@.Data) # ratio to abundance
     switch_notation(recast_isoval(iso, "Abundance"), get_iso_opts("default_ab_notation"))
 }) 
 
+#' @rdname to_abundance
+#' @aliases Ratios-method
 setMethod("to_abundance", "Ratios", function(iso) {
     convert_isosys(iso, "Abundances", 
                    function(df) {
@@ -197,10 +210,12 @@ setMethod("to_abundance", "Ratios", function(iso) {
                    })
 })
 
-# intensity to abundance
+#' @rdname to_abundance
+#' @aliases Intensities-method
 setMethod("to_abundance", "Intensities", function(iso) to_abundance(to_ratio(iso)))
 
-# delta to abundance
+#' @rdname to_abundance
+#' @aliases Delta-method
 setMethod("to_abundance", "Delta", function(iso) {
     # FIXME: add warning for isotope systems with more than one ratio?
     r <- to_ratio(iso)
@@ -232,22 +247,33 @@ setMethod("to_abundance", "Delta", function(iso) {
 #' \code{to_ff(ratio(), ratio())} is the same as \code{ratio() / ratio()}.
 #' See \link{arithmetic} for details.
 #' @family data type conversions
-#' @method to_ff
-#' @export
+#' @name to_ff
+#' @rdname to_ff
+#' @exportMethod to_ff
 setGeneric("to_ff", function(iso1, iso2) standardGeneric("to_ff"))
 
-#' @method to_ff
-#' @export
+#' @rdname to_ff
+#' @aliases ANY-method
 setMethod("to_ff", "ANY", function(iso1, iso2) conversion_error(iso1, "fractionation factor value (ratio of ratios)"))
+
+#' @rdname to_ff
+#' @aliases FractionationFactor,missing-method
 setMethod("to_ff", signature("FractionationFactor", "missing"), function(iso1, iso2) iso)
+
+#' @rdname to_ff
+#' @aliases FractionationFactors,missing-method
 setMethod("to_ff", signature("FractionationFactors", "missing"), function(iso1, iso2) iso)
 
-# two ratios to fractionation factor in alpha notation (uses the arithmetic shorthand) 
+# two ratios
+#' @rdname to_ff
+#' @aliases Ratio,Ratio-method
 setMethod("to_ff", signature("Ratio", "Ratio"), function(iso1, iso2) iso1/iso2)
 # Note: to allow this for entire isotope systems --> need to implement it properly with matching the right columns
 
 
 # delta/epsilon to alpha
+#' @rdname to_ff
+#' @aliases Delta,missing-method
 setMethod("to_ff", signature("Delta", "missing"), function(iso1, iso2) {
     iso1 <- switch_notation(iso1, "permil") # deltas and ffs are the same when in permil notation
     iso1 <- recast_isoval(iso1, "FractionationFactor", list(ref_ratio = NULL))
@@ -255,6 +281,8 @@ setMethod("to_ff", signature("Delta", "missing"), function(iso1, iso2) {
 })
 
 # two delta to fractionation factor (ff between the two compounds)
+#' @rdname to_ff
+#' @aliases Delta,Delta-method
 setMethod("to_ff", signature("Delta", "Delta"), function(iso1, iso2) {
     to_ff(iso1) / to_ff(iso2) # arithmetic operator is defined and takes care of the all the proper type checks
 })
@@ -275,35 +303,48 @@ setMethod("to_ff", signature("Delta", "Delta"), function(iso1, iso2) {
 #' @return isotope \code{\link{delta}} object if iso can be converted to a \code{\link{delta}}, an error otherwise
 #' @rdname to_delta
 #' @family data type conversions
-#' @method to_delta
-#' @export
+#' @name to_delta
+#' @rdname to_delta
+#' @exportMethod to_delta
 setGeneric("to_delta", function(iso, ref_ratio) standardGeneric("to_delta"))
 
 #' @rdname to_delta
 #' @export
 to_d <- function(iso, ref_ratio) to_delta(iso, ref_ratio)
 
-#' @method to_delta
-#' @export
+#' @rdname to_delta
+#' @aliases ANY-method
 setMethod("to_delta", "ANY", function(iso, ref_ratio) conversion_error(iso, "delta value"))
+
+#' @rdname to_delta
+#' @aliases Isosys,missing-method
 setMethod("to_delta", signature(iso = "Isosys", ref_ratio = "missing"), function(iso, ref_ratio) {
     convert_isosys(iso, "Deltas", function(df) lapply(as.data.frame(df), function(i) to_delta(i)))
 })
+
+#' @rdname to_delta
+#' @aliases Delta,missing-method
 setMethod("to_delta", signature(iso = "Delta", ref_ratio = "missing"), function(iso, ref_ratio) {
     iso
 })
 
 
 # fractionation factor to delta ====
+#' @rdname to_delta
+#' @aliases FractionationFactor,missing-method
 setMethod("to_delta", signature(iso = "FractionationFactor", ref_ratio = "missing"), function(iso, ref_ratio) {
     to_delta(iso, numeric())
 })
 
+#' @rdname to_delta
+#' @aliases FractionationFactor,numeric-method
 setMethod("to_delta", signature(iso = "FractionationFactor", ref_ratio = "numeric"), function(iso, ref_ratio) {
     to_delta(iso, ratio(ref_ratio))
 })
 
 # epsilon/delta to delta =========
+#' @rdname to_delta
+#' @aliases FractionationFactor,Ratio-method
 setMethod("to_delta", signature(iso = "FractionationFactor", ref_ratio = "Ratio"), function(iso, ref_ratio) {
     # make sure Ratio has the appropriate values
     if (length(ref_ratio) > 1 && length(ref_ratio) != length(iso))
@@ -329,6 +370,8 @@ setMethod("to_delta", signature(iso = "FractionationFactor", ref_ratio = "Ratio"
 # ratio to delta =========
 
 # ratio to delta (with numeric ref ratio)
+#' @rdname to_delta
+#' @aliases Ratio,missing-method
 setMethod("to_delta", signature("Ratio", "missing"), function(iso, ref_ratio) {
     stop("Can't convert from a ratio to a delta value without a reference ratio.",
          call. = FALSE)
@@ -336,6 +379,8 @@ setMethod("to_delta", signature("Ratio", "missing"), function(iso, ref_ratio) {
 
 
 # ratio to delta (with numeric ref ratio)
+#' @rdname to_delta
+#' @aliases Ratio,numeric-method
 setMethod("to_delta", signature("Ratio", "numeric"), function(iso, ref_ratio) {
     to_delta(iso, update_iso(ratio(ref_ratio), list(isoname = iso@isoname, major = iso@major)))
 })
@@ -344,6 +389,8 @@ setMethod("to_delta", signature("Ratio", "numeric"), function(iso, ref_ratio) {
 #FIXME: should allow multiple values for a ref_ratio!?
 
 # ratio to delta (with Ratio object as ref ratio)
+#' @rdname to_delta
+#' @aliases Ratio,Ratio-method
 setMethod("to_delta", signature("Ratio", "Ratio"), function(iso, ref_ratio) {
     if (length(ref_ratio) != 1)
         stop("reference ratio for a delta value object must be exactly one numeric value, supplied ", length(ref_ratio), call. = FALSE)
@@ -357,6 +404,8 @@ setMethod("to_delta", signature("Ratio", "Ratio"), function(iso, ref_ratio) {
     to_delta(a, ref_ratio = ref_ratio)
 })
 
+#' @rdname to_delta
+#' @aliases Ratios,Ratios-method
 setMethod("to_delta", signature(iso = "Ratios", ref_ratio = "Ratios"), function(iso, ref_ratio) {
     stop("This is the proper way to convert from a system of ratios to Deltas",
          " but not implemented yet: have to match the ref_ratio Ratios apppropriately",
@@ -364,6 +413,8 @@ setMethod("to_delta", signature(iso = "Ratios", ref_ratio = "Ratios"), function(
 })
 
 # abundance to delta =====
+#' @rdname to_delta
+#' @aliases Abundance,ANY-method
 setMethod("to_delta", signature("Abundance", "ANY"), function(iso, ref_ratio) {
     stop("not currently implemented, probably won't permit because it's dangerous transforming to ratio without taking the",
          "whole isotope system into consideration --> implement on the Abundances/Ratios level instead", call. = FALSE)

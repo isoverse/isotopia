@@ -22,4 +22,3 @@ generic function to convert an isotope system that is part of a data frame
 and stitch it back together with the columns in the proper positions. uses
 a callback function that has to do the conversion of the isotope values
 }
-

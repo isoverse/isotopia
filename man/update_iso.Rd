@@ -11,4 +11,3 @@ update_iso(obj, attribs)
 update_iso the attributes of an isotope value object
 internal function that is called by set_attrib wrapper
 }
-

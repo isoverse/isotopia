@@ -2,6 +2,17 @@
 % Please edit documentation in R/arithmetic.R
 \name{arithmetic}
 \alias{arithmetic}
+\alias{arithmetic}
+\alias{arithmetic}
+\alias{arithmetic}
+\alias{arithmetic}
+\alias{arithmetic}
+\alias{arithmetic}
+\alias{arithmetic}
+\alias{arithmetic}
+\alias{arithmetic}
+\alias{arithmetic}
+\alias{arithmetic}
 \title{Isotope arithmetic}
 \usage{
 intensity +- intensity
@@ -73,4 +84,3 @@ This is a shorthand for the \link{to_ff} function.
 describes the fractionation factor between the two compounds, requires the reference
 name of the two delta values to be identical. This is a shorthand for the \link{to_ff} function.
 }
-

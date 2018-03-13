@@ -1,4 +1,4 @@
-#' @include operations.R
+#' @include classes.R
 NULL
 
 #' Isotope arithmetic

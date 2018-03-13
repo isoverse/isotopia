@@ -3,34 +3,35 @@ Type: Package
 Title: Work with Isotopic Data in R
 Version: 0.5.7
 Author: Sebastian Kopf
-Maintainer: Sebastian Kopf <seb.kopf@gmail.com>
+Maintainer: Sebastian Kopf <sebastian.kopf@colorado.edu>
 Description: R interface for working with isotopic data (abundances, ratios,
     fractionation factors, delta values, etc.).
-License: GPL-3
-LazyLoad: yes
-Roxygen: list(wrap = FALSE)
 URL: https://github.com/sebkopf/isotopia
 BugReports: https://github.com/sebkopf/isotopia/issues
-Depends:
+Imports:
     methods,
+    stats,
     utils
 Suggests:
     testthat,
     rmarkdown,
     knitr
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
 VignetteBuilder: knitr
-Collate:
-    'utils.R'
+RoxygenNote: 6.0.1
+Collate: 
     'classes.R'
-    'validation.R'
-    'conversion.R'
-    'operations.R'
     'arithmetic.R'
     'attribs.R'
-    'show.R'
+    'conversion.R'
     'initialization.R'
-    'options.R'
     'isotopia.R'
     'notation.R'
+    'operations.R'
+    'options.R'
+    'show.R'
+    'utils.R'
+    'validation.R'
     'zzz.R'
-RoxygenNote: 5.0.1
