@@ -2,8 +2,7 @@ Package: isotopia
 Type: Package
 Title: Work with Isotopic Data in R
 Version: 0.5.7
-Author: Sebastian Kopf
-Maintainer: Sebastian Kopf <sebastian.kopf@colorado.edu>
+Authors@R: person("Sebastian", "Kopf", , "sebastian.kopf@colorado.edu", role = c("aut", "cre"))
 Description: R interface for working with isotopic data (abundances, ratios,
     fractionation factors, delta values, etc.).
 URL: https://github.com/sebkopf/isotopia
