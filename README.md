@@ -496,3 +496,4 @@ The **isotopia** package currently implements a lot of the core functionality fo
  
   - [Wickham, H., 2011. testthat: Get started with testing. The R Journal 3, 5-10.](http://journal.r-project.org/archive/2011-1/RJournal_2011-1_Wickham.pdf)
   - [Xie, Y., 2013b. knitr: A general-purpose package for dynamic report generation in R.](http://cran.r-project.org/web/packages/knitr/index.html)
+
