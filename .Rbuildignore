@@ -3,3 +3,6 @@
 .Rd2*
 .travis.yml
 .local
+_pkgdown.yml
+Makefile
+docs/*
