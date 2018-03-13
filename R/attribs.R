@@ -1,6 +1,3 @@
-#' @include classes.R
-NULL
-
 # update attributes =================================
 
 #' Set attributes of isotope objects
@@ -137,14 +134,17 @@ update_text_attrib <- function(obj, attribs, slot_name, msg) {
 #' r <- weight(r, 10)
 #' print(get_weight(r)) # returns 10
 #' @family data type attributes
-#' @method weight
-#' @export
+#' @name weight
+#' @rdname weight
+#' @exportMethod weight
 setGeneric("weight", function(iso, weight) standardGeneric("weight"))
 
-#' @method weight
-#' @export
+#' @rdname weight
+#' @aliases ANY-method
 setMethod("weight", "ANY", function(iso, weight) stop("weight not defined for objects of class ", class(iso), call. = FALSE))
 
+#' @rdname weight
+#' @aliases Isovale,numeric-method
 setMethod("weight", signature("Isoval", "numeric"), function(iso, weight) {
     iso <- update_iso(iso, list(weight = weight))
     validObject(iso) 
@@ -168,15 +168,25 @@ setMethod("weight", signature("Isoval", "numeric"), function(iso, weight) {
 #' frame but keep the isotope values intact, use \code{\link{as.data.frame}} instead.
 #' @seealso \code{\link[base]{as.numeric}}, \code{\link{as.data.frame}}, \code{\link[base]{as.data.frame}} (base method)
 #' @family data type attributes
-#' @method get_value
-#' @export
+#' @name get_value
+#' @rdname get_value
+#' @exportMethod get_value
 setGeneric("get_value", function(iso, notation = iso@notation) standardGeneric("get_value"))
 
-#' @method get_value
-#' @export
+#' @rdname get_value
+#' @aliases ANY-method
 setMethod("get_value", "ANY", function(iso, notation) stop("get_value not defined for objects of class ", class(iso), call. = FALSE))
+
+#' @rdname get_value
+#' @aliases numeric-method
 setMethod("get_value", "numeric", function(iso, notation = NULL) iso) # allow this for simplicity so this is similiar to as_numeric
+
+#' @rdname get_value
+#' @aliases Isoval-method
 setMethod("get_value", "Isoval", function(iso, notation = iso@notation) as.numeric(switch_notation(iso, notation)))
+
+#' @rdname get_value
+#' @aliases Isosys-method
 setMethod("get_value", "Isosys", function(iso, notation = NULL) {
     data.frame(lapply(iso,
       function(col) {
@@ -196,14 +206,21 @@ setMethod("get_value", "Isosys", function(iso, notation = NULL) {
 #' objects replaced with their weight values. 
 #' @seealso \code{\link{as.data.frame}}, \code{\link[base]{as.data.frame}} (base method)
 #' @family data type attributes
-#' @method get_weight
-#' @export
+#' @name get_weight
+#' @rdname get_weight
+#' @exportMethod get_weight
 setGeneric("get_weight", function(iso) standardGeneric("get_weight"))
 
-#' @method get_weight
-#' @export
+#' @rdname get_weight
+#' @aliases ANY-method
 setMethod("get_weight", "ANY", function(iso) stop("get_weight not defined for objects of class ", class(iso), call. = FALSE))
+
+#' @rdname get_weight
+#' @aliases Isoval-method
 setMethod("get_weight", "Isoval", function(iso) iso@weight)
+
+#' @rdname get_weight
+#' @aliases Isosys-method
 setMethod("get_weight", "Isosys", function(iso) {
     data.frame(lapply(iso,
       function(col) {
@@ -222,14 +239,21 @@ setMethod("get_weight", "Isosys", function(iso) {
 #' objects replaced with their weighted values. 
 #' @seealso \code{\link{as.data.frame}}, \code{\link[base]{as.data.frame}} (base method)
 #' @family data type attributes
-#' @method get_weighted_value
-#' @export
+#' @name get_weighted_value
+#' @rdname get_weighted_value
+#' @exportMethod get_weighted_value
 setGeneric("get_weighted_value", function(iso) standardGeneric("get_weighted_value"))
 
-#' @method get_weighted_value
-#' @export
+#' @rdname get_weighted_value
+#' @aliases ANY-method
 setMethod("get_weighted_value", "ANY", function(iso) stop("get_weighted_value not defined for objects of class ", class(iso), call. = FALSE))
+
+#' @rdname get_weighted_value
+#' @aliases Isoval-method
 setMethod("get_weighted_value", "Isoval", function(iso) get_weight(iso) * get_value(iso))
+
+#' @rdname get_weighted_value
+#' @aliases Isosys-method
 setMethod("get_weighted_value", "Isosys", function(iso) {
     data.frame(lapply(iso,
       function(col) {

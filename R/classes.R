@@ -1,6 +1,3 @@
-#' @include utils.R
-NULL
-
 # little helper function for isotope letters
 # --> to be expanded for proper formatting in the future
 get_iso_letter <- function(letter = c("alpha", "delta", "epsilon", "permil")) {

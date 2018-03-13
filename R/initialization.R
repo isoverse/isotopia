@@ -1,7 +1,3 @@
-#' @include show.R
-#' @include conversion.R
-NULL
-
 #' Isotope ratio
 #'
 #' Generate isotope ratio objects. See \link{isotopia} for general information on initializing

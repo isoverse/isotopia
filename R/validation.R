@@ -1,6 +1,3 @@
-#' @include classes.R
-NULL
-
 #' Checks for isotope value objects
 #' 
 #' Checks for different kinds of isotope value objects. All checks recognize

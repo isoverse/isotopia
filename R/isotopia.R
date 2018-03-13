@@ -45,10 +45,6 @@
 #' ratio(`33S` = c(0.1, 0.2, 0.3), `34S` = c(0.2, 0.4, 0.6), major = "32S") # isotope system
 NULL
 
-#' @include options.R
-#' @include operations.R
-#' @include arithmetic.R
-#' @include initialization.R
 #' @import methods
 #' @importFrom stats complete.cases
 #' @importFrom utils modifyList

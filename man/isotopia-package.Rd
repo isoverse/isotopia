@@ -2,8 +2,8 @@
 % Please edit documentation in R/isotopia.R
 \docType{package}
 \name{isotopia-package}
-\alias{isotopia}
 \alias{isotopia-package}
+\alias{isotopia}
 \title{isotopia package}
 \description{
 R interface for working with isotopic data (abundances, ratios, delta values, etc.).
@@ -47,10 +47,9 @@ ratio(c(0.1, 0.2, 0.3)) # multiple values
 ratio(`13C` = c(0.1, 0.2, 0.3)) # named ratio
 ratio(`33S` = c(0.1, 0.2, 0.3), `34S` = c(0.2, 0.4, 0.6), major = "32S") # isotope system
 }
-\author{
-Sebastian Kopf
-}
 \seealso{
 \code{\link{ratio}}, \code{\link{is.ratio}}, \code{\link{to_ratio}}, etc.
 }
-
+\author{
+Sebastian Kopf
+}

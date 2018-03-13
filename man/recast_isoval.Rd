@@ -18,4 +18,3 @@ recast_isoval(iso, to_class, mods = list(), validate = TRUE)
 \description{
 generic function to recast an isotopic value object during conversions
 }
-

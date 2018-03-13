@@ -47,4 +47,3 @@ Other isotope data types: \code{\link{abundance}},
   \code{\link{fractionation_factor}},
   \code{\link{intensity}}, \code{\link{ratio}}
 }
-

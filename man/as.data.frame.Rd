@@ -16,4 +16,3 @@ value objects.
 \seealso{
 \code{\link[base]{as.data.frame}}
 }
-

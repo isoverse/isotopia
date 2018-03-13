@@ -24,4 +24,3 @@ be access via the appropriate wrapper functions, e.g. \code{ratio}, \code{abunda
 the setup for this function also means that you can modify
 e.g. an existing ratio with the paramters passed in (say to set the name later on)
 }
-
