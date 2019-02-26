@@ -1,7 +1,7 @@
 Package: isotopia
 Type: Package
 Title: Work with Isotopic Data in R
-Version: 0.5.7
+Version: 0.5.8
 Authors@R: person("Sebastian", "Kopf", , "sebastian.kopf@colorado.edu", role = c("aut", "cre"))
 Description: R interface for working with isotopic data (abundances, ratios,
     fractionation factors, delta values, etc.).
@@ -19,7 +19,7 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 VignetteBuilder: knitr
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Collate: 
     'classes.R'
     'arithmetic.R'

@@ -8,8 +8,8 @@
 set_iso_opts(default_ab_notation = c("raw", "percent"),
   default_ff_notation = c("alpha", "eps", "permil", "ppm"),
   default_delta_notation = c("raw", "permil", "ppm"),
-  default_intensity_unit = "", default_major = "", default_minor = "",
-  exact_mass_balance = FALSE, standards = c())
+  default_intensity_unit = "", default_major = "",
+  default_minor = "", exact_mass_balance = FALSE, standards = c())
 
 get_iso_opts(opts)
 }
@@ -74,3 +74,4 @@ default major and minor isotopes
 \seealso{
 Other options: \code{\link{register_standard}}
 }
+\concept{options}

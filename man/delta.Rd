@@ -4,8 +4,9 @@
 \alias{delta}
 \title{Delta value}
 \usage{
-delta(..., major = get_iso_opts("default_major"), compound = "", ref = "",
-  ref_ratio = numeric(), notation = get_iso_opts("default_delta_notation"),
+delta(..., major = get_iso_opts("default_major"), compound = "",
+  ref = "", ref_ratio = numeric(),
+  notation = get_iso_opts("default_delta_notation"),
   weight = numeric(), single_as_df = FALSE)
 }
 \arguments{
@@ -47,3 +48,4 @@ Other isotope data types: \code{\link{abundance}},
   \code{\link{fractionation_factor}},
   \code{\link{intensity}}, \code{\link{ratio}}
 }
+\concept{isotope data types}

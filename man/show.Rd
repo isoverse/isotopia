@@ -12,3 +12,6 @@
 
 \S4method{show}{Isosys}(object)
 }
+\description{
+show information
+}

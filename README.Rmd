@@ -1,0 +1,39 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+
+version <- as.character(packageVersion("isotopia"))
+```
+
+# isotopia
+
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/isotopia)](https://cran.r-project.org/package=isotopia)
+[![Git_Hub_Version](https://img.shields.io/badge/GitHub-`r version`-orange.svg?style=flat-square)](/commits)
+[![Documentation](https://img.shields.io/badge/docs-online-green.svg)](http://isotopia.kopflab.org/)
+[![Build Status](https://travis-ci.org/sebkopf/isotopia.svg?branch=master)](https://travis-ci.org/sebkopf/isotopia)
+
+## About
+
+In stable isotope geochemical calculations, we use a number of different representations of isotopic information and processes (ratios, abundances, delta values, alpha values, epsilon values, fractionation factors, refereence frame shifts, mass balance calculations, mass-independent effects, etc., etc.) that are constantly being converted back and forth and used for different kinds of isotope arithmetic. Very frequently, the tangle of keeping track of this information and how all the calculations are done properly makes code very hard to read, difficult to communicate - or even understand oneself later on, and as anyone knows who's ever dropped a -1 or x1000 at the wrong place, prone to small mistakes that can make an enormous difference.
+
+The [**isotopia**](http://isotopia.kopflab.org/) package uses the S4 object system of R to define elemental isotopic data classes (`ratio`, `abundance`, `delta`, `fractionation_factor` and `intensity`) so that it can automatically keep track of what is a ratio, what is a delta value (and is it in permil notation or in ppm), etc., and perform isotope arithmetic accordingly. The multiple dispatch system of S4 allows any generic function to be dispached to a method based on the class of the argument, i.e. a fractionation function can be implemented differentely whether it is supposed to fractionate an isotope ratio or a delta value. This allows the user to focus on the actual calculations and communicate to the reader exactly what each value represents. Most importantly, the isotope value object structure allows [**isotopia**](http://isotopia.kopflab.org/) to put safeguards in place against non-sense calculations and makes it easy to implement rigorous, automatically executed tests for every single formula and computation (currently there are over 350 tests implemented, see [Testing](#testing) for a few examples). This means that any time any of the isotopia source code is modified, it has to pass all the tests that ensure it is functioning exactly as expected. This kind of test-driven implementation provides high confidence in the calculations and protects from small code changes leading to incorrect results and interpretation. 
+
+For a detailed guide on how to get started, see [this vignette](https://isotopia.kopflab.org/articles/isotopia.html).
+
+## Installation
+
+The [**isotopia**](http://isotopia.kopflab.org/) R package can be installed directly from [GitHub](https://github.com/), by using the R development tools package (`devtools`). A word of caution that isotopia is still under active development and development versions include additional functionality with syntax that might not be backwards compatible.
+
+```{r gh-installation, eval = FALSE}
+# install.packages("devtools") # only needed once
+devtools::install_github("sebkopf/isotopia")
+```

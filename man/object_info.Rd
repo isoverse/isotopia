@@ -17,18 +17,13 @@
 \alias{Delta-method}
 \alias{get_units}
 \alias{get_units,Isoval-method}
-\alias{Isoval-method}
 \alias{get_units,Intensity-method}
 \alias{Intensity-method}
 \alias{get_label}
 \alias{get_label,ANY-method}
-\alias{ANY-method}
 \alias{get_label,Isoval-method}
-\alias{Isoval-method}
 \alias{get_label,FractionationFactor-method}
-\alias{FractionationFactor-method}
 \alias{get_label,Delta-method}
-\alias{Delta-method}
 \alias{get_label,Isosys-method}
 \alias{Isosys-method}
 \title{Information about an isotopic data object}
@@ -90,3 +85,4 @@ Other data type attributes: \code{\link{get_value}},
   \code{\link{get_weight}}, \code{\link{set_attrib}},
   \code{\link{switch_notation}}, \code{\link{weight}}
 }
+\concept{data type attributes}

@@ -52,3 +52,4 @@ The \code{to_ab} function is a shorthand for \code{to_abundance} but otherwise i
 Other data type conversions: \code{\link{to_delta}},
   \code{\link{to_ff}}, \code{\link{to_ratio}}
 }
+\concept{data type conversions}

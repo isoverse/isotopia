@@ -73,3 +73,4 @@ The \code{to_d} function is a shorthand for \code{to_delta} but otherwise identi
 Other data type conversions: \code{\link{to_abundance}},
   \code{\link{to_ff}}, \code{\link{to_ratio}}
 }
+\concept{data type conversions}

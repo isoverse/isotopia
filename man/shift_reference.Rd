@@ -38,3 +38,4 @@ attributes.
 Other operations: \code{\link{fractionate}},
   \code{\link{mass_balance}}
 }
+\concept{operations}

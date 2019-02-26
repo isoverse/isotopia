@@ -37,3 +37,4 @@ Other isotope data types: \code{\link{delta}},
   \code{\link{fractionation_factor}},
   \code{\link{intensity}}, \code{\link{ratio}}
 }
+\concept{isotope data types}

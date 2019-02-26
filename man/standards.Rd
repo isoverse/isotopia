@@ -49,3 +49,4 @@ if the search criteria did not yield exactly one.
 \seealso{
 Other options: \code{\link{set_iso_opts}}
 }
+\concept{options}

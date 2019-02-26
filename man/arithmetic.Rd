@@ -2,17 +2,6 @@
 % Please edit documentation in R/arithmetic.R
 \name{arithmetic}
 \alias{arithmetic}
-\alias{arithmetic}
-\alias{arithmetic}
-\alias{arithmetic}
-\alias{arithmetic}
-\alias{arithmetic}
-\alias{arithmetic}
-\alias{arithmetic}
-\alias{arithmetic}
-\alias{arithmetic}
-\alias{arithmetic}
-\alias{arithmetic}
 \title{Isotope arithmetic}
 \usage{
 intensity +- intensity

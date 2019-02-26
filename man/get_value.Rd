@@ -47,3 +47,4 @@ Other data type attributes: \code{\link{get_name}},
   \code{\link{get_weight}}, \code{\link{set_attrib}},
   \code{\link{switch_notation}}, \code{\link{weight}}
 }
+\concept{data type attributes}

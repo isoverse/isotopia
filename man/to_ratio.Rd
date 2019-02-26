@@ -36,3 +36,4 @@ The \code{to_r} function is a shorthand for \code{to_ratio} but otherwise identi
 Other data type conversions: \code{\link{to_abundance}},
   \code{\link{to_delta}}, \code{\link{to_ff}}
 }
+\concept{data type conversions}

@@ -45,3 +45,4 @@ is also implemented with an \code{\link{arithmetic}} shorthand.
 Other operations: \code{\link{fractionate}},
   \code{\link{shift_reference}}
 }
+\concept{operations}

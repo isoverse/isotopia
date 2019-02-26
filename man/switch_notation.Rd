@@ -77,8 +77,8 @@ switch_notation(iso, to)
 
 \S4method{switch_notation}{ANY,ANY,ANY}(iso, to = NULL, from = NULL)
 
-\S4method{switch_notation}{numeric,Notation_raw,Notation_raw}(iso, to = NULL,
-  from = NULL)
+\S4method{switch_notation}{numeric,Notation_raw,Notation_raw}(iso,
+  to = NULL, from = NULL)
 
 \S4method{switch_notation}{numeric,Notation_percent,Notation_percent}(iso,
   to = NULL, from = NULL)
@@ -86,14 +86,14 @@ switch_notation(iso, to)
 \S4method{switch_notation}{numeric,Notation_alpha,Notation_alpha}(iso,
   to = NULL, from = NULL)
 
-\S4method{switch_notation}{numeric,Notation_eps,Notation_eps}(iso, to = NULL,
-  from = NULL)
+\S4method{switch_notation}{numeric,Notation_eps,Notation_eps}(iso,
+  to = NULL, from = NULL)
 
 \S4method{switch_notation}{numeric,Notation_permil,Notation_permil}(iso,
   to = NULL, from = NULL)
 
-\S4method{switch_notation}{numeric,Notation_ppm,Notation_ppm}(iso, to = NULL,
-  from = NULL)
+\S4method{switch_notation}{numeric,Notation_ppm,Notation_ppm}(iso,
+  to = NULL, from = NULL)
 
 \S4method{switch_notation}{numeric,Notation_percent,Notation_raw}(iso,
   to = NULL, from = NULL)
@@ -101,11 +101,11 @@ switch_notation(iso, to)
 \S4method{switch_notation}{numeric,Notation_raw,Notation_percent}(iso,
   to = NULL, from = NULL)
 
-\S4method{switch_notation}{numeric,Notation_eps,Notation_raw}(iso, to = NULL,
-  from = NULL)
+\S4method{switch_notation}{numeric,Notation_eps,Notation_raw}(iso,
+  to = NULL, from = NULL)
 
-\S4method{switch_notation}{numeric,Notation_raw,Notation_eps}(iso, to = NULL,
-  from = NULL)
+\S4method{switch_notation}{numeric,Notation_raw,Notation_eps}(iso,
+  to = NULL, from = NULL)
 
 \S4method{switch_notation}{numeric,Notation_eps,Notation_alpha}(iso,
   to = NULL, from = NULL)
@@ -140,13 +140,14 @@ switch_notation(iso, to)
 \S4method{switch_notation}{numeric,ANY,Notation_ppm}(iso, to = NULL,
   from = NULL)
 
-\S4method{switch_notation}{Isoval,ANY,missing}(iso, to = NULL, from = NULL)
+\S4method{switch_notation}{Isoval,ANY,missing}(iso, to = NULL,
+  from = NULL)
 
 \S4method{switch_notation}{Isoval,Notation_raw,missing}(iso, to = NULL,
   from = NULL)
 
-\S4method{switch_notation}{Abundance,Notation_percent,missing}(iso, to = NULL,
-  from = NULL)
+\S4method{switch_notation}{Abundance,Notation_percent,missing}(iso,
+  to = NULL, from = NULL)
 
 \S4method{switch_notation}{Delta,Notation_permil,missing}(iso, to = NULL,
   from = NULL)
@@ -154,7 +155,8 @@ switch_notation(iso, to)
 \S4method{switch_notation}{Delta,Notation_ppm,missing}(iso, to = NULL,
   from = NULL)
 
-\S4method{switch_notation}{FractionationFactor,Notation_alpha,missing}(iso,
+
+  \S4method{switch_notation}{FractionationFactor,Notation_alpha,missing}(iso,
   to = NULL, from = NULL)
 
 \S4method{switch_notation}{FractionationFactor,Notation_eps,missing}(iso,
@@ -163,7 +165,8 @@ switch_notation(iso, to)
 \S4method{switch_notation}{FractionationFactor,Notation_raw,missing}(iso,
   to = NULL, from = NULL)
 
-\S4method{switch_notation}{FractionationFactor,Notation_permil,missing}(iso,
+
+  \S4method{switch_notation}{FractionationFactor,Notation_permil,missing}(iso,
   to = NULL, from = NULL)
 
 \S4method{switch_notation}{FractionationFactor,Notation_ppm,missing}(iso,
@@ -201,3 +204,4 @@ Other data type attributes: \code{\link{get_name}},
   \code{\link{get_weight}}, \code{\link{set_attrib}},
   \code{\link{weight}}
 }
+\concept{data type attributes}

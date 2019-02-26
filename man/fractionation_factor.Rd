@@ -6,12 +6,12 @@
 \title{Fractionation factor}
 \usage{
 fractionation_factor(..., major = get_iso_opts("default_major"),
-  notation = get_iso_opts("default_ff_notation"), ctop = "", cbot = "",
-  single_as_df = FALSE)
+  notation = get_iso_opts("default_ff_notation"), ctop = "",
+  cbot = "", single_as_df = FALSE)
 
 ff(..., major = get_iso_opts("default_major"),
-  notation = get_iso_opts("default_ff_notation"), ctop = "", cbot = "",
-  single_as_df = FALSE)
+  notation = get_iso_opts("default_ff_notation"), ctop = "",
+  cbot = "", single_as_df = FALSE)
 }
 \arguments{
 \item{...}{- numeric vectors (can be named) to turn into fractionation factors}
@@ -41,3 +41,4 @@ Other isotope data types: \code{\link{abundance}},
   \code{\link{delta}}, \code{\link{intensity}},
   \code{\link{ratio}}
 }
+\concept{isotope data types}

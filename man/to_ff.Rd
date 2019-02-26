@@ -59,3 +59,4 @@ See \link{arithmetic} for details.
 Other data type conversions: \code{\link{to_abundance}},
   \code{\link{to_delta}}, \code{\link{to_ratio}}
 }
+\concept{data type conversions}

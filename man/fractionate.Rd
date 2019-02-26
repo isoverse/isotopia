@@ -54,3 +54,4 @@ attributes.
 Other operations: \code{\link{mass_balance}},
   \code{\link{shift_reference}}
 }
+\concept{operations}
