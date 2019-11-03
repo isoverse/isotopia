@@ -4,8 +4,8 @@
 # isotopia
 
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/isotopia)](https://cran.r-project.org/package=isotopia)
-[![Git\_Hub\_Version](https://img.shields.io/badge/GitHub-0.5.7-orange.svg?style=flat-square)](/commits)
-[![Documentation](https://img.shields.io/badge/docs-online-green.svg)](http://isotopia.kopflab.org/)
+[![Git\_Hub\_Version](https://img.shields.io/badge/GitHub-0.5.8-orange.svg?style=flat-square)](/commits)
+[![Documentation](https://img.shields.io/badge/docs-online-green.svg)](http://isotopia.isoverse.org/)
 [![Build
 Status](https://travis-ci.org/sebkopf/isotopia.svg?branch=master)](https://travis-ci.org/sebkopf/isotopia)
 
@@ -24,7 +24,7 @@ later on, and as anyone knows who’s ever dropped a -1 or x1000 at the
 wrong place, prone to small mistakes that can make an enormous
 difference.
 
-The [**isotopia**](http://isotopia.kopflab.org/) package uses the S4
+The [**isotopia**](http://isotopia.isoverse.org/) package uses the S4
 object system of R to define elemental isotopic data classes (`ratio`,
 `abundance`, `delta`, `fractionation_factor` and `intensity`) so that it
 can automatically keep track of what is a ratio, what is a delta value
@@ -36,7 +36,7 @@ whether it is supposed to fractionate an isotope ratio or a delta value.
 This allows the user to focus on the actual calculations and communicate
 to the reader exactly what each value represents. Most importantly, the
 isotope value object structure allows
-[**isotopia**](http://isotopia.kopflab.org/) to put safeguards in place
+[**isotopia**](http://isotopia.isoverse.org/) to put safeguards in place
 against non-sense calculations and makes it easy to implement rigorous,
 automatically executed tests for every single formula and computation
 (currently there are over 350 tests implemented, see [Testing](#testing)
@@ -47,11 +47,11 @@ provides high confidence in the calculations and protects from small
 code changes leading to incorrect results and interpretation.
 
 For a detailed guide on how to get started, see [this
-vignette](https://isotopia.kopflab.org/articles/isotopia.html).
+vignette](https://isotopia.isoverse.org/articles/isotopia.html).
 
 ## Installation
 
-The [**isotopia**](http://isotopia.kopflab.org/) R package can be
+The [**isotopia**](http://isotopia.isoverse.org/) R package can be
 installed directly from [GitHub](https://github.com/), by using the R
 development tools package (`devtools`). A word of caution that isotopia
 is still under active development and development versions include

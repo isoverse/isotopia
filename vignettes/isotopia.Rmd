@@ -9,11 +9,11 @@ vignette: >
 
 # Overview
 
-The [**isotopia**](http://isotopia.kopflab.org/) package provides several isotopic data types that can be initialized by calling the respective `ratio`, `abundance`, `delta`, `fractionation_factor` and `intensity` functions. Each data type has additional attributes (such as name of the minor and major isotopes, and what compound it represents, what the reference ratio is for delta values, and what notation is used), which are all described in great detail in the help functions of [**isotopia**](http://isotopia.kopflab.org/) that are accessible directly from R. Each data type can be initialized as a single vector of isotopic data or an entire system of isotope values for the same element (e.g. all oxygen or all sulfur isotopes). As all isotope data objects are implemented as extensions of primitive data types in R, they can be structured and aggregated in all the ways familiar to people with prior R experience, but should be intuitive enough to be useful "out of the box" for users new to this language. Isotope data types can then be converted from one type to another using `to_ratio`, `to_abundance`, `to_delta`, `to_fractionation_factor` methods, can be used in operations (`mass_balance`, `fractionate`, etc.) or transferred from one notation to another using `switch_notation`. Here, I provide a few examples how [**isotopia**](http://isotopia.kopflab.org/) works and how it can be used, with the complete documentation available in the reference manual. To look at the newest version of this tutorial directly within R, call the vignette `vignette("isotopia")`.
+The [**isotopia**](http://isotopia.isoverse.org/) package provides several isotopic data types that can be initialized by calling the respective `ratio`, `abundance`, `delta`, `fractionation_factor` and `intensity` functions. Each data type has additional attributes (such as name of the minor and major isotopes, and what compound it represents, what the reference ratio is for delta values, and what notation is used), which are all described in great detail in the help functions of [**isotopia**](http://isotopia.isoverse.org/) that are accessible directly from R. Each data type can be initialized as a single vector of isotopic data or an entire system of isotope values for the same element (e.g. all oxygen or all sulfur isotopes). As all isotope data objects are implemented as extensions of primitive data types in R, they can be structured and aggregated in all the ways familiar to people with prior R experience, but should be intuitive enough to be useful "out of the box" for users new to this language. Isotope data types can then be converted from one type to another using `to_ratio`, `to_abundance`, `to_delta`, `to_fractionation_factor` methods, can be used in operations (`mass_balance`, `fractionate`, etc.) or transferred from one notation to another using `switch_notation`. Here, I provide a few examples how [**isotopia**](http://isotopia.isoverse.org/) works and how it can be used, with the complete documentation available in the reference manual. To look at the newest version of this tutorial directly within R, call the vignette `vignette("isotopia")`.
 
 # Data types
 
-After *isotopia* is [installed](http://isotopia.kopflab.org/), it can be loaded at any time like any other R package using `library(isotopia)`. The basic data types are initialized simply by calling the respective `ratio`, `abundance`, `delta` and `fractionation_factor` functions with single or multiple values.
+After *isotopia* is [installed](http://isotopia.isoverse.org/), it can be loaded at any time like any other R package using `library(isotopia)`. The basic data types are initialized simply by calling the respective `ratio`, `abundance`, `delta` and `fractionation_factor` functions with single or multiple values.
 
 ```{r data-types}
 library(isotopia)
@@ -58,7 +58,7 @@ show(ab(`33S` = 0.0075, `34S` = 0.0421, `36S` = 0.0002, major = "32S"))
 
 # Notation
 
-Closely related to the attributes system is the notation system implemented in [**isotopia**](https://github.com/sebkopf/isotopia). Notation is special because it is an attribute that, when changed, also changes the numerical value of an isotope object with it. All isotope value objects keep track internally what notation they are in, which allows them to be used correctly in any operations and conversions completely independent of what notation the user prefers to work in. Notation is first specified when an isotope value object is initialized and several different notations are implemented for the different isotope value objects. If not specified during intialization, [**isotopia**](https://github.com/sebkopf/isotopia) assumes tha an object is created with its default notation. A number of default settings can be specified and retrieved using ```set_iso_opts()``` and ```get_iso_opts()```. Here an example of checking and setting the default notation for fractionation factors (which can be either $\alpha$ values, raw $\epsilon=\alpha-1$ or $\epsilon$ values in permil notation), initializing a new object with default notation (i.e. without specifying `notation="x"` during initialization) and converting it back and forth. 
+Closely related to the attributes system is the notation system implemented in [**isotopia**](https://github.com/isoverse/isotopia). Notation is special because it is an attribute that, when changed, also changes the numerical value of an isotope object with it. All isotope value objects keep track internally what notation they are in, which allows them to be used correctly in any operations and conversions completely independent of what notation the user prefers to work in. Notation is first specified when an isotope value object is initialized and several different notations are implemented for the different isotope value objects. If not specified during intialization, [**isotopia**](https://github.com/isoverse/isotopia) assumes tha an object is created with its default notation. A number of default settings can be specified and retrieved using ```set_iso_opts()``` and ```get_iso_opts()```. Here an example of checking and setting the default notation for fractionation factors (which can be either $\alpha$ values, raw $\epsilon=\alpha-1$ or $\epsilon$ values in permil notation), initializing a new object with default notation (i.e. without specifying `notation="x"` during initialization) and converting it back and forth. 
 
 ```{r}
 show(get_iso_opts("default_ff_notation")) 
@@ -69,7 +69,7 @@ show(switch_notation(p, "eps"))
 show(switch_notation(p, "alpha"))
 ```
 
-It is important to note that of course all of these values are equivalent, they are just representions of the same fractionation factor in different notation. Accordingly, they behave **exactly** the same in all calculations implemented by [**isotopia**](https://github.com/sebkopf/isotopia) regardless what notation they are in.
+It is important to note that of course all of these values are equivalent, they are just representions of the same fractionation factor in different notation. Accordingly, they behave **exactly** the same in all calculations implemented by [**isotopia**](https://github.com/isoverse/isotopia) regardless what notation they are in.
 
 # Conversions
 
@@ -83,11 +83,11 @@ ab <- to_abundance(r)
 show(ab)
 ```
 
-Because the system of intensities (here as ion counts #) had the major isotope attribute specified, the conversion ```to_ratio``` could automatically figure out what ratios to form. Without specifying which one is the major isotope, the intensities would have still initialized just fine but [**isotopia**](https://github.com/sebkopf/isotopia) would have thrown an error when trying to convert to isotope ratios. There's much more functionality in the conversions, which are all listed in the reference manual available directly within R by calling ```?isotopia``` or ```?to_ratio``` or any other function defined in the package.
+Because the system of intensities (here as ion counts #) had the major isotope attribute specified, the conversion ```to_ratio``` could automatically figure out what ratios to form. Without specifying which one is the major isotope, the intensities would have still initialized just fine but [**isotopia**](https://github.com/isoverse/isotopia) would have thrown an error when trying to convert to isotope ratios. There's much more functionality in the conversions, which are all listed in the reference manual available directly within R by calling ```?isotopia``` or ```?to_ratio``` or any other function defined in the package.
 
 ## Delta values and reference standards
 
-In the case of delta values, conversions often require the specification or use of a reference ratio. This can simply be done by specifying the reference ratio when converting to_delta and since [**isotopia**](https://github.com/sebkopf/isotopia) stores the reference ratio with the delta value object, it can be used automatically in the reverse calculation.
+In the case of delta values, conversions often require the specification or use of a reference ratio. This can simply be done by specifying the reference ratio when converting to_delta and since [**isotopia**](https://github.com/isoverse/isotopia) stores the reference ratio with the delta value object, it can be used automatically in the reverse calculation.
 
 ```{r}
 r <- ratio(`13C` = 0.0115, major = "12C")
@@ -97,14 +97,14 @@ show(d)
 show(to_ratio(d))
 ```
 
-Additionally, [**isotopia**](https://github.com/sebkopf/isotopia) keeps a register of known reference materials with several default values already entered and the possibility for the user to add additional ones they want to use (with the ```register_standard()``` function). Standards can be retrieved as ratio objects by calling ```get_standard()``` and specifying which standard to retrieve for which isotope (see the manual in section A.2.8 for details). The list of all registered ratios can be retrieved as any other option with a call to ```get_iso_opts``` (here turned into a table with the k-table or ```kable``` command provided by the knitr package - Xie, 2013):
+Additionally, [**isotopia**](https://github.com/isoverse/isotopia) keeps a register of known reference materials with several default values already entered and the possibility for the user to add additional ones they want to use (with the ```register_standard()``` function). Standards can be retrieved as ratio objects by calling ```get_standard()``` and specifying which standard to retrieve for which isotope (see the manual in section A.2.8 for details). The list of all registered ratios can be retrieved as any other option with a call to ```get_iso_opts``` (here turned into a table with the k-table or ```kable``` command provided by the knitr package - Xie, 2013):
 
 ```{r, results='asis'}
 library(knitr)
 kable(get_iso_opts("standards"), format="markdown")
 ```
 
-Registered standards provide [**isotopia**](https://github.com/sebkopf/isotopia) with the means to automatically select the correct reference ratio during conversions with delta objects that have sufficiently specific attributes (a message informs the user what was selected, if not enough information is provided to match exactly to one correct standard, this will fail with an error unless the user specifically provides a reference ratio for the conversion).
+Registered standards provide [**isotopia**](https://github.com/isoverse/isotopia) with the means to automatically select the correct reference ratio during conversions with delta objects that have sufficiently specific attributes (a message informs the user what was selected, if not enough information is provided to match exactly to one correct standard, this will fail with an error unless the user specifically provides a reference ratio for the conversion).
 
 
 ```{r}
@@ -115,11 +115,11 @@ show(to_ratio(d))
 
 # Operations
 
-With the conversions and data types all in place, [**isotopia**](https://github.com/sebkopf/isotopia) can easily expand its func- tionality by building on top of the data types. Currently, operations are limited to a number of key features, such as ```mass_balance()``` calculations for fractional abundances and delta values, as well as fractionating (```fractionate()```) isotope data objects with ```fractionation_factors``` and shifting the reference frame on delta values (```shift_reference()```). As always, attributes are carried through these operations in the most sensible way for what they actuallly represent.
+With the conversions and data types all in place, [**isotopia**](https://github.com/isoverse/isotopia) can easily expand its func- tionality by building on top of the data types. Currently, operations are limited to a number of key features, such as ```mass_balance()``` calculations for fractional abundances and delta values, as well as fractionating (```fractionate()```) isotope data objects with ```fractionation_factors``` and shifting the reference frame on delta values (```shift_reference()```). As always, attributes are carried through these operations in the most sensible way for what they actuallly represent.
 
 ## Mass balance
 
-Mass balance makes use of an additional attribute not mentioned before, the weight attribute. This allows one to weight values according to their reservoir sizes such that during mass balance calculations, isotopically different pools are mixed according to their relative proportions. Weight can be specified either during initialization or by using the ```weight()``` function later on. Imagine a reservoir of CO2 that receives a tiny spike of heavily labeled additional carbon. For convenience, we're introducing here the [**isotopia**](https://github.com/sebkopf/isotopia) options to set the default minor and major isotope names - this is nice for working on a problem in a specific isotope system. Also, we're going to do the mass balance exact by converting to fractional abundances (although [**isotopia**](https://github.com/sebkopf/isotopia) provides the approximate ```mass_balance()``` directly with delta value objects as well).
+Mass balance makes use of an additional attribute not mentioned before, the weight attribute. This allows one to weight values according to their reservoir sizes such that during mass balance calculations, isotopically different pools are mixed according to their relative proportions. Weight can be specified either during initialization or by using the ```weight()``` function later on. Imagine a reservoir of CO2 that receives a tiny spike of heavily labeled additional carbon. For convenience, we're introducing here the [**isotopia**](https://github.com/isoverse/isotopia) options to set the default minor and major isotope names - this is nice for working on a problem in a specific isotope system. Also, we're going to do the mass balance exact by converting to fractional abundances (although [**isotopia**](https://github.com/isoverse/isotopia) provides the approximate ```mass_balance()``` directly with delta value objects as well).
 
 ```{r}
 set_iso_opts(
@@ -137,7 +137,7 @@ mb <- mass_balance(
 show(mb)
 ```
 
-Notice that the result of the mass balance again is a weighted isotope value object itself. It can be converted to other data types or you can keep adding additional components to it with mass balance calculations. In fact, since [**isotopia**](https://github.com/sebkopf/isotopia) keeps track of the weight, you can keep tagging multiple mass balances together (the ```mass_balance()``` function takes as many parameters as desired). Additionally, since R implements basic arithmetic operators as functions, [**isotopia**](https://github.com/sebkopf/isotopia) redefines adding (+) and subtracting (-) for abundance and delta objects to be interpreted as mass balance calculations. This means ```mass_balance(x, y)``` is the same as ```x + y``` for these isotope value objects. This allows short-hand calculations like the following (although ```mass_balance()``` is recommended in more complex situations for clarity of recording what is happening). Here, we are adding a heavy relatively small but heavy pool (40permil, weight=2) to a circumneutral reservoir (5permil, weight=10) and then remove an isotopically light fraction from the pool (-10permil, weight=4).
+Notice that the result of the mass balance again is a weighted isotope value object itself. It can be converted to other data types or you can keep adding additional components to it with mass balance calculations. In fact, since [**isotopia**](https://github.com/isoverse/isotopia) keeps track of the weight, you can keep tagging multiple mass balances together (the ```mass_balance()``` function takes as many parameters as desired). Additionally, since R implements basic arithmetic operators as functions, [**isotopia**](https://github.com/isoverse/isotopia) redefines adding (+) and subtracting (-) for abundance and delta objects to be interpreted as mass balance calculations. This means ```mass_balance(x, y)``` is the same as ```x + y``` for these isotope value objects. This allows short-hand calculations like the following (although ```mass_balance()``` is recommended in more complex situations for clarity of recording what is happening). Here, we are adding a heavy relatively small but heavy pool (40permil, weight=2) to a circumneutral reservoir (5permil, weight=10) and then remove an isotopically light fraction from the pool (-10permil, weight=4).
 
 ```{r}
 mb <- 
@@ -158,7 +158,7 @@ r <- fractionate(a, r)
 show(r)
 ```
 
-Notice that [**isotopia**](https://github.com/sebkopf/isotopia) automatically keeps track of what compound is represented. Af- ter fractionation, the ratio represents no longer $CO[2]$ but $DIC$ according to the fractionation factors attributes. If these attributes do not "cancel" correctly, this command fails with an error and the relevant error message. Same as with ```mass_balance()```, [**isotopia**](https://github.com/sebkopf/isotopia) implements arithmetic shorthand for this, isotope value objects can be simply fractionationed by multiplying with a fractionation factor. I.e., ```fractionate(a, b)``` is the same as ```a * b``` (this also means fractionation factors can be easily chained with ```a1 * a2 * a3 * b``` but only if the "numerators" and "denominators" cancel properly).
+Notice that [**isotopia**](https://github.com/isoverse/isotopia) automatically keeps track of what compound is represented. Af- ter fractionation, the ratio represents no longer $CO[2]$ but $DIC$ according to the fractionation factors attributes. If these attributes do not "cancel" correctly, this command fails with an error and the relevant error message. Same as with ```mass_balance()```, [**isotopia**](https://github.com/isoverse/isotopia) implements arithmetic shorthand for this, isotope value objects can be simply fractionationed by multiplying with a fractionation factor. I.e., ```fractionate(a, b)``` is the same as ```a * b``` (this also means fractionation factors can be easily chained with ```a1 * a2 * a3 * b``` but only if the "numerators" and "denominators" cancel properly).
 
 ```{r}
 ff(-25, notation = "permil", ctop = "Corg", cbot = "DIC") *
@@ -181,7 +181,7 @@ show(sample * standard)
 
 ## Arithmetic
 
-Several of the arithmetic shorthands were introduced already, but there are several more (for all, see the manual). For all of these, it is always recommend to use the actual real functions in more complex scenarios for clarity. Here's just an example of what [**isotopia**](https://github.com/sebkopf/isotopia) can automatically keep track of in terms of isotope data objects. Here are two ways of turning isotope ratios into a fractionation factor in permil notation - it works booth by explicit mention of each functional step, or by the arithmetic equivalent.
+Several of the arithmetic shorthands were introduced already, but there are several more (for all, see the manual). For all of these, it is always recommend to use the actual real functions in more complex scenarios for clarity. Here's just an example of what [**isotopia**](https://github.com/isoverse/isotopia) can automatically keep track of in terms of isotope data objects. Here are two ways of turning isotope ratios into a fractionation factor in permil notation - it works booth by explicit mention of each functional step, or by the arithmetic equivalent.
 
 ```{r}
 r1 <- ratio(0.011)
@@ -194,7 +194,7 @@ show(p)
 
 # Testing
 
-Testing of all functionality in [**isotopia**](https://github.com/sebkopf/isotopia) is implemented using the **testthat** package (Wickham, 2011; Wickham & Chan, 2014), which provides a simple and uniform way of writing tests that can be run automatically to report any incorrect behaviour immediately. This enables multiple developers to contribute to the core functionality of the project without the risk of breaking prior implementations, but also allows users to easily write a few tests of their own to be confident that the package is doing what it is supposed to be doing, or just to test their own code and formulas on a regular basis. Here are few examples from the many tests already implemented for [**isotopia**](https://github.com/sebkopf/isotopia) to give an idea of the range of functionality tests:
+Testing of all functionality in [**isotopia**](https://github.com/isoverse/isotopia) is implemented using the **testthat** package (Wickham, 2011; Wickham & Chan, 2014), which provides a simple and uniform way of writing tests that can be run automatically to report any incorrect behaviour immediately. This enables multiple developers to contribute to the core functionality of the project without the risk of breaking prior implementations, but also allows users to easily write a few tests of their own to be confident that the package is doing what it is supposed to be doing, or just to test their own code and formulas on a regular basis. Here are few examples from the many tests already implemented for [**isotopia**](https://github.com/isoverse/isotopia) to give an idea of the range of functionality tests:
 
 ```{r}
 library(testthat)
@@ -216,7 +216,7 @@ expect_equal(get_value(ff(0.8) * delta(200) + delta(100), "permil"), 1000*(0.8*1
 
 # Future extensions
 
-The [**isotopia**](https://github.com/sebkopf/isotopia) package currently implements a lot of the core functionality for isotope arithmetic. However, there is much that could built on top of it, including support for mass-scaling and mass-independent data objects and multiply subsituted isotopologues. The goal with all of these would be to provide an interface that can implement rigorous unit tests to ensure calculations are always performed the exact same way, tools to convert between reference frames and make it easier to compare and visualize data in different isotopic spaces, and, above all, to make it fun, intuitive and reproducible to work with isotopic data.
+The [**isotopia**](https://github.com/isoverse/isotopia) package currently implements a lot of the core functionality for isotope arithmetic. However, there is much that could built on top of it, including support for mass-scaling and mass-independent data objects and multiply subsituted isotopologues. The goal with all of these would be to provide an interface that can implement rigorous unit tests to ensure calculations are always performed the exact same way, tools to convert between reference frames and make it easier to compare and visualize data in different isotopic spaces, and, above all, to make it fun, intuitive and reproducible to work with isotopic data.
 
 # References
  

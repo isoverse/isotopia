@@ -1,102 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>http://isotopia.kopflab.org/index.html</loc>
+    <loc>http://isotopia.isoverse.org/index.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/abundance.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/abundance.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/arithmetic.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/arithmetic.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/as.data.frame.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/as.data.frame.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/convert_isosys.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/convert_isosys.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/delta.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/delta.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/fractionate.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/fractionate.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/fractionation_factor.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/fractionation_factor.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/get_value.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/get_value.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/get_weight.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/get_weight.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/get_weighted_value.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/get_weighted_value.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/intensity.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/intensity.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/is.iso.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/is.iso.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/iso.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/iso.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/iso_opts.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/iso_opts.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/isotopia-package.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/isotopia-package.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/mass_balance.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/mass_balance.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/object_info.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/object_info.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/quietly.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/quietly.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/ratio.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/ratio.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/recast_isoval.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/recast_isoval.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/set_attrib.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/set_attrib.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/shift_reference.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/shift_reference.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/show.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/show.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/standards.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/standards.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/switch_notation.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/switch_notation.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/to_abundance.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/to_abundance.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/to_delta.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/to_delta.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/to_ff.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/to_ff.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/to_ratio.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/to_ratio.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/update_iso.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/update_iso.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/reference/weight.html</loc>
+    <loc>http://isotopia.isoverse.org/reference/weight.html</loc>
   </url>
   <url>
-    <loc>http://isotopia.kopflab.org/articles/isotopia.html</loc>
+    <loc>http://isotopia.isoverse.org/articles/isotopia.html</loc>
   </url>
 </urlset>
