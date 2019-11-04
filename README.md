@@ -7,7 +7,7 @@
 [![Git\_Hub\_Version](https://img.shields.io/badge/GitHub-0.5.8-orange.svg?style=flat-square)](/commits)
 [![Documentation](https://img.shields.io/badge/docs-online-green.svg)](http://isotopia.isoverse.org/)
 [![Build
-Status](https://travis-ci.org/sebkopf/isotopia.svg?branch=master)](https://travis-ci.org/sebkopf/isotopia)
+Status](https://travis-ci.org/isoverse/isotopia.svg?branch=master)](https://travis-ci.org/isoverse/isotopia)
 
 ## About
 
@@ -60,5 +60,5 @@ compatible.
 
 ``` r
 # install.packages("devtools") # only needed once
-devtools::install_github("sebkopf/isotopia")
+devtools::install_github("isoverse/isotopia")
 ```
